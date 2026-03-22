@@ -23,7 +23,6 @@ jobs:
         with:
           node-version: 20
       - run: echo "registry=https://registry.npmjs.org" > .npmrc
-        working-directory: frontend
       - run: npm install
         working-directory: frontend
       - run: npm run build
