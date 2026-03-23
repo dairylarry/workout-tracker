@@ -8,8 +8,7 @@ export default function Home() {
     <div className="home">
       <h1>Workout Tracker</h1>
       <nav className="home-nav">
-        <button onClick={() => navigate('/session/start')}>Start Session</button>
-        <button onClick={() => navigate('/session/resume')}>Resume / Edit Session</button>
+        <button onClick={() => navigate('/session/start')}>Start / Resume Session</button>
         <button onClick={() => navigate('/history')}>View Sessions</button>
         <button onClick={() => navigate('/plan')}>View Plan</button>
       </nav>

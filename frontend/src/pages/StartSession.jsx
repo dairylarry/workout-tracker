@@ -1,5 +1,7 @@
+import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { getToday } from '../lib/date'
+import { getSession } from '../lib/dynamodb'
 import '../styles/StartSession.css'
 
 const SESSION_TYPES = [
@@ -11,20 +13,37 @@ const SESSION_TYPES = [
 
 export default function StartSession() {
   const navigate = useNavigate()
+  const today = getToday()
+  const [inProgress, setInProgress] = useState({})
+
+  useEffect(() => {
+    async function checkToday() {
+      const results = await Promise.all(
+        SESSION_TYPES.map(async s => {
+          const session = await getSession(s.id, today)
+          return [s.id, !!session]
+        })
+      )
+      setInProgress(Object.fromEntries(results))
+    }
+    checkToday()
+  }, [today])
 
   function handleSelect(sessionId) {
-    const today = getToday()
     navigate(`/session/${sessionId}/${today}`)
   }
 
   return (
     <div className="start-session">
       <button className="back" onClick={() => navigate('/')}>← Back</button>
-      <h2>Start Session</h2>
+      <h2>Start / Resume Session</h2>
       <div className="session-list">
         {SESSION_TYPES.map(s => (
           <button key={s.id} className="session-card" onClick={() => handleSelect(s.id)}>
-            <span className="session-label">{s.label}</span>
+            <div className="session-card-top">
+              <span className="session-label">{s.label}</span>
+              {inProgress[s.id] && <span className="in-progress-badge">In progress</span>}
+            </div>
             <span className="session-meta">{s.day} · {s.focus}</span>
           </button>
         ))}
