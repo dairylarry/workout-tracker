@@ -12,17 +12,17 @@ const WORKING_SETS = {
   1: [
     { reps: 5, pct: 0.65, label: '1×5' },
     { reps: 5, pct: 0.75, label: '1×5' },
-    { reps: 5, pct: 0.85, label: '1×5+ (AMRAP)', isAmrap: true },
+    { reps: 5, pct: 0.85, label: '1×5', isAmrap: true },
   ],
   2: [
     { reps: 3, pct: 0.70, label: '1×3' },
     { reps: 3, pct: 0.80, label: '1×3' },
-    { reps: 3, pct: 0.90, label: '1×3+ (AMRAP)', isAmrap: true },
+    { reps: 3, pct: 0.90, label: '1×3', isAmrap: true },
   ],
   3: [
     { reps: 5, pct: 0.75, label: '1×5' },
     { reps: 3, pct: 0.85, label: '1×3' },
-    { reps: 1, pct: 0.95, label: '1×1+ (AMRAP)', isAmrap: true },
+    { reps: 1, pct: 0.95, label: '1×1', isAmrap: true },
   ],
 }
 
