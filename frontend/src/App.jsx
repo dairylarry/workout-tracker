@@ -17,6 +17,7 @@ export default function App() {
         <Route path="/session/resume" element={<ResumeSession />} />
         <Route path="/session/:sessionType/:date" element={<ActiveSession />} />
         <Route path="/history" element={<History />} />
+        <Route path="/history/:sessionType/:date" element={<SessionDetail />} />
         <Route path="/plan" element={<Plan />} />
       </Routes>
     </BrowserRouter>
