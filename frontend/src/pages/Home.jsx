@@ -9,6 +9,9 @@ export default function Home() {
 
   async function testConnection() {
     setDbStatus('testing...')
+    console.log('Region:', import.meta.env.VITE_AWS_REGION)
+    console.log('Access key ID:', import.meta.env.VITE_AWS_ACCESS_KEY_ID ? '✓ set' : '✗ missing')
+    console.log('Secret access key:', import.meta.env.VITE_AWS_SECRET_ACCESS_KEY ? '✓ set' : '✗ missing')
     try {
       const client = new DynamoDBClient({
         region: import.meta.env.VITE_AWS_REGION,
@@ -17,9 +20,12 @@ export default function Home() {
           secretAccessKey: import.meta.env.VITE_AWS_SECRET_ACCESS_KEY,
         },
       })
+      console.log('DynamoDB client created')
       const response = await client.send(new ListTablesCommand({}))
+      console.log('ListTables response:', response)
       setDbStatus(`Connected. Tables: ${response.TableNames.join(', ')}`)
     } catch (e) {
+      console.error('DynamoDB error:', e)
       setDbStatus(`Error: ${e.message}`)
     }
   }
