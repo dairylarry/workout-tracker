@@ -60,6 +60,7 @@ SK: DATE#2026-03-22
   sessionType: "lower-a",
   date: "2026-03-22",
   startedAt: "2026-03-22T10:00:00Z",
+  deload: false,
   exercises: [
     {
       name: "Bulgarian Split Squat",
