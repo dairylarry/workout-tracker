@@ -11,7 +11,7 @@ const client = new DynamoDBClient({
 
 const docClient = DynamoDBDocumentClient.from(client)
 
-const TABLE = 'workout-tracker'
+const TABLE = 'workout-tracker-db'
 
 export async function getSession(sessionType, date) {
   const response = await docClient.send(new GetCommand({
