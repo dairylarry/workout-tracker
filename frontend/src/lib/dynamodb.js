@@ -1,5 +1,6 @@
 import { DynamoDBClient } from '@aws-sdk/client-dynamodb'
 import { DynamoDBDocumentClient, GetCommand, PutCommand, UpdateCommand, QueryCommand, DeleteCommand } from '@aws-sdk/lib-dynamodb'
+import { cacheSession, getCachedSession, cacheSessions, getCachedSessions, queueWrite } from './offlineCache'
 
 const client = new DynamoDBClient({
   region: import.meta.env.VITE_AWS_REGION,
@@ -14,63 +15,137 @@ const docClient = DynamoDBDocumentClient.from(client)
 const TABLE = 'workout-tracker-db'
 
 export async function getSession(sessionType, date) {
-  const response = await docClient.send(new GetCommand({
-    TableName: TABLE,
-    Key: { PK: `SESSION#${sessionType}`, SK: `DATE#${date}` },
-  }))
-  return response.Item || null
+  try {
+    const response = await docClient.send(new GetCommand({
+      TableName: TABLE,
+      Key: { PK: `SESSION#${sessionType}`, SK: `DATE#${date}` },
+    }))
+    const item = response.Item || null
+    if (item) cacheSession(sessionType, date, item)
+    return item
+  } catch (e) {
+    console.warn('Offline — loading from cache:', e.message)
+    return getCachedSession(sessionType, date)
+  }
 }
 
 export async function putSession(session) {
-  await docClient.send(new PutCommand({
-    TableName: TABLE,
-    Item: session,
-  }))
+  cacheSession(session.sessionType, session.date, session)
+  try {
+    await docClient.send(new PutCommand({ TableName: TABLE, Item: session }))
+  } catch (e) {
+    console.warn('Offline — queued putSession:', e.message)
+    queueWrite('putSession', [session])
+  }
 }
 
 export async function updateSessionField(sessionType, date, field, value) {
-  await docClient.send(new UpdateCommand({
-    TableName: TABLE,
-    Key: { PK: `SESSION#${sessionType}`, SK: `DATE#${date}` },
-    UpdateExpression: `SET #field = :value`,
-    ExpressionAttributeNames: { '#field': field },
-    ExpressionAttributeValues: { ':value': value },
-  }))
+  // Update local cache
+  const cached = getCachedSession(sessionType, date)
+  if (cached) {
+    cached[field] = value
+    cacheSession(sessionType, date, cached)
+  }
+  try {
+    await docClient.send(new UpdateCommand({
+      TableName: TABLE,
+      Key: { PK: `SESSION#${sessionType}`, SK: `DATE#${date}` },
+      UpdateExpression: `SET #field = :value`,
+      ExpressionAttributeNames: { '#field': field },
+      ExpressionAttributeValues: { ':value': value },
+    }))
+  } catch (e) {
+    console.warn('Offline — queued updateSessionField:', e.message)
+    queueWrite('updateSessionField', [sessionType, date, field, value])
+  }
 }
 
 export async function updateSessionExercises(sessionType, date, exercises) {
-  await docClient.send(new UpdateCommand({
-    TableName: TABLE,
-    Key: { PK: `SESSION#${sessionType}`, SK: `DATE#${date}` },
-    UpdateExpression: 'SET exercises = :exercises',
-    ExpressionAttributeValues: { ':exercises': exercises },
-  }))
+  // Update local cache
+  const cached = getCachedSession(sessionType, date)
+  if (cached) {
+    cached.exercises = exercises
+    cacheSession(sessionType, date, cached)
+  }
+  try {
+    await docClient.send(new UpdateCommand({
+      TableName: TABLE,
+      Key: { PK: `SESSION#${sessionType}`, SK: `DATE#${date}` },
+      UpdateExpression: 'SET exercises = :exercises',
+      ExpressionAttributeValues: { ':exercises': exercises },
+    }))
+  } catch (e) {
+    console.warn('Offline — queued updateSessionExercises:', e.message)
+    queueWrite('updateSessionExercises', [sessionType, date, exercises])
+  }
 }
 
 export async function deleteSession(sessionType, date) {
-  await docClient.send(new DeleteCommand({
-    TableName: TABLE,
-    Key: { PK: `SESSION#${sessionType}`, SK: `DATE#${date}` },
-  }))
+  try {
+    await docClient.send(new DeleteCommand({
+      TableName: TABLE,
+      Key: { PK: `SESSION#${sessionType}`, SK: `DATE#${date}` },
+    }))
+  } catch (e) {
+    console.warn('Offline — queued deleteSession:', e.message)
+    queueWrite('deleteSession', [sessionType, date])
+  }
 }
 
 export async function getAllSessionsForType(sessionType) {
-  const response = await docClient.send(new QueryCommand({
-    TableName: TABLE,
-    KeyConditionExpression: 'PK = :pk',
-    ExpressionAttributeValues: { ':pk': `SESSION#${sessionType}` },
-    ScanIndexForward: false,
-  }))
-  return response.Items || []
+  try {
+    const response = await docClient.send(new QueryCommand({
+      TableName: TABLE,
+      KeyConditionExpression: 'PK = :pk',
+      ExpressionAttributeValues: { ':pk': `SESSION#${sessionType}` },
+      ScanIndexForward: false,
+    }))
+    const items = response.Items || []
+    cacheSessions(sessionType, items)
+    return items
+  } catch (e) {
+    console.warn('Offline — loading sessions from cache:', e.message)
+    return getCachedSessions(sessionType) || []
+  }
 }
 
 export async function getLastSession(sessionType) {
-  const response = await docClient.send(new QueryCommand({
-    TableName: TABLE,
-    KeyConditionExpression: 'PK = :pk',
-    ExpressionAttributeValues: { ':pk': `SESSION#${sessionType}` },
-    ScanIndexForward: false,
-    Limit: 1,
-  }))
-  return response.Items?.[0] || null
+  try {
+    const response = await docClient.send(new QueryCommand({
+      TableName: TABLE,
+      KeyConditionExpression: 'PK = :pk',
+      ExpressionAttributeValues: { ':pk': `SESSION#${sessionType}` },
+      ScanIndexForward: false,
+      Limit: 1,
+    }))
+    const item = response.Items?.[0] || null
+    return item
+  } catch (e) {
+    console.warn('Offline — loading last session from cache:', e.message)
+    const cached = getCachedSessions(sessionType)
+    return cached?.[0] || null
+  }
+}
+
+/**
+ * Flush any queued writes from offline usage.
+ * Call this when the app detects it's back online.
+ */
+export async function flushWriteQueue() {
+  const { getWriteQueue, clearWriteQueue } = await import('./offlineCache')
+  const queue = getWriteQueue()
+  if (queue.length === 0) return
+
+  const actions = { putSession, updateSessionField, updateSessionExercises, deleteSession }
+
+  for (const entry of queue) {
+    try {
+      await actions[entry.action](...entry.args)
+    } catch (e) {
+      console.error('Failed to flush queued write:', e)
+      return // stop flushing on failure, try again later
+    }
+  }
+  clearWriteQueue()
+  console.log(`Flushed ${queue.length} queued writes`)
 }
