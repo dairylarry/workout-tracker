@@ -9,10 +9,10 @@ function emptyExerciseData(config) {
     .filter(ex => ex.sets > 0)
     .map(ex => ({
       name: ex.name,
+      weightUnit: 'lbs',
       sets: Array.from({ length: ex.sets }, (_, i) => ({
         setNumber: i + 1,
         weight: '',
-        weightUnit: 'lbs',
         reps: '',
         rir: '',
       })),
@@ -103,6 +103,24 @@ export default function ActiveSession() {
     })
   }
 
+  function handleUnitChange(exIndex, unit) {
+    setExercises(prev => {
+      const updated = prev.map((ex, ei) => {
+        if (ei !== exIndex) return ex
+        return { ...ex, weightUnit: unit }
+      })
+
+      if (saveTimeout.current) clearTimeout(saveTimeout.current)
+      saveTimeout.current = setTimeout(() => {
+        updateSessionExercises(sessionType, date, updated).catch(e =>
+          console.error('Failed to save:', e)
+        )
+      }, 500)
+
+      return updated
+    })
+  }
+
   function handleSwap(exIndex, newName) {
     setExercises(prev => {
       const updated = prev.map((ex, ei) => {
@@ -163,6 +181,7 @@ export default function ActiveSession() {
         return {
           date: s.date,
           sets: ex.sets,
+          weightUnit: ex.weightUnit || 'lbs',
           displayName: ex.swappedName || ex.name,
         }
       })
@@ -233,10 +252,20 @@ export default function ActiveSession() {
               {isSwapped && (
                 <span className="swapped-from">Originally: {exercise.name}</span>
               )}
-              <span className="exercise-target">
-                {exConfig.sets} × {exConfig.repRange[0]}–{exConfig.repRange[1]}
-                {exConfig.perSide ? '/side' : ''} · RIR {exConfig.rir} · {exConfig.rest}
-              </span>
+              <div className="exercise-meta-row">
+                <span className="exercise-target">
+                  {exConfig.sets} × {exConfig.repRange[0]}–{exConfig.repRange[1]}
+                  {exConfig.perSide ? '/side' : ''} · RIR {exConfig.rir} · {exConfig.rest}
+                </span>
+                <select
+                  className="unit-toggle"
+                  value={exercise.weightUnit || 'lbs'}
+                  onChange={e => handleUnitChange(exIndex, e.target.value)}
+                >
+                  <option value="lbs">lbs</option>
+                  <option value="kg">kg</option>
+                </select>
+              </div>
               {exConfig.superset && (
                 <span className="superset-badge">Superset {exConfig.superset}</span>
               )}
@@ -282,7 +311,7 @@ export default function ActiveSession() {
                 <div className="last-session">
                   <span className="history-date">{history[0].date}:</span>{' '}
                   <span className="history-variant">{history[0].displayName}</span>{' '}
-                  {history[0].sets.map(s => `${s.weight}${s.weightUnit === 'kg' ? 'kg' : ''}×${s.reps}`).join(', ')}
+                  {history[0].sets.map(s => `${s.weight}${history[0].weightUnit === 'kg' ? 'kg' : ''}×${s.reps}`).join(', ')}
                 </div>
                 {history.length > 1 && (
                   <>
@@ -293,7 +322,7 @@ export default function ActiveSession() {
                       <div key={h.date} className="last-session">
                         <span className="history-date">{h.date}:</span>{' '}
                         <span className="history-variant">{h.displayName}</span>{' '}
-                        {h.sets.map(s => `${s.weight}${s.weightUnit === 'kg' ? 'kg' : ''}×${s.reps}`).join(', ')}
+                        {h.sets.map(s => `${s.weight}${h.weightUnit === 'kg' ? 'kg' : ''}×${s.reps}`).join(', ')}
                       </div>
                     ))}
                   </>
@@ -305,7 +334,6 @@ export default function ActiveSession() {
               <div className="set-row set-header">
                 <span>Set</span>
                 <span>Weight</span>
-                <span>Unit</span>
                 <span>Reps</span>
                 <span>RIR</span>
               </div>
@@ -319,13 +347,6 @@ export default function ActiveSession() {
                     placeholder="—"
                     onChange={e => handleSetChange(exIndex, setIndex, 'weight', e.target.value)}
                   />
-                  <select
-                    value={set.weightUnit}
-                    onChange={e => handleSetChange(exIndex, setIndex, 'weightUnit', e.target.value)}
-                  >
-                    <option value="lbs">lbs</option>
-                    <option value="kg">kg</option>
-                  </select>
                   <input
                     type="number"
                     inputMode="numeric"
