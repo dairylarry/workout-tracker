@@ -12,10 +12,44 @@
 .detail-date {
   font-size: 0.85rem;
   color: #666;
-  margin-bottom: 1.5rem;
+  margin-bottom: 1rem;
   display: flex;
   align-items: center;
   gap: 0.5rem;
+}
+
+.edit-btn {
+  width: 100%;
+  padding: 0.65rem;
+  min-height: 44px;
+  font-size: 0.9rem;
+  border: 2px solid #111;
+  background: #fff;
+  color: #111;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-bottom: 1rem;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.edit-btn:active {
+  background: #111;
+  color: #fff;
+}
+
+.deload-toggle {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.85rem;
+  margin-bottom: 1rem;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.deload-toggle input {
+  width: 1.1rem;
+  height: 1.1rem;
 }
 
 .detail-exercise {
@@ -26,9 +60,104 @@
   margin-bottom: 0.75rem;
 }
 
+.detail-exercise-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
 .detail-exercise h3 {
   font-size: 1rem;
   margin-bottom: 0.5rem;
+}
+
+.swapped-from {
+  display: block;
+  font-size: 0.72rem;
+  color: #999;
+  font-style: italic;
+  margin-bottom: 0.4rem;
+}
+
+.swap-btn {
+  background: none;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+  font-size: 0.7rem;
+  padding: 0.2rem 0.5rem;
+  cursor: pointer;
+  color: #666;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.swap-panel {
+  background: #fafafa;
+  border: 1px solid #e5e5e5;
+  border-radius: 4px;
+  padding: 0.6rem;
+  margin: 0.5rem 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.swap-option {
+  width: 100%;
+  padding: 0.5rem 0.75rem;
+  min-height: 44px;
+  border: 1px solid #ddd;
+  background: #fff;
+  border-radius: 4px;
+  font-size: 0.85rem;
+  text-align: left;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.swap-custom {
+  display: flex;
+  gap: 0.35rem;
+}
+
+.swap-custom input {
+  flex: 1;
+  padding: 0.5rem 0.6rem;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 0.85rem;
+  background: #fff;
+}
+
+.swap-custom input:focus {
+  outline: none;
+  border-color: #111;
+}
+
+.swap-custom button {
+  padding: 0.5rem 0.75rem;
+  min-height: 44px;
+  border: 1px solid #111;
+  background: #111;
+  color: #fff;
+  border-radius: 4px;
+  font-size: 0.85rem;
+  cursor: pointer;
+}
+
+.swap-custom button:disabled {
+  opacity: 0.3;
+}
+
+.swap-reset {
+  width: 100%;
+  padding: 0.5rem 0.75rem;
+  min-height: 44px;
+  border: 1px solid #dc2626;
+  background: #fff;
+  color: #dc2626;
+  border-radius: 4px;
+  font-size: 0.8rem;
+  cursor: pointer;
 }
 
 .detail-sets {
@@ -41,10 +170,15 @@
   gap: 0.4rem;
   padding: 0.35rem 0;
   border-bottom: 1px solid #f0f0f0;
+  align-items: center;
 }
 
 .detail-set-row:last-child {
   border-bottom: none;
+}
+
+.detail-set-editing {
+  grid-template-columns: 2rem 1fr 3.5rem 3.5rem 3.5rem;
 }
 
 .detail-set-header {
@@ -54,6 +188,78 @@
   letter-spacing: 0.05em;
   border-bottom: 1px solid #e5e5e5;
   padding-bottom: 0.4rem;
+}
+
+.detail-set-row input {
+  width: 100%;
+  padding: 0.5rem 0.25rem;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 0.9rem;
+  text-align: center;
+  background: #fff;
+  -webkit-appearance: none;
+  -moz-appearance: textfield;
+}
+
+.detail-set-row input:focus {
+  outline: none;
+  border-color: #111;
+}
+
+.detail-set-row select {
+  width: 100%;
+  padding: 0.45rem 0.1rem;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  text-align: center;
+  background: #fff;
+  -webkit-appearance: none;
+}
+
+.detail-set-row input[type="number"]::-webkit-inner-spin-button,
+.detail-set-row input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.edit-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-top: 1.5rem;
+}
+
+.save-btn {
+  width: 100%;
+  padding: 0.85rem;
+  min-height: 52px;
+  font-size: 1rem;
+  font-weight: 600;
+  border: 2px solid #111;
+  background: #111;
+  color: #fff;
+  border-radius: 4px;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.save-btn:disabled {
+  opacity: 0.5;
+}
+
+.cancel-btn {
+  width: 100%;
+  padding: 0.75rem;
+  min-height: 48px;
+  font-size: 0.9rem;
+  border: 2px solid #ddd;
+  background: #fff;
+  color: #111;
+  border-radius: 4px;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
 }
 
 .delete-section {
