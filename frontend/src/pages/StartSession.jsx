@@ -1,4 +1,5 @@
 import { useNavigate } from 'react-router-dom'
+import { getToday } from '../lib/date'
 import '../styles/StartSession.css'
 
 const SESSION_TYPES = [
@@ -12,7 +13,7 @@ export default function StartSession() {
   const navigate = useNavigate()
 
   function handleSelect(sessionId) {
-    const today = new Date().toISOString().split('T')[0]
+    const today = getToday()
     navigate(`/session/${sessionId}/${today}`)
   }
 
