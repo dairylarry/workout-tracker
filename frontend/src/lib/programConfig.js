@@ -21,7 +21,6 @@ export const PROGRAM = {
         { name: 'Flat Barbell Bench Press', sets: 0, repRange: null, rir: null, rest: '3–4 min', is531: true, note: '5s PRO — track manually' },
         { name: 'Weighted Pull-Up', sets: 4, repRange: [6, 10], rir: 2, rest: '90 sec', subs: ['Lat Pulldown', 'Band-Assisted Pull-Up'] },
         { name: 'Seated Cable Row', sets: 3, repRange: [8, 10], rir: 2, rest: '90 sec', subs: ['Barbell Bent-Over Row', 'DB Bent-Over Row'] },
-        { name: 'Seated DB Shoulder Press', sets: 2, repRange: [8, 12], rir: 2, rest: '90 sec', subs: ['Standing DB Shoulder Press', 'Machine Shoulder Press'] },
         { name: 'Cable Lateral Raise', sets: 4, repRange: [12, 15], rir: 1, rest: '60 sec', subs: ['DB Lateral Raise'] },
         { name: 'Tricep Rope Pushdown', sets: 4, repRange: [10, 12], rir: 1, rest: '60 sec', superset: 'A', subs: ['Tricep Bar Pushdown', 'Band Tricep Pushdown'] },
         { name: 'EZ Bar Curl', sets: 4, repRange: [10, 12], rir: 1, rest: '60 sec', superset: 'A', subs: ['DB Curl', 'Barbell Curl'] },

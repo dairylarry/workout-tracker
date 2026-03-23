@@ -5,7 +5,7 @@ const SESSIONS = [
   {
     title: 'Lower A — Strength + Hypertrophy',
     exercises: [
-      { name: 'Barbell Back Squat', sets: '5/3/1', reps: '—', rest: '3–4 min' },
+      { name: 'Barbell Back Squat', sets: '5s PRO', reps: '—', rest: '3–4 min' },
       { name: 'Leg Press', sets: '3', reps: '10–15 (RIR 2)', rest: '90 sec', subs: ['Bulgarian Split Squat', 'Goblet Squat'] },
       { name: 'Romanian Deadlift (or DB/KB RDL)', sets: '3', reps: '6–10 (RIR 2)', rest: '2 min', subs: ['DB Romanian Deadlift', 'KB Romanian Deadlift'] },
       { name: 'Barbell Hip Thrust (or DB/KB hip thrust)', sets: '2', reps: '8–12 (RIR 2)', rest: '90 sec', subs: ['DB Hip Thrust', 'KB Hip Thrust'] },
@@ -16,10 +16,9 @@ const SESSIONS = [
   {
     title: 'Upper A — Strength + Hypertrophy',
     exercises: [
-      { name: 'Flat Barbell Bench Press', sets: '5/3/1', reps: '—', rest: '3–4 min' },
+      { name: 'Flat Barbell Bench Press', sets: '5s PRO', reps: '—', rest: '3–4 min' },
       { name: 'Weighted Pull-Up', sets: '4', reps: '6–10 (RIR 2)', rest: '90 sec', subs: ['Lat Pulldown', 'Band-Assisted Pull-Up'] },
       { name: 'Seated Cable Row', sets: '3', reps: '8–10 (RIR 2)', rest: '90 sec', subs: ['Barbell Bent-Over Row', 'DB Bent-Over Row'] },
-      { name: 'Seated DB Shoulder Press', sets: '2', reps: '8–12 (RIR 2)', rest: '90 sec', subs: ['Standing DB Shoulder Press', 'Machine Shoulder Press'] },
       { name: 'Cable Lateral Raise (or DB lateral raise)', sets: '4', reps: '12–15 (RIR 1)', rest: '60 sec', subs: ['DB Lateral Raise'] },
       { name: 'Tricep Rope Pushdown', sets: '4', reps: '10–12 (RIR 1)', rest: '60 sec', subs: ['Tricep Bar Pushdown', 'Band Tricep Pushdown'] },
       { name: 'EZ Bar Curl (or DB curl)', sets: '4', reps: '10–12 (RIR 1)', rest: '60 sec', subs: ['DB Curl', 'Barbell Curl'] },
