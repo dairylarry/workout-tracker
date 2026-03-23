@@ -104,7 +104,40 @@
 }
 
 .tm-history-entry {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   font-size: 0.8rem;
   color: #666;
   padding: 0.2rem 0;
+}
+
+.tm-delete-x {
+  background: none;
+  border: none;
+  color: #dc2626;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 0.2rem 0.5rem;
+  min-height: 32px;
+  min-width: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.delete-mode-btn {
+  width: 100%;
+  padding: 0.65rem;
+  min-height: 44px;
+  font-size: 0.85rem;
+  border: 2px solid #dc2626;
+  background: #fff;
+  color: #dc2626;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-top: 1rem;
+  -webkit-tap-highlight-color: transparent;
 }

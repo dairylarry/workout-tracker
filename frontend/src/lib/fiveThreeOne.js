@@ -26,8 +26,8 @@ const WORKING_SETS = {
   ],
 }
 
-function roundTo5(weight) {
-  return Math.round(weight / 5) * 5
+function ceilTo5(weight) {
+  return Math.ceil(weight / 5) * 5
 }
 
 /**
@@ -36,12 +36,12 @@ function roundTo5(weight) {
 export function getSetsForWeek(week, trainingMax) {
   const warmup = WARMUP_SETS.map(s => ({
     ...s,
-    target: roundTo5(trainingMax * s.pct),
+    target: ceilTo5(trainingMax * s.pct),
     isWarmup: true,
   }))
   const working = WORKING_SETS[week].map(s => ({
     ...s,
-    target: roundTo5(trainingMax * s.pct),
+    target: ceilTo5(trainingMax * s.pct),
     isWarmup: false,
   }))
   return [...warmup, ...working]
@@ -54,13 +54,13 @@ export function getSetsForWeek(week, trainingMax) {
 export function getFullWaveTable(trainingMax) {
   const warmup = WARMUP_SETS.map(s => ({
     ...s,
-    target: roundTo5(trainingMax * s.pct),
+    target: ceilTo5(trainingMax * s.pct),
   }))
   const weeks = {}
   for (const week of [1, 2, 3]) {
     weeks[week] = WORKING_SETS[week].map(s => ({
       ...s,
-      target: roundTo5(trainingMax * s.pct),
+      target: ceilTo5(trainingMax * s.pct),
     }))
   }
   return { warmup, weeks }

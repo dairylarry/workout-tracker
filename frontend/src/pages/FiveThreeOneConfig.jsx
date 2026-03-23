@@ -16,6 +16,7 @@ export default function FiveThreeOneConfig() {
   const [inputs, setInputs] = useState({})
   const [loading, setLoading] = useState(true)
   const [saveStatus, setSaveStatus] = useState({})
+  const [deleteMode, setDeleteMode] = useState(false)
 
   useEffect(() => {
     async function load() {
@@ -60,6 +61,26 @@ export default function FiveThreeOneConfig() {
       console.error('Failed to save 531 config:', e)
       setSaveStatus(prev => ({ ...prev, [exerciseKey]: 'error' }))
       setTimeout(() => setSaveStatus(prev => ({ ...prev, [exerciseKey]: null })), 3000)
+    }
+  }
+
+  async function handleDeleteHistory(exerciseKey, historyIndex) {
+    const existing = configs[exerciseKey]
+    if (!existing?.history) return
+    const reversed = [...existing.history].reverse()
+    const actualIndex = existing.history.length - 1 - historyIndex
+    const newHistory = existing.history.filter((_, i) => i !== actualIndex)
+    const newTm = newHistory.length > 0 ? newHistory[newHistory.length - 1].tm : null
+
+    try {
+      await put531Config(exerciseKey, newTm, newHistory)
+      setConfigs(prev => ({
+        ...prev,
+        [exerciseKey]: { ...prev[exerciseKey], trainingMax: newTm, history: newHistory },
+      }))
+      setInputs(prev => ({ ...prev, [exerciseKey]: newTm?.toString() || '' }))
+    } catch (e) {
+      console.error('Failed to delete history entry:', e)
     }
   }
 
@@ -132,7 +153,10 @@ export default function FiveThreeOneConfig() {
                 <h4>TM History</h4>
                 {[...config.history].reverse().map((entry, i) => (
                   <div key={i} className="tm-history-entry">
-                    {entry.date} — {entry.tm} lbs
+                    <span>{entry.date} — {entry.tm} lbs</span>
+                    {deleteMode && (
+                      <button className="tm-delete-x" onClick={() => handleDeleteHistory(ex.key, i)}>✕</button>
+                    )}
                   </div>
                 ))}
               </div>
@@ -140,6 +164,9 @@ export default function FiveThreeOneConfig() {
           </div>
         )
       })}
+      <button className="delete-mode-btn" onClick={() => setDeleteMode(prev => !prev)}>
+        {deleteMode ? 'Done' : 'Delete History Entries'}
+      </button>
     </div>
   )
 }
