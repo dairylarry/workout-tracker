@@ -35,6 +35,7 @@ export const PROGRAM = {
         { name: 'Hack Squat', sets: 3, repRange: [8, 12], rir: 2, rest: '2 min', subs: ['Goblet Squat', 'Leg Press'] },
         { name: 'Nordic Curl', sets: 2, repRange: [5, 8], rir: 2, rest: '2 min', subs: ['Seated Leg Curl', 'Lying Leg Curl'] },
         { name: 'Single-Leg Romanian Deadlift', sets: 2, repRange: [8, 10], rir: 2, rest: '90 sec', perSide: true, subs: ['DB Single-Leg RDL', 'KB Single-Leg RDL'] },
+        { name: 'Seated DB Shoulder Press', sets: 3, repRange: [8, 12], rir: 2, rest: '90 sec', subs: ['Standing DB Shoulder Press', 'Machine Shoulder Press'] },
         { name: 'Leg Extension', sets: 3, repRange: [12, 15], rir: 1, rest: '60 sec', superset: 'A', subs: ['Cable Leg Extension'] },
         { name: 'Seated Calf Raise', sets: 3, repRange: [15, 20], rir: 1, rest: '60 sec', superset: 'A', subs: ['Seated DB Calf Raise'] },
       ],

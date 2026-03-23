@@ -92,7 +92,6 @@ Mobile-friendly app to log workouts from the Spring 2026 program (plans/final.md
 
 ## V1 TODOs
 - [ ] Fill out 5/3/1 section (currently read-only placeholder)
-- [ ] Cable Fly exercise added, for substitutions, make sure to add choices for the angle variations
 
 ## V2
 - [ ] Rest timer

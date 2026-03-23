@@ -35,11 +35,12 @@ const SESSIONS = [
       { name: 'Hack Squat (or goblet squat)', sets: '3', reps: '8–12 (RIR 2)', rest: '2 min', subs: ['Goblet Squat', 'Leg Press'] },
       { name: 'Nordic Curl', sets: '2', reps: '5–8 (RIR 2)', rest: '2 min', subs: ['Seated Leg Curl', 'Lying Leg Curl'] },
       { name: 'Single-Leg Romanian Deadlift (DB or KB)', sets: '2', reps: '8–10/leg (RIR 2)', rest: '90 sec', subs: ['DB Single-Leg RDL', 'KB Single-Leg RDL'] },
+      { name: 'Seated DB Shoulder Press', sets: '3', reps: '8–12 (RIR 2)', rest: '90 sec', subs: ['Standing DB Shoulder Press', 'Machine Shoulder Press'] },
       { name: 'Leg Extension (or cable leg extension)', sets: '3', reps: '12–15 (RIR 1)', rest: '60 sec', subs: ['Cable Leg Extension'] },
       { name: 'Seated Calf Raise (or seated DB calf raise)', sets: '3', reps: '15–20 (RIR 1)', rest: '60 sec', subs: ['Seated DB Calf Raise'] },
     ],
     notes: [
-      'Nordic Curls: 3–5 sec eccentric, controlled return; start at 4–5 reps and build.',
+      'Nordic Curls: 3–5 sec eccentric, controlled return. Start at 3–4 reps per set regardless of how easy it feels — these cause severe DOMS early on and can compromise the Saturday run. Build to the 5–8 range over several weeks.',
       'Single-leg RDL: use a weight that lets you hinge with control and balance. If balance is the limiter, use a rack or wall for light fingertip support.',
       'Superset: Leg Extension + Seated Calf Raise — do back to back, rest after the calf raise.',
     ],
@@ -86,8 +87,9 @@ export default function Plan() {
       <div className="plan-meta">
         <p><strong>Split:</strong> Upper/Lower A/B · 4 days/week</p>
         <p><strong>Intensity:</strong> Compounds RIR 2 · Isolations RIR 1</p>
-        <p><strong>Progression:</strong> Double progression on all accessories. 5/3/1 on Bench + Squat.</p>
-        <p><strong>Deload:</strong> Every 5–6 weeks, or after 2+ weeks of declining performance. Cut sets ~40%, keep loads.</p>
+        <p><strong>5/3/1:</strong> Bench + Squat only. Run 2 cycles of the 3-week wave, then deload.</p>
+        <p><strong>Progression:</strong> Double progression on all other lifts.</p>
+        <p><strong>Deload:</strong> Every 6 weeks (after 2 full 5/3/1 cycles), or earlier if performance drops 2+ consecutive weeks. Cut sets ~40%, keep loads.</p>
         <p><strong>Core:</strong> 10 min after each session (handstands, ab wheel, hollow body)</p>
       </div>
 
