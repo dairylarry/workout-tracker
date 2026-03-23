@@ -44,8 +44,8 @@ export const PROGRAM = {
       day: 'Friday',
       focus: 'Hypertrophy',
       exercises: [
-        { name: 'Pull-Up', sets: 3, repRange: [8, 12], rir: 2, rest: '90 sec', subs: ['Lat Pulldown', 'Band-Assisted Pull-Up'] },
         { name: 'Incline DB Press', sets: 4, repRange: [8, 12], rir: 2, rest: '90 sec', subs: ['Incline Barbell Press', 'Machine Incline Press'] },
+        { name: 'Pull-Up', sets: 3, repRange: [8, 12], rir: 2, rest: '90 sec', subs: ['Lat Pulldown', 'Band-Assisted Pull-Up'] },
         { name: 'Chest-Supported DB Row', sets: 3, repRange: [10, 12], rir: 2, rest: '90 sec', subs: ['Single-Arm DB Row', 'Machine Row'] },
         { name: 'Incline Cable Fly', sets: 3, repRange: [12, 15], rir: 1, rest: '60 sec', subs: ['Incline Pec Deck', 'Flat Cable Fly', 'Decline Cable Fly'] },
         { name: 'Cable Face Pull', sets: 3, repRange: [12, 15], rir: 1, rest: '60 sec', superset: 'A', subs: ['Band Face Pull', 'Rear Delt Fly'] },

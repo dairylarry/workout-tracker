@@ -47,8 +47,8 @@ const SESSIONS = [
   {
     title: 'Upper B — Hypertrophy',
     exercises: [
-      { name: 'Pull-Up', sets: '3', reps: '8–12 (RIR 2)', rest: '90 sec', subs: ['Lat Pulldown', 'Band-Assisted Pull-Up'] },
       { name: 'Incline DB Press', sets: '4', reps: '8–12 (RIR 2)', rest: '90 sec', subs: ['Incline Barbell Press', 'Machine Incline Press'] },
+      { name: 'Pull-Up', sets: '3', reps: '8–12 (RIR 2)', rest: '90 sec', subs: ['Lat Pulldown', 'Band-Assisted Pull-Up'] },
       { name: 'Chest-Supported DB Row (or single-arm DB row)', sets: '3', reps: '10–12 (RIR 2)', rest: '90 sec', subs: ['Single-Arm DB Row', 'Machine Row'] },
       { name: 'Incline Cable Fly (or incline pec deck)', sets: '3', reps: '12–15 (RIR 1)', rest: '60 sec', subs: ['Incline Pec Deck', 'Flat Cable Fly', 'Decline Cable Fly'] },
       { name: 'Cable Face Pull', sets: '3', reps: '12–15 (RIR 1)', rest: '60 sec', subs: ['Band Face Pull', 'Rear Delt Fly'] },
