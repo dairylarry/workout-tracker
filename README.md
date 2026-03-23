@@ -1,3 +1,3 @@
 # workout-tracker
 
-This is a workout tracker.
+This is a workout tracker. :)
