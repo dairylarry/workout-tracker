@@ -38,10 +38,16 @@
   margin-bottom: 1rem;
 }
 
-.exercise-name-row {
+.exercise-top-row {
   display: flex;
   justify-content: space-between;
+  align-items: flex-start;
+}
+
+.exercise-name-row {
+  display: flex;
   align-items: center;
+  gap: 0.4rem;
 }
 
 .exercise-header h3 {
@@ -148,16 +154,11 @@
   -webkit-tap-highlight-color: transparent;
 }
 
-.exercise-meta-row {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 0.25rem;
-}
-
 .exercise-target {
+  display: block;
   font-size: 0.8rem;
   color: #666;
+  margin-bottom: 0.25rem;
 }
 
 .unit-toggle {

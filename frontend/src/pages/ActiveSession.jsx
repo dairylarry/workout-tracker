@@ -240,23 +240,16 @@ export default function ActiveSession() {
         return (
           <div key={exercise.name} className="exercise-block">
             <div className="exercise-header">
-              <div className="exercise-name-row">
-                <h3>{displayName}</h3>
-                <button
-                  className="swap-btn"
-                  onClick={() => setSwapOpen(isSwapOpen ? null : exIndex)}
-                >
-                  Swap
-                </button>
-              </div>
-              {isSwapped && (
-                <span className="swapped-from">Originally: {exercise.name}</span>
-              )}
-              <div className="exercise-meta-row">
-                <span className="exercise-target">
-                  {exConfig.sets} × {exConfig.repRange[0]}–{exConfig.repRange[1]}
-                  {exConfig.perSide ? '/side' : ''} · RIR {exConfig.rir} · {exConfig.rest}
-                </span>
+              <div className="exercise-top-row">
+                <div className="exercise-name-row">
+                  <h3>{displayName}</h3>
+                  <button
+                    className="swap-btn"
+                    onClick={() => setSwapOpen(isSwapOpen ? null : exIndex)}
+                  >
+                    Swap
+                  </button>
+                </div>
                 <select
                   className="unit-toggle"
                   value={exercise.weightUnit || 'lbs'}
@@ -266,6 +259,13 @@ export default function ActiveSession() {
                   <option value="kg">kg</option>
                 </select>
               </div>
+              {isSwapped && (
+                <span className="swapped-from">Originally: {exercise.name}</span>
+              )}
+              <span className="exercise-target">
+                {exConfig.sets} × {exConfig.repRange[0]}–{exConfig.repRange[1]}
+                {exConfig.perSide ? '/side' : ''} · RIR {exConfig.rir} · {exConfig.rest}
+              </span>
               {exConfig.superset && (
                 <span className="superset-badge">Superset {exConfig.superset}</span>
               )}
