@@ -8,6 +8,7 @@ import History from './pages/History'
 import SessionDetail from './pages/SessionDetail'
 import Plan from './pages/Plan'
 import DoubleProgression from './pages/DoubleProgression'
+import LogWeight from './pages/LogWeight'
 import './styles/App.css'
 
 export default function App() {
@@ -27,6 +28,7 @@ export default function App() {
         <Route path="/history/:sessionType/:date" element={<SessionDetail />} />
         <Route path="/plan" element={<Plan />} />
         <Route path="/progression" element={<DoubleProgression />} />
+        <Route path="/weight" element={<LogWeight />} />
       </Routes>
     </BrowserRouter>
   )

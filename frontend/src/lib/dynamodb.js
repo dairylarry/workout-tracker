@@ -144,6 +144,45 @@ export async function getLastSession(sessionType) {
   }
 }
 
+// --- Bodyweight ---
+
+export async function putBodyweight(date, weight, weightUnit) {
+  const item = { PK: 'BODYWEIGHT', SK: `DATE#${date}`, date, weight, weightUnit }
+  try {
+    await docClient.send(new PutCommand({ TableName: TABLE, Item: item }))
+  } catch (e) {
+    console.warn('Offline — queued putBodyweight:', e.message)
+    queueWrite('putBodyweight', [date, weight, weightUnit])
+  }
+}
+
+export async function deleteBodyweight(date) {
+  try {
+    await docClient.send(new DeleteCommand({
+      TableName: TABLE,
+      Key: { PK: 'BODYWEIGHT', SK: `DATE#${date}` },
+    }))
+  } catch (e) {
+    console.warn('Offline — queued deleteBodyweight:', e.message)
+    queueWrite('deleteBodyweight', [date])
+  }
+}
+
+export async function getAllBodyweights() {
+  try {
+    const response = await docClient.send(new QueryCommand({
+      TableName: TABLE,
+      KeyConditionExpression: 'PK = :pk',
+      ExpressionAttributeValues: { ':pk': 'BODYWEIGHT' },
+      ScanIndexForward: false,
+    }))
+    return response.Items || []
+  } catch (e) {
+    console.warn('Offline — failed to load bodyweights:', e.message)
+    return []
+  }
+}
+
 /**
  * Flush any queued writes from offline usage.
  * Call this when the app detects it's back online.
@@ -153,7 +192,7 @@ export async function flushWriteQueue() {
   const queue = getWriteQueue()
   if (queue.length === 0) return
 
-  const actions = { putSession, updateSessionField, updateSessionExercises, deleteSession }
+  const actions = { putSession, updateSessionField, updateSessionExercises, deleteSession, putBodyweight, deleteBodyweight }
 
   for (const entry of queue) {
     try {

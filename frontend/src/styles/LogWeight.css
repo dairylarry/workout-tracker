@@ -1,0 +1,143 @@
+.log-weight {
+  padding: 1.5rem;
+  max-width: 600px;
+  margin: 0 auto;
+  padding-bottom: 4rem;
+}
+
+.log-weight h2 {
+  margin-bottom: 1rem;
+}
+
+.weight-input-area {
+  margin-bottom: 1.5rem;
+}
+
+.weight-input-row {
+  display: flex;
+  gap: 0.4rem;
+  margin-bottom: 0.5rem;
+}
+
+.date-input {
+  flex: 1.2;
+  padding: 0.5rem;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 0.85rem;
+  background: #fff;
+}
+
+.weight-input {
+  flex: 1;
+  padding: 0.5rem;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 0.9rem;
+  text-align: center;
+  background: #fff;
+  -webkit-appearance: none;
+  -moz-appearance: textfield;
+}
+
+.weight-input:focus,
+.date-input:focus {
+  outline: none;
+  border-color: #111;
+}
+
+.weight-input[type="number"]::-webkit-inner-spin-button,
+.weight-input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.unit-select {
+  padding: 0.5rem 0.4rem;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 0.8rem;
+  background: #fff;
+  -webkit-appearance: none;
+}
+
+.log-btn {
+  width: 100%;
+  padding: 0.75rem;
+  min-height: 48px;
+  font-size: 1rem;
+  font-weight: 600;
+  border: 2px solid #111;
+  background: #111;
+  color: #fff;
+  border-radius: 4px;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.log-btn:disabled {
+  opacity: 0.3;
+}
+
+.empty {
+  color: #888;
+  font-size: 0.9rem;
+}
+
+.weight-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  margin-bottom: 1rem;
+}
+
+.weight-entry {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.6rem 0.75rem;
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 0.9rem;
+}
+
+.delete-x {
+  background: none;
+  border: none;
+  color: #dc2626;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 0.2rem 0.5rem;
+  min-height: 44px;
+  min-width: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.delete-mode-btn {
+  width: 100%;
+  padding: 0.65rem;
+  min-height: 44px;
+  font-size: 0.85rem;
+  border: 2px solid #dc2626;
+  background: #fff;
+  color: #dc2626;
+  border-radius: 4px;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.back {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 0.9rem;
+  padding: 0;
+  margin-bottom: 1rem;
+  display: block;
+  -webkit-tap-highlight-color: transparent;
+}
