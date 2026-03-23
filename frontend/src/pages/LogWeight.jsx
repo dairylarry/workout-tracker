@@ -95,7 +95,7 @@ export default function LogWeight() {
           <div className="weight-list">
             {entries.map(entry => (
               <div key={entry.date} className="weight-entry">
-                <span>{entry.date}{entry.timeOfDay ? ` ${TIME_LABELS[entry.timeOfDay]}` : ''}</span>
+                <span>{entry.date}{entry.timeOfDay ? ` · ${TIME_LABELS[entry.timeOfDay]}` : ''}</span>
                 <span className="weight-value">{entry.weight} {entry.weightUnit}</span>
                 {deleteMode && (
                   <button className="delete-x" onClick={() => handleDelete(entry.date)}>✕</button>
