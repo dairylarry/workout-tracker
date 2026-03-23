@@ -253,7 +253,47 @@ export default function ActiveSession() {
   async function handleManualSave() {
     setSaveStatus('saving')
     try {
-      await updateSessionExercises(sessionType, date, exercises)
+      // Re-fetch 5/3/1 TMs and update exercises if changed
+      let updated = exercises
+      const has531 = config.exercises.some(e => e.is531)
+      if (has531) {
+        const newFtoConfigs = {}
+        for (const ex of config.exercises) {
+          if (ex.is531) {
+            const key = EXERCISE_TO_531_KEY[ex.name]
+            if (key) {
+              const cfg = await get531Config(key)
+              if (cfg) newFtoConfigs[key] = cfg
+            }
+          }
+        }
+        setFtoConfigs(newFtoConfigs)
+        updated = exercises.map(ex => {
+          if (!ex.is531) return ex
+          const key = EXERCISE_TO_531_KEY[ex.name]
+          const newTm = newFtoConfigs[key]?.trainingMax
+          if (newTm && newTm !== ex.trainingMax) {
+            const week = ex.week || 1
+            return {
+              ...ex,
+              trainingMax: newTm,
+              sets: getSetsForWeek(week, newTm).map((s, i) => ({
+                setNumber: i + 1,
+                target: s.target,
+                label: s.label,
+                isWarmup: s.isWarmup,
+                weight: ex.sets[i]?.weight || '',
+                reps: ex.sets[i]?.reps || '',
+                rir: ex.sets[i]?.rir || '',
+              })),
+            }
+          }
+          return ex
+        })
+        setExercises(updated)
+      }
+
+      await updateSessionExercises(sessionType, date, updated)
       setSaveStatus('saved')
       setTimeout(() => setSaveStatus(null), 2000)
     } catch (e) {
