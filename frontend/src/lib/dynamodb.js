@@ -146,8 +146,8 @@ export async function getLastSession(sessionType) {
 
 // --- Bodyweight ---
 
-export async function putBodyweight(date, weight, weightUnit) {
-  const item = { PK: 'BODYWEIGHT', SK: `DATE#${date}`, date, weight, weightUnit }
+export async function putBodyweight(date, weight, weightUnit, timeOfDay) {
+  const item = { PK: 'BODYWEIGHT', SK: `DATE#${date}`, date, weight, weightUnit, timeOfDay }
   try {
     await docClient.send(new PutCommand({ TableName: TABLE, Item: item }))
   } catch (e) {

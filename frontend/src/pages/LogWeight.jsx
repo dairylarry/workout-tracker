@@ -4,6 +4,15 @@ import { getToday } from '../lib/date'
 import { putBodyweight, deleteBodyweight, getAllBodyweights } from '../lib/dynamodb'
 import '../styles/LogWeight.css'
 
+function getTimeOfDay() {
+  const hour = new Date().getHours()
+  if (hour >= 4 && hour < 11) return 'morning'
+  if (hour >= 11 && hour < 18) return 'afternoon'
+  return 'night'
+}
+
+const TIME_LABELS = { morning: 'Morning', afternoon: 'Afternoon', night: 'Night' }
+
 export default function LogWeight() {
   const navigate = useNavigate()
   const [date, setDate] = useState(getToday())
@@ -29,10 +38,11 @@ export default function LogWeight() {
 
   async function handleLog() {
     if (!weight || !date) return
-    await putBodyweight(date, Number(weight), unit)
+    const timeOfDay = getTimeOfDay()
+    await putBodyweight(date, Number(weight), unit, timeOfDay)
     setEntries(prev => {
       const filtered = prev.filter(e => e.date !== date)
-      return [{ date, weight: Number(weight), weightUnit: unit }, ...filtered]
+      return [{ date, weight: Number(weight), weightUnit: unit, timeOfDay }, ...filtered]
         .sort((a, b) => b.date.localeCompare(a.date))
     })
     setWeight('')
@@ -85,7 +95,8 @@ export default function LogWeight() {
           <div className="weight-list">
             {entries.map(entry => (
               <div key={entry.date} className="weight-entry">
-                <span>{entry.date} — {entry.weight} {entry.weightUnit}</span>
+                <span>{entry.date}{entry.timeOfDay ? ` ${TIME_LABELS[entry.timeOfDay]}` : ''}</span>
+                <span className="weight-value">{entry.weight} {entry.weightUnit}</span>
                 {deleteMode && (
                   <button className="delete-x" onClick={() => handleDelete(entry.date)}>✕</button>
                 )}
