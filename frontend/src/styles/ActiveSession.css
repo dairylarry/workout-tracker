@@ -212,11 +212,6 @@
   opacity: 0.55;
 }
 
-.amrap-set {
-  background: #fffde7;
-  border-radius: 4px;
-  padding: 0.15rem 0;
-}
 
 /* 5/3/1 grid needs an extra column for target */
 .exercise-531 .set-row {

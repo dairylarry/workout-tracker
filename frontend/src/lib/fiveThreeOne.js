@@ -1,5 +1,6 @@
 /**
- * 5/3/1 percentage calculations and set structure.
+ * 5s PRO percentage calculations and set structure.
+ * All working sets are 5 reps across all 3 weeks — no AMRAP.
  */
 
 const WARMUP_SETS = [
@@ -12,17 +13,17 @@ const WORKING_SETS = {
   1: [
     { reps: 5, pct: 0.65, label: '1×5' },
     { reps: 5, pct: 0.75, label: '1×5' },
-    { reps: 5, pct: 0.85, label: '1×5', isAmrap: true },
+    { reps: 5, pct: 0.85, label: '1×5' },
   ],
   2: [
-    { reps: 3, pct: 0.70, label: '1×3' },
-    { reps: 3, pct: 0.80, label: '1×3' },
-    { reps: 3, pct: 0.90, label: '1×3', isAmrap: true },
+    { reps: 5, pct: 0.70, label: '1×5' },
+    { reps: 5, pct: 0.80, label: '1×5' },
+    { reps: 5, pct: 0.90, label: '1×5' },
   ],
   3: [
     { reps: 5, pct: 0.75, label: '1×5' },
-    { reps: 3, pct: 0.85, label: '1×3' },
-    { reps: 1, pct: 0.95, label: '1×1', isAmrap: true },
+    { reps: 5, pct: 0.85, label: '1×5' },
+    { reps: 5, pct: 0.95, label: '1×5' },
   ],
 }
 

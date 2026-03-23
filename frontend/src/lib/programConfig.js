@@ -6,7 +6,7 @@ export const PROGRAM = {
       day: 'Monday',
       focus: 'Strength + Hypertrophy',
       exercises: [
-        { name: 'Barbell Back Squat', sets: 0, repRange: null, rir: null, rest: '3–4 min', is531: true, note: '5/3/1 — track manually' },
+        { name: 'Barbell Back Squat', sets: 0, repRange: null, rir: null, rest: '3–4 min', is531: true, note: '5s PRO — track manually' },
         { name: 'Leg Press', sets: 3, repRange: [10, 15], rir: 2, rest: '90 sec', subs: ['Bulgarian Split Squat', 'Goblet Squat'] },
         { name: 'Romanian Deadlift', sets: 3, repRange: [6, 10], rir: 2, rest: '2 min', subs: ['DB Romanian Deadlift', 'KB Romanian Deadlift'] },
         { name: 'Barbell Hip Thrust', sets: 2, repRange: [8, 12], rir: 2, rest: '90 sec', subs: ['DB Hip Thrust', 'KB Hip Thrust'] },
@@ -18,7 +18,7 @@ export const PROGRAM = {
       day: 'Tuesday',
       focus: 'Strength + Hypertrophy',
       exercises: [
-        { name: 'Flat Barbell Bench Press', sets: 0, repRange: null, rir: null, rest: '3–4 min', is531: true, note: '5/3/1 — track manually' },
+        { name: 'Flat Barbell Bench Press', sets: 0, repRange: null, rir: null, rest: '3–4 min', is531: true, note: '5s PRO — track manually' },
         { name: 'Weighted Pull-Up', sets: 4, repRange: [6, 10], rir: 2, rest: '90 sec', subs: ['Lat Pulldown', 'Band-Assisted Pull-Up'] },
         { name: 'Seated Cable Row', sets: 3, repRange: [8, 10], rir: 2, rest: '90 sec', subs: ['Barbell Bent-Over Row', 'DB Bent-Over Row'] },
         { name: 'Seated DB Shoulder Press', sets: 2, repRange: [8, 12], rir: 2, rest: '90 sec', subs: ['Standing DB Shoulder Press', 'Machine Shoulder Press'] },

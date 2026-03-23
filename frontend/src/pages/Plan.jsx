@@ -87,9 +87,9 @@ export default function Plan() {
       <div className="plan-meta">
         <p><strong>Split:</strong> Upper/Lower A/B · 4 days/week</p>
         <p><strong>Intensity:</strong> Compounds RIR 2 · Isolations RIR 1</p>
-        <p><strong>5/3/1:</strong> Bench + Squat only. Run 2 cycles of the 3-week wave, then deload.</p>
+        <p><strong>5s PRO:</strong> Bench + Squat only. Run 2 cycles of the 3-week wave (all sets 5 reps, no AMRAP), then deload.</p>
         <p><strong>Progression:</strong> Double progression on all other lifts.</p>
-        <p><strong>Deload:</strong> Every 6 weeks (after 2 full 5/3/1 cycles), or earlier if performance drops 2+ consecutive weeks. Cut sets ~40%, keep loads.</p>
+        <p><strong>Deload:</strong> Every 6 weeks (after 2 full cycles), or earlier if performance drops 2+ consecutive weeks. Cut sets ~40%, keep loads.</p>
         <p><strong>Core:</strong> 10 min after each session (handstands, ab wheel, hollow body)</p>
       </div>
 
@@ -163,7 +163,7 @@ export default function Plan() {
         <h3>Plateau Management</h3>
         <ul>
           <li>Double-progression lifts: if stalled 2+ weeks through a deload, drop load 10% and rebuild</li>
-          <li>5/3/1 lifts: if AMRAP drops below target for 2+ weeks after deload, reset training max 10%</li>
+          <li>5s PRO lifts: if top sets feel consistently above RPE 8 for 2+ weeks after deload, reset training max 10%</li>
         </ul>
       </div>
     </div>

@@ -28,7 +28,7 @@ function emptyExerciseData(config, ftoConfigs) {
             target: s.target,
             label: s.label,
             isWarmup: s.isWarmup,
-            isAmrap: s.isAmrap || false,
+
             weight: '',
             reps: '',
             rir: '',
@@ -120,7 +120,7 @@ export default function ActiveSession() {
                 target: s.target,
                 label: s.label,
                 isWarmup: s.isWarmup,
-                isAmrap: s.isAmrap || false,
+    
                 weight: '',
                 reps: '',
                 rir: '',
@@ -353,7 +353,7 @@ export default function ActiveSession() {
                   <span>RIR</span>
                 </div>
                 {exercise.sets.map((set, setIndex) => (
-                  <div key={set.setNumber} className={`set-row ${set.isWarmup ? 'warmup-set' : ''} ${set.isAmrap ? 'amrap-set' : ''}`}>
+                  <div key={set.setNumber} className={`set-row ${set.isWarmup ? 'warmup-set' : ''}`}>
                     <span className="set-number">{set.label}</span>
                     <span className="set-target">{set.target}</span>
                     <input
