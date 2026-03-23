@@ -4,6 +4,7 @@ import StartSession from './pages/StartSession'
 import ResumeSession from './pages/ResumeSession'
 import ActiveSession from './pages/ActiveSession'
 import History from './pages/History'
+import SessionDetail from './pages/SessionDetail'
 import Plan from './pages/Plan'
 import './styles/App.css'
 
