@@ -162,7 +162,7 @@ export default function Plan() {
         <h3>Plateau Management</h3>
         <ul>
           <li>Double-progression lifts: if stalled 2+ weeks through a deload, drop load 10% and rebuild</li>
-          <li>5s PRO lifts: if top sets feel consistently above RPE 8 for 2+ weeks after deload, reset training max 10%</li>
+          <li>5s PRO lifts: if top sets feel consistently above RPE 8 (less than RIR 2) for 2+ weeks after deload, reset training max 10%</li>
         </ul>
       </div>
     </div>
