@@ -9,6 +9,7 @@ import SessionDetail from './pages/SessionDetail'
 import Plan from './pages/Plan'
 import DoubleProgression from './pages/DoubleProgression'
 import LogWeight from './pages/LogWeight'
+import FiveThreeOneConfig from './pages/FiveThreeOneConfig'
 import './styles/App.css'
 
 export default function App() {
@@ -29,6 +30,7 @@ export default function App() {
         <Route path="/plan" element={<Plan />} />
         <Route path="/progression" element={<DoubleProgression />} />
         <Route path="/weight" element={<LogWeight />} />
+        <Route path="/531" element={<FiveThreeOneConfig />} />
       </Routes>
     </BrowserRouter>
   )

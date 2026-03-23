@@ -1,22 +1,51 @@
 import { useParams, useNavigate } from 'react-router-dom'
 import { useState, useEffect, useRef } from 'react'
 import { PROGRAM } from '../lib/programConfig'
-import { getSession, putSession, updateSessionExercises, updateSessionField, getRecentSessions } from '../lib/dynamodb'
+import { getSession, putSession, updateSessionExercises, updateSessionField, getRecentSessions, get531Config } from '../lib/dynamodb'
+import { getSetsForWeek, WEEK_LABELS } from '../lib/fiveThreeOne'
 import '../styles/ActiveSession.css'
 
-function emptyExerciseData(config) {
+const EXERCISE_TO_531_KEY = {
+  'Barbell Back Squat': 'squat',
+  'Flat Barbell Bench Press': 'bench',
+}
+
+function emptyExerciseData(config, ftoConfigs) {
   return config.exercises
-    .filter(ex => ex.sets > 0)
-    .map(ex => ({
-      name: ex.name,
-      weightUnit: 'lbs',
-      sets: Array.from({ length: ex.sets }, (_, i) => ({
-        setNumber: i + 1,
-        weight: '',
-        reps: '',
-        rir: '',
-      })),
-    }))
+    .filter(ex => ex.sets > 0 || ex.is531)
+    .map(ex => {
+      if (ex.is531) {
+        const key = EXERCISE_TO_531_KEY[ex.name]
+        const tm = ftoConfigs[key]?.trainingMax
+        return {
+          name: ex.name,
+          is531: true,
+          week: 1,
+          trainingMax: tm || null,
+          weightUnit: 'lbs',
+          sets: tm ? getSetsForWeek(1, tm).map((s, i) => ({
+            setNumber: i + 1,
+            target: s.target,
+            label: s.label,
+            isWarmup: s.isWarmup,
+            isAmrap: s.isAmrap || false,
+            weight: '',
+            reps: '',
+            rir: '',
+          })) : [],
+        }
+      }
+      return {
+        name: ex.name,
+        weightUnit: 'lbs',
+        sets: Array.from({ length: ex.sets }, (_, i) => ({
+          setNumber: i + 1,
+          weight: '',
+          reps: '',
+          rir: '',
+        })),
+      }
+    })
 }
 
 function checkProgression(exercise, config) {
@@ -41,20 +70,64 @@ export default function ActiveSession() {
   const [error, setError] = useState(null)
   const [swapOpen, setSwapOpen] = useState(null) // index of exercise with swap open
   const [customSwap, setCustomSwap] = useState('')
+  const [ftoConfigs, setFtoConfigs] = useState({})
   const saveTimeout = useRef(null)
 
   useEffect(() => {
     async function load() {
       try {
+        // Load 5/3/1 configs if this session has 5/3/1 exercises
+        const ftoResults = {}
+        for (const ex of config.exercises) {
+          if (ex.is531) {
+            const key = EXERCISE_TO_531_KEY[ex.name]
+            if (key) {
+              const cfg = await get531Config(key)
+              if (cfg) ftoResults[key] = cfg
+            }
+          }
+        }
+        setFtoConfigs(ftoResults)
+
         const [existing, recent] = await Promise.all([
           getSession(sessionType, date),
           getRecentSessions(sessionType, 4),
         ])
+
+        const pastSessions = recent.filter(s => s.SK !== `DATE#${date}`)
+        setRecentSessions(pastSessions.slice(0, 3))
+
         if (existing) {
           setExercises(existing.exercises)
           setDeload(existing.deload || false)
         } else {
-          const initial = emptyExerciseData(config)
+          // Infer week from last session's 5/3/1 exercises
+          let inferredWeek = 1
+          if (pastSessions.length > 0) {
+            const last531 = pastSessions[0].exercises?.find(e => e.is531)
+            if (last531?.week) {
+              inferredWeek = (last531.week % 3) + 1
+            }
+          }
+
+          const initial = emptyExerciseData(config, ftoResults)
+          // Apply inferred week to 5/3/1 exercises
+          initial.forEach(ex => {
+            if (ex.is531 && ex.trainingMax) {
+              ex.week = inferredWeek
+              ex.sets = getSetsForWeek(inferredWeek, ex.trainingMax).map((s, i) => ({
+                setNumber: i + 1,
+                target: s.target,
+                label: s.label,
+                isWarmup: s.isWarmup,
+                isAmrap: s.isAmrap || false,
+                weight: '',
+                reps: '',
+                rir: '',
+              }))
+            }
+          })
+
           setExercises(initial)
           await putSession({
             PK: `SESSION#${sessionType}`,
@@ -67,8 +140,6 @@ export default function ActiveSession() {
             exercises: initial,
           })
         }
-        const pastSessions = recent.filter(s => s.SK !== `DATE#${date}`)
-        setRecentSessions(pastSessions.slice(0, 3))
       } catch (e) {
         console.error('Failed to load session:', e)
         setError(e.message)
@@ -117,6 +188,29 @@ export default function ActiveSession() {
         )
       }, 500)
 
+      return updated
+    })
+  }
+
+  function handle531WeekChange(exIndex, newWeek) {
+    setExercises(prev => {
+      const updated = prev.map((ex, ei) => {
+        if (ei !== exIndex || !ex.is531 || !ex.trainingMax) return ex
+        const newSets = getSetsForWeek(newWeek, ex.trainingMax).map((s, i) => ({
+          setNumber: i + 1,
+          target: s.target,
+          label: s.label,
+          isWarmup: s.isWarmup,
+          isAmrap: s.isAmrap || false,
+          weight: '',
+          reps: '',
+          rir: '',
+        }))
+        return { ...ex, week: newWeek, sets: newSets }
+      })
+      updateSessionExercises(sessionType, date, updated).catch(e =>
+        console.error('Failed to save week change:', e)
+      )
       return updated
     })
   }
@@ -216,12 +310,75 @@ export default function ActiveSession() {
 
       {config.exercises.map((exConfig, idx) => {
         if (exConfig.is531) {
+          const exercise = exercises.find(e => e.name === exConfig.name)
+          if (!exercise) {
+            return (
+              <div key={exConfig.name} className="exercise-block exercise-531">
+                <div className="exercise-header">
+                  <h3>{exConfig.name}</h3>
+                  <span className="exercise-target">Set up Training Max in 5/3/1 Config first</span>
+                  <span className="badge-531">5/3/1</span>
+                </div>
+              </div>
+            )
+          }
+          const exIndex = exercises.indexOf(exercise)
           return (
             <div key={exConfig.name} className="exercise-block exercise-531">
               <div className="exercise-header">
-                <h3>{exConfig.name}</h3>
-                <span className="exercise-target">{exConfig.note} · Rest {exConfig.rest}</span>
-                <span className="badge-531">5/3/1</span>
+                <div className="exercise-top-row">
+                  <h3>{exConfig.name}</h3>
+                  <span className="badge-531">5/3/1</span>
+                </div>
+                <div className="fto-week-row">
+                  <select
+                    value={exercise.week || 1}
+                    onChange={e => handle531WeekChange(exIndex, Number(e.target.value))}
+                    className="week-select"
+                  >
+                    <option value={1}>{WEEK_LABELS[1]}</option>
+                    <option value={2}>{WEEK_LABELS[2]}</option>
+                    <option value={3}>{WEEK_LABELS[3]}</option>
+                  </select>
+                  <span className="exercise-target">TM: {exercise.trainingMax} lbs · Rest {exConfig.rest}</span>
+                </div>
+              </div>
+
+              <div className="sets-grid">
+                <div className="set-row set-header">
+                  <span>Set</span>
+                  <span>Target</span>
+                  <span>Weight</span>
+                  <span>Reps</span>
+                  <span>RIR</span>
+                </div>
+                {exercise.sets.map((set, setIndex) => (
+                  <div key={set.setNumber} className={`set-row ${set.isWarmup ? 'warmup-set' : ''} ${set.isAmrap ? 'amrap-set' : ''}`}>
+                    <span className="set-number">{set.label}</span>
+                    <span className="set-target">{set.target}</span>
+                    <input
+                      type="number"
+                      inputMode="decimal"
+                      value={set.weight}
+                      placeholder="—"
+                      onChange={e => handleSetChange(exIndex, setIndex, 'weight', e.target.value)}
+                    />
+                    <input
+                      type="number"
+                      inputMode="numeric"
+                      value={set.reps}
+                      placeholder="—"
+                      onChange={e => handleSetChange(exIndex, setIndex, 'reps', e.target.value)}
+                    />
+                    <input
+                      type="number"
+                      inputMode="numeric"
+                      value={set.rir}
+                      placeholder="—"
+                      onChange={e => handleSetChange(exIndex, setIndex, 'rir', e.target.value)}
+                    />
+                  </div>
+                ))}
               </div>
             </div>
           )

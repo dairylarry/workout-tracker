@@ -1,0 +1,110 @@
+.fto-config {
+  padding: 1.5rem;
+  max-width: 480px;
+  margin: 0 auto;
+}
+
+.fto-config h2 {
+  margin-bottom: 1.5rem;
+}
+
+.fto-exercise {
+  margin-bottom: 2rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid #ddd;
+}
+
+.fto-exercise:last-child {
+  border-bottom: none;
+}
+
+.fto-exercise h3 {
+  margin-bottom: 0.75rem;
+}
+
+.tm-input-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.tm-input-row label {
+  font-size: 0.85rem;
+  white-space: nowrap;
+}
+
+.tm-input-row input {
+  width: 80px;
+  padding: 0.4rem;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 0.9rem;
+  text-align: center;
+}
+
+.tm-input-row button {
+  padding: 0.4rem 0.75rem;
+  background: #000;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  font-size: 0.85rem;
+  cursor: pointer;
+}
+
+.tm-input-row button:disabled {
+  opacity: 0.5;
+}
+
+.wave-table-wrap {
+  overflow-x: auto;
+  margin-bottom: 1rem;
+}
+
+.wave-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+}
+
+.wave-table th,
+.wave-table td {
+  padding: 0.4rem 0.6rem;
+  text-align: center;
+  border: 1px solid #ddd;
+}
+
+.wave-table th {
+  background: #f0f0f0;
+  font-weight: 600;
+}
+
+.wave-table th:first-child,
+.wave-table td:first-child {
+  text-align: left;
+}
+
+.warmup-row {
+  color: #888;
+}
+
+.amrap-row {
+  font-weight: 600;
+  background: #fffde7;
+}
+
+.tm-history {
+  margin-top: 1rem;
+}
+
+.tm-history h4 {
+  font-size: 0.85rem;
+  margin-bottom: 0.5rem;
+}
+
+.tm-history-entry {
+  font-size: 0.8rem;
+  color: #666;
+  padding: 0.2rem 0;
+}

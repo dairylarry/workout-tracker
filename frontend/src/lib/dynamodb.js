@@ -183,6 +183,38 @@ export async function getAllBodyweights() {
   }
 }
 
+// --- 5/3/1 Config ---
+
+export async function get531Config(exercise) {
+  try {
+    const response = await docClient.send(new GetCommand({
+      TableName: TABLE,
+      Key: { PK: '531_CONFIG', SK: `EXERCISE#${exercise}` },
+    }))
+    return response.Item || null
+  } catch (e) {
+    console.warn('Offline — failed to load 531 config:', e.message)
+    return null
+  }
+}
+
+export async function put531Config(exercise, trainingMax, history) {
+  const item = {
+    PK: '531_CONFIG',
+    SK: `EXERCISE#${exercise}`,
+    type: '531_CONFIG',
+    exercise,
+    trainingMax,
+    history,
+  }
+  try {
+    await docClient.send(new PutCommand({ TableName: TABLE, Item: item }))
+  } catch (e) {
+    console.warn('Offline — queued put531Config:', e.message)
+    queueWrite('put531Config', [exercise, trainingMax, history])
+  }
+}
+
 /**
  * Flush any queued writes from offline usage.
  * Call this when the app detects it's back online.
@@ -192,7 +224,7 @@ export async function flushWriteQueue() {
   const queue = getWriteQueue()
   if (queue.length === 0) return
 
-  const actions = { putSession, updateSessionField, updateSessionExercises, deleteSession, putBodyweight, deleteBodyweight }
+  const actions = { putSession, updateSessionField, updateSessionExercises, deleteSession, putBodyweight, deleteBodyweight, put531Config }
 
   for (const entry of queue) {
     try {

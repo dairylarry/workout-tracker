@@ -173,7 +173,7 @@
 }
 
 .exercise-531 {
-  opacity: 0.65;
+  border-left: 3px solid #374151;
 }
 
 .badge-531 {
@@ -184,7 +184,48 @@
   border-radius: 3px;
   background: #e5e7eb;
   color: #374151;
-  margin-top: 0.25rem;
+}
+
+.fto-week-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 0.35rem;
+}
+
+.week-select {
+  padding: 0.3rem 0.4rem;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 0.85rem;
+  background: #fff;
+}
+
+.set-target {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #666;
+  text-align: center;
+}
+
+.warmup-set {
+  opacity: 0.55;
+}
+
+.amrap-set {
+  background: #fffde7;
+  border-radius: 4px;
+  padding: 0.15rem 0;
+}
+
+/* 5/3/1 grid needs an extra column for target */
+.exercise-531 .set-row {
+  grid-template-columns: 5.5rem 3rem 1fr 3.5rem 3.5rem;
+}
+
+.exercise-531 .set-row .set-number {
+  font-size: 0.75rem;
+  text-align: left;
 }
 
 .superset-badge,
