@@ -38,6 +38,8 @@ export default function ActiveSession() {
   const [lastSession, setLastSession] = useState(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
+  const [swapOpen, setSwapOpen] = useState(null) // index of exercise with swap open
+  const [customSwap, setCustomSwap] = useState('')
   const saveTimeout = useRef(null)
 
   useEffect(() => {
@@ -101,6 +103,54 @@ export default function ActiveSession() {
     })
   }
 
+  function handleSwap(exIndex, newName) {
+    setExercises(prev => {
+      const updated = prev.map((ex, ei) => {
+        if (ei !== exIndex) return ex
+        return {
+          ...ex,
+          swappedName: newName,
+        }
+      })
+      updateSessionExercises(sessionType, date, updated).catch(e =>
+        console.error('Failed to save swap:', e)
+      )
+      return updated
+    })
+    setSwapOpen(null)
+    setCustomSwap('')
+  }
+
+  function handleResetSwap(exIndex) {
+    setExercises(prev => {
+      const updated = prev.map((ex, ei) => {
+        if (ei !== exIndex) return ex
+        const { swappedName, ...rest } = ex
+        return rest
+      })
+      updateSessionExercises(sessionType, date, updated).catch(e =>
+        console.error('Failed to save swap reset:', e)
+      )
+      return updated
+    })
+    setSwapOpen(null)
+  }
+
+  const [saveStatus, setSaveStatus] = useState(null)
+
+  async function handleManualSave() {
+    setSaveStatus('saving')
+    try {
+      await updateSessionExercises(sessionType, date, exercises)
+      setSaveStatus('saved')
+      setTimeout(() => setSaveStatus(null), 2000)
+    } catch (e) {
+      console.error('Manual save failed:', e)
+      setSaveStatus('error')
+      setTimeout(() => setSaveStatus(null), 3000)
+    }
+  }
+
   function getLastExercise(name) {
     if (!lastSession) return null
     return lastSession.exercises?.find(e => e.name === name)
@@ -146,11 +196,25 @@ export default function ActiveSession() {
         const exIndex = exercises.indexOf(exercise)
         const lastEx = getLastExercise(exercise.name)
         const progReady = checkProgression(exercise, config)
+        const displayName = exercise.swappedName || exercise.name
+        const isSwapped = !!exercise.swappedName
+        const isSwapOpen = swapOpen === exIndex
 
         return (
           <div key={exercise.name} className="exercise-block">
             <div className="exercise-header">
-              <h3>{exercise.name}</h3>
+              <div className="exercise-name-row">
+                <h3>{displayName}</h3>
+                <button
+                  className="swap-btn"
+                  onClick={() => setSwapOpen(isSwapOpen ? null : exIndex)}
+                >
+                  Swap
+                </button>
+              </div>
+              {isSwapped && (
+                <span className="swapped-from">Originally: {exercise.name}</span>
+              )}
               <span className="exercise-target">
                 {exConfig.sets} × {exConfig.repRange[0]}–{exConfig.repRange[1]}
                 {exConfig.perSide ? '/side' : ''} · RIR {exConfig.rir} · {exConfig.rest}
@@ -165,6 +229,35 @@ export default function ActiveSession() {
                 <span className="progression-badge">↑ Add weight next session</span>
               )}
             </div>
+
+            {isSwapOpen && (
+              <div className="swap-panel">
+                {exConfig.subs?.map(sub => (
+                  <button key={sub} className="swap-option" onClick={() => handleSwap(exIndex, sub)}>
+                    {sub}
+                  </button>
+                ))}
+                <div className="swap-custom">
+                  <input
+                    type="text"
+                    placeholder="Custom exercise..."
+                    value={customSwap}
+                    onChange={e => setCustomSwap(e.target.value)}
+                  />
+                  <button
+                    disabled={!customSwap.trim()}
+                    onClick={() => handleSwap(exIndex, customSwap.trim())}
+                  >
+                    Use
+                  </button>
+                </div>
+                {isSwapped && (
+                  <button className="swap-reset" onClick={() => handleResetSwap(exIndex)}>
+                    Reset to {exercise.name}
+                  </button>
+                )}
+              </div>
+            )}
 
             {lastEx && (
               <div className="last-session">
@@ -217,6 +310,10 @@ export default function ActiveSession() {
           </div>
         )
       })}
+
+      <button className="save-btn" onClick={handleManualSave} disabled={saveStatus === 'saving'}>
+        {saveStatus === 'saving' ? 'Saving...' : saveStatus === 'saved' ? 'Saved' : saveStatus === 'error' ? 'Save failed — retry' : 'Save'}
+      </button>
     </div>
   )
 }
