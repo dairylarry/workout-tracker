@@ -7,6 +7,7 @@ import ActiveSession from './pages/ActiveSession'
 import History from './pages/History'
 import SessionDetail from './pages/SessionDetail'
 import Plan from './pages/Plan'
+import DoubleProgression from './pages/DoubleProgression'
 import './styles/App.css'
 
 export default function App() {
@@ -25,6 +26,7 @@ export default function App() {
         <Route path="/history" element={<History />} />
         <Route path="/history/:sessionType/:date" element={<SessionDetail />} />
         <Route path="/plan" element={<Plan />} />
+        <Route path="/progression" element={<DoubleProgression />} />
       </Routes>
     </BrowserRouter>
   )

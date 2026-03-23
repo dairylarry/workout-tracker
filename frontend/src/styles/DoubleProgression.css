@@ -1,0 +1,115 @@
+.dp {
+  padding: 1.5rem;
+  max-width: 600px;
+  margin: 0 auto;
+  padding-bottom: 4rem;
+}
+
+.dp h2 {
+  margin-bottom: 1rem;
+}
+
+.dp-section {
+  margin-bottom: 1.5rem;
+}
+
+.dp-section h3 {
+  font-size: 1rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 0.5rem;
+}
+
+.dp-intro {
+  font-size: 0.9rem;
+  line-height: 1.5;
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  padding: 1rem;
+}
+
+.dp-config {
+  font-size: 0.9rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+.dp-key-points {
+  list-style: none;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.dp-key-points li {
+  font-size: 0.9rem;
+  padding: 0.5rem 0.75rem;
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.dp p {
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+.dp-note {
+  font-size: 0.8rem;
+  color: #666;
+  margin-top: 0.5rem;
+}
+
+.table-wrap {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  margin: 0.5rem 0;
+}
+
+.dp table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+  min-width: 320px;
+}
+
+.dp th {
+  text-align: left;
+  padding: 0.4rem 0.5rem;
+  background: #111;
+  color: #fff;
+  font-weight: 600;
+}
+
+.dp td {
+  padding: 0.4rem 0.5rem;
+  border-bottom: 1px solid #e5e5e5;
+  background: #fff;
+}
+
+.dp tr:last-child td {
+  border-bottom: none;
+}
+
+.highlight-row td {
+  background: #d1fae5;
+  font-weight: 600;
+}
+
+.note-cell {
+  font-size: 0.75rem;
+  color: #666;
+}
+
+.back {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 0.9rem;
+  padding: 0;
+  margin-bottom: 1rem;
+  display: block;
+  -webkit-tap-highlight-color: transparent;
+}

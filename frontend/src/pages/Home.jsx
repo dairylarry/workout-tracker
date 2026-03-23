@@ -47,6 +47,7 @@ export default function Home() {
         <button onClick={() => navigate('/session/start')}>New Session</button>
         <button onClick={() => navigate('/history')}>View Sessions</button>
         <button onClick={() => navigate('/plan')}>View Plan</button>
+        <button onClick={() => navigate('/progression')}>Progression Guide</button>
       </nav>
     </div>
   )

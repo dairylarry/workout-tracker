@@ -6,10 +6,10 @@ const SESSIONS = [
     title: 'Lower A — Strength + Hypertrophy',
     exercises: [
       { name: 'Barbell Back Squat', sets: '5/3/1', reps: '—', rest: '3–4 min' },
-      { name: 'Bulgarian Split Squat', sets: '3', reps: '8–12/leg (RIR 2)', rest: '90 sec' },
-      { name: 'Romanian Deadlift', sets: '3', reps: '6–10 (RIR 2)', rest: '2 min' },
-      { name: 'Barbell Hip Thrust', sets: '3', reps: '8–12 (RIR 2)', rest: '90 sec' },
-      { name: 'Standing Calf Raise', sets: '3', reps: '12–15 (RIR 1)', rest: '60 sec' },
+      { name: 'Bulgarian Split Squat', sets: '3', reps: '8–12/leg (RIR 2)', rest: '90 sec', subs: ['DB Lunge', 'Goblet Split Squat'] },
+      { name: 'Romanian Deadlift (or DB/KB RDL)', sets: '3', reps: '6–10 (RIR 2)', rest: '2 min', subs: ['DB Romanian Deadlift', 'KB Romanian Deadlift'] },
+      { name: 'Barbell Hip Thrust (or DB/KB hip thrust)', sets: '3', reps: '8–12 (RIR 2)', rest: '90 sec', subs: ['DB Hip Thrust', 'KB Hip Thrust'] },
+      { name: 'Standing Calf Raise (or single-leg DB calf raise)', sets: '3', reps: '12–15 (RIR 1)', rest: '60 sec', subs: ['Single-Leg DB Calf Raise'] },
     ],
     notes: ['On weeks with a long run ≥60 min Saturday, cap BSS at 8 reps/leg.'],
   },
@@ -17,24 +17,24 @@ const SESSIONS = [
     title: 'Upper A — Strength + Hypertrophy',
     exercises: [
       { name: 'Flat Barbell Bench Press', sets: '5/3/1', reps: '—', rest: '3–4 min' },
-      { name: 'Weighted Pull-Up', sets: '3', reps: '6–10 (RIR 2)', rest: '90 sec' },
-      { name: 'Barbell Bent-Over Row', sets: '3', reps: '8–10 (RIR 2)', rest: '90 sec' },
-      { name: 'Seated DB Shoulder Press', sets: '3', reps: '8–12 (RIR 2)', rest: '90 sec' },
-      { name: 'Cable Lateral Raise', sets: '3', reps: '12–15 (RIR 1)', rest: '60 sec' },
-      { name: 'Tricep Rope Pushdown', sets: '3', reps: '10–12 (RIR 1)', rest: '60 sec' },
-      { name: 'EZ Bar Curl', sets: '3', reps: '10–12 (RIR 1)', rest: '60 sec' },
+      { name: 'Weighted Pull-Up', sets: '3', reps: '6–10 (RIR 2)', rest: '90 sec', subs: ['Lat Pulldown', 'Band-Assisted Pull-Up'] },
+      { name: 'Barbell Bent-Over Row (or DB/KB bent-over row)', sets: '3', reps: '8–10 (RIR 2)', rest: '90 sec', subs: ['DB Bent-Over Row', 'KB Bent-Over Row'] },
+      { name: 'Seated DB Shoulder Press', sets: '3', reps: '8–12 (RIR 2)', rest: '90 sec', subs: ['Standing DB Shoulder Press', 'Machine Shoulder Press'] },
+      { name: 'Cable Lateral Raise (or DB lateral raise)', sets: '3', reps: '12–15 (RIR 1)', rest: '60 sec', subs: ['DB Lateral Raise'] },
+      { name: 'Tricep Rope Pushdown', sets: '3', reps: '10–12 (RIR 1)', rest: '60 sec', subs: ['Tricep Bar Pushdown', 'Band Tricep Pushdown'] },
+      { name: 'EZ Bar Curl (or DB curl)', sets: '3', reps: '10–12 (RIR 1)', rest: '60 sec', subs: ['DB Curl', 'Barbell Curl'] },
     ],
     notes: ['Superset: Tricep Rope Pushdown + EZ Bar Curl — do back to back, rest after the curl.'],
   },
   {
     title: 'Lower B — Hypertrophy',
     exercises: [
-      { name: 'Hack Squat', sets: '3', reps: '8–12 (RIR 2)', rest: '2 min' },
-      { name: 'Single-Leg Romanian Deadlift', sets: '3', reps: '8–10/leg (RIR 2)', rest: '90 sec' },
-      { name: 'Nordic Curl', sets: '3', reps: '5–8 (RIR 2)', rest: '2 min' },
-      { name: 'Barbell Hip Thrust', sets: '3', reps: '8–12 (RIR 2)', rest: '90 sec' },
-      { name: 'Leg Extension (optional)', sets: '3', reps: '12–15 (RIR 1)', rest: '60 sec' },
-      { name: 'Seated Calf Raise', sets: '3', reps: '15–20 (RIR 1)', rest: '60 sec' },
+      { name: 'Hack Squat (or goblet squat)', sets: '3', reps: '8–12 (RIR 2)', rest: '2 min', subs: ['Goblet Squat', 'Leg Press'] },
+      { name: 'Single-Leg Romanian Deadlift (DB or KB)', sets: '3', reps: '8–10/leg (RIR 2)', rest: '90 sec', subs: ['DB Single-Leg RDL', 'KB Single-Leg RDL'] },
+      { name: 'Nordic Curl', sets: '3', reps: '5–8 (RIR 2)', rest: '2 min', subs: ['Seated Leg Curl', 'Lying Leg Curl'] },
+      { name: 'Barbell Hip Thrust (or DB/KB hip thrust)', sets: '3', reps: '8–12 (RIR 2)', rest: '90 sec', subs: ['DB Hip Thrust', 'KB Hip Thrust'] },
+      { name: 'Leg Extension (or cable leg extension) (optional)', sets: '3', reps: '12–15 (RIR 1)', rest: '60 sec', subs: ['Cable Leg Extension'] },
+      { name: 'Seated Calf Raise (or seated DB calf raise)', sets: '3', reps: '15–20 (RIR 1)', rest: '60 sec', subs: ['Seated DB Calf Raise'] },
     ],
     notes: [
       'Nordic Curls: 3–5 sec eccentric, controlled return; start at 4–5 reps and build.',
@@ -45,14 +45,14 @@ const SESSIONS = [
   {
     title: 'Upper B — Hypertrophy',
     exercises: [
-      { name: 'Barbell Overhead Press', sets: '3', reps: '6–8 (RIR 2)', rest: '2 min' },
-      { name: 'Pull-Up', sets: '3', reps: '8–12 (RIR 2)', rest: '90 sec' },
-      { name: 'Incline DB Press', sets: '3', reps: '8–12 (RIR 2)', rest: '90 sec' },
-      { name: 'Chest-Supported DB Row', sets: '3', reps: '10–12 (RIR 2)', rest: '90 sec' },
-      { name: 'Cable Face Pull', sets: '3', reps: '12–15 (RIR 1)', rest: '60 sec' },
-      { name: 'Cable Lateral Raise', sets: '3', reps: '15–20 (RIR 1)', rest: '60 sec' },
-      { name: 'Overhead Tricep Extension (optional)', sets: '3', reps: '10–12 (RIR 1)', rest: '60 sec' },
-      { name: 'Hammer Curl', sets: '3', reps: '10–12 (RIR 1)', rest: '60 sec' },
+      { name: 'Barbell Overhead Press', sets: '3', reps: '6–8 (RIR 2)', rest: '2 min', subs: ['DB Overhead Press', 'Landmine Press'] },
+      { name: 'Pull-Up', sets: '3', reps: '8–12 (RIR 2)', rest: '90 sec', subs: ['Lat Pulldown', 'Band-Assisted Pull-Up'] },
+      { name: 'Incline DB Press', sets: '3', reps: '8–12 (RIR 2)', rest: '90 sec', subs: ['Incline Barbell Press', 'Machine Incline Press'] },
+      { name: 'Chest-Supported DB Row (or single-arm DB row)', sets: '3', reps: '10–12 (RIR 2)', rest: '90 sec', subs: ['Single-Arm DB Row', 'Machine Row'] },
+      { name: 'Cable Face Pull', sets: '3', reps: '12–15 (RIR 1)', rest: '60 sec', subs: ['Band Face Pull', 'Rear Delt Fly'] },
+      { name: 'Cable Lateral Raise (or DB lateral raise)', sets: '3', reps: '15–20 (RIR 1)', rest: '60 sec', subs: ['DB Lateral Raise'] },
+      { name: 'Overhead Tricep Extension (DB or cable) (optional)', sets: '3', reps: '10–12 (RIR 1)', rest: '60 sec', subs: ['DB Overhead Tricep Extension', 'Cable Overhead Extension'] },
+      { name: 'Hammer Curl', sets: '3', reps: '10–12 (RIR 1)', rest: '60 sec', subs: ['DB Hammer Curl', 'Cross-Body Hammer Curl'] },
     ],
     notes: [
       'Superset A: Cable Face Pull + Cable Lateral Raise.',
@@ -104,7 +104,12 @@ export default function Plan() {
               <tbody>
                 {session.exercises.map(ex => (
                   <tr key={ex.name}>
-                    <td>{ex.name}</td>
+                    <td>
+                      {ex.name}
+                      {ex.subs && (
+                        <span className="plan-subs">Subs: {ex.subs.join(', ')}</span>
+                      )}
+                    </td>
                     <td>{ex.sets}</td>
                     <td>{ex.reps}</td>
                     <td>{ex.rest}</td>
