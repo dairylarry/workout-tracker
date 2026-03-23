@@ -109,6 +109,23 @@ export async function getAllSessionsForType(sessionType) {
   }
 }
 
+export async function getRecentSessions(sessionType, limit = 3) {
+  try {
+    const response = await docClient.send(new QueryCommand({
+      TableName: TABLE,
+      KeyConditionExpression: 'PK = :pk',
+      ExpressionAttributeValues: { ':pk': `SESSION#${sessionType}` },
+      ScanIndexForward: false,
+      Limit: limit,
+    }))
+    return response.Items || []
+  } catch (e) {
+    console.warn('Offline — loading recent sessions from cache:', e.message)
+    const cached = getCachedSessions(sessionType)
+    return cached?.slice(0, limit) || []
+  }
+}
+
 export async function getLastSession(sessionType) {
   try {
     const response = await docClient.send(new QueryCommand({

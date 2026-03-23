@@ -201,13 +201,37 @@
   margin-top: 0.25rem;
 }
 
+.history-section {
+  margin: 0.5rem 0;
+}
+
 .last-session {
   font-size: 0.78rem;
   color: #888;
-  margin: 0.5rem 0;
   padding: 0.4rem 0.5rem;
   background: #fafafa;
   border-radius: 3px;
+  margin-bottom: 0.2rem;
+}
+
+.history-date {
+  font-weight: 600;
+  color: #666;
+}
+
+.history-variant {
+  font-style: italic;
+  color: #666;
+}
+
+.show-more {
+  background: none;
+  border: none;
+  font-size: 0.72rem;
+  color: #1a56db;
+  cursor: pointer;
+  padding: 0.2rem 0.5rem;
+  -webkit-tap-highlight-color: transparent;
 }
 
 .sets-grid {

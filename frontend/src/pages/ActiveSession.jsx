@@ -1,7 +1,7 @@
 import { useParams, useNavigate } from 'react-router-dom'
 import { useState, useEffect, useRef } from 'react'
 import { PROGRAM } from '../lib/programConfig'
-import { getSession, putSession, updateSessionExercises, updateSessionField, getLastSession } from '../lib/dynamodb'
+import { getSession, putSession, updateSessionExercises, updateSessionField, getRecentSessions } from '../lib/dynamodb'
 import '../styles/ActiveSession.css'
 
 function emptyExerciseData(config) {
@@ -35,7 +35,8 @@ export default function ActiveSession() {
   const config = PROGRAM.sessionTypes[sessionType]
   const [exercises, setExercises] = useState(null)
   const [deload, setDeload] = useState(false)
-  const [lastSession, setLastSession] = useState(null)
+  const [recentSessions, setRecentSessions] = useState([])
+  const [expandedHistory, setExpandedHistory] = useState({})
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
   const [swapOpen, setSwapOpen] = useState(null) // index of exercise with swap open
@@ -45,9 +46,9 @@ export default function ActiveSession() {
   useEffect(() => {
     async function load() {
       try {
-        const [existing, last] = await Promise.all([
+        const [existing, recent] = await Promise.all([
           getSession(sessionType, date),
-          getLastSession(sessionType),
+          getRecentSessions(sessionType, 4),
         ])
         if (existing) {
           setExercises(existing.exercises)
@@ -66,9 +67,8 @@ export default function ActiveSession() {
             exercises: initial,
           })
         }
-        if (last && last.SK !== `DATE#${date}`) {
-          setLastSession(last)
-        }
+        const pastSessions = recent.filter(s => s.SK !== `DATE#${date}`)
+        setRecentSessions(pastSessions.slice(0, 3))
       } catch (e) {
         console.error('Failed to load session:', e)
         setError(e.message)
@@ -151,9 +151,26 @@ export default function ActiveSession() {
     }
   }
 
-  function getLastExercise(name) {
-    if (!lastSession) return null
-    return lastSession.exercises?.find(e => e.name === name)
+  function getExerciseHistory(name, swappedName) {
+    return recentSessions
+      .map(s => {
+        const ex = s.exercises?.find(e => {
+          const pastDisplay = e.swappedName || e.name
+          const currentDisplay = swappedName || name
+          return e.name === name || pastDisplay === currentDisplay
+        })
+        if (!ex) return null
+        return {
+          date: s.date,
+          sets: ex.sets,
+          displayName: ex.swappedName || ex.name,
+        }
+      })
+      .filter(Boolean)
+  }
+
+  function toggleHistory(exName) {
+    setExpandedHistory(prev => ({ ...prev, [exName]: !prev[exName] }))
   }
 
   if (!config) return <div className="active-session"><p>Unknown session type.</p></div>
@@ -194,7 +211,8 @@ export default function ActiveSession() {
         const exercise = exercises.find(e => e.name === exConfig.name)
         if (!exercise) return null
         const exIndex = exercises.indexOf(exercise)
-        const lastEx = getLastExercise(exercise.name)
+        const history = getExerciseHistory(exercise.name, exercise.swappedName)
+        const isExpanded = expandedHistory[exercise.name]
         const progReady = checkProgression(exercise, config)
         const displayName = exercise.swappedName || exercise.name
         const isSwapped = !!exercise.swappedName
@@ -259,9 +277,27 @@ export default function ActiveSession() {
               </div>
             )}
 
-            {lastEx && (
-              <div className="last-session">
-                Last: {lastEx.sets.map(s => `${s.weight}${s.weightUnit === 'kg' ? 'kg' : ''}×${s.reps}`).join(', ')}
+            {history.length > 0 && (
+              <div className="history-section">
+                <div className="last-session">
+                  <span className="history-date">{history[0].date}:</span>{' '}
+                  <span className="history-variant">{history[0].displayName}</span>{' '}
+                  {history[0].sets.map(s => `${s.weight}${s.weightUnit === 'kg' ? 'kg' : ''}×${s.reps}`).join(', ')}
+                </div>
+                {history.length > 1 && (
+                  <>
+                    <button className="show-more" onClick={() => toggleHistory(exercise.name)}>
+                      {isExpanded ? 'Hide' : `Show ${history.length - 1} more`}
+                    </button>
+                    {isExpanded && history.slice(1).map(h => (
+                      <div key={h.date} className="last-session">
+                        <span className="history-date">{h.date}:</span>{' '}
+                        <span className="history-variant">{h.displayName}</span>{' '}
+                        {h.sets.map(s => `${s.weight}${s.weightUnit === 'kg' ? 'kg' : ''}×${s.reps}`).join(', ')}
+                      </div>
+                    ))}
+                  </>
+                )}
               </div>
             )}
 
