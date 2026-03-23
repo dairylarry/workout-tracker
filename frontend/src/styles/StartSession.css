@@ -1,0 +1,56 @@
+.start-session {
+  padding: 1.5rem;
+  max-width: 480px;
+  margin: 0 auto;
+}
+
+.back {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 0.9rem;
+  padding: 0;
+  margin-bottom: 1rem;
+}
+
+.start-session h2 {
+  margin-bottom: 1.5rem;
+}
+
+.session-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.session-card {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 1rem 1.25rem;
+  min-height: 64px;
+  border: 2px solid #000;
+  background: #fff;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: background 0.15s;
+  width: 100%;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.session-card:hover,
+.session-card:active {
+  background: #000;
+  color: #fff;
+}
+
+.session-label {
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+.session-meta {
+  font-size: 0.85rem;
+  opacity: 0.6;
+  margin-top: 0.2rem;
+}
