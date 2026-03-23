@@ -90,8 +90,13 @@ Mobile-friendly app to log workouts from the Spring 2026 program (plans/final.md
 - [ ] Progression flag when criteria met
 - [ ] Session history view
 
-## Out of Scope (v1)
-- Auth
-- 5/3/1 tracking
-- Offline support
-- Multiple users
+## V1 TODOs
+- [ ] Fill out 5/3/1 section (currently read-only placeholder)
+
+## V2
+- [ ] Rest timer
+- [ ] Add and customize workouts
+- [ ] Auth (Cognito)
+- [ ] 5/3/1 tracking
+- [ ] Progress charts per exercise
+- [ ] Multiple users
