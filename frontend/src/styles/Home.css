@@ -37,6 +37,16 @@
   color: #fff;
 }
 
+.resume-btn {
+  background: #111 !important;
+  color: #fff !important;
+  font-weight: 600;
+}
+
+.resume-btn:active {
+  opacity: 0.8;
+}
+
 @media (hover: hover) {
   .home-nav button:hover {
     background: #000;
