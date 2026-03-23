@@ -17,10 +17,12 @@
   display: flex;
   gap: 0.4rem;
   margin-bottom: 0.5rem;
+  max-width: 100%;
 }
 
 .date-input {
-  flex: 1.2;
+  flex: 1;
+  min-width: 0;
   padding: 0.5rem;
   border: 1px solid #ddd;
   border-radius: 4px;
@@ -29,7 +31,7 @@
 }
 
 .weight-input {
-  flex: 1;
+  flex: 0 0 5rem;
   padding: 0.5rem;
   border: 1px solid #ddd;
   border-radius: 4px;
