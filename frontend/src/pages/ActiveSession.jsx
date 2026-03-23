@@ -201,7 +201,7 @@ export default function ActiveSession() {
           target: s.target,
           label: s.label,
           isWarmup: s.isWarmup,
-          isAmrap: s.isAmrap || false,
+
           weight: '',
           reps: '',
           rir: '',
