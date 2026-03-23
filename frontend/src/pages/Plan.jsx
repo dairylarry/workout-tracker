@@ -88,7 +88,7 @@ export default function Plan() {
         <p><strong>Intensity:</strong> Compounds RIR 2 · Isolations RIR 1</p>
         <p><strong>5s PRO:</strong> Bench + Squat only. Run 2 cycles of the 3-week wave (all sets 5 reps, no AMRAP), then deload.</p>
         <p><strong>Progression:</strong> Double progression on all other lifts.</p>
-        <p><strong>Deload:</strong> Every 6 weeks (after 2 full cycles), or earlier if performance drops 2+ consecutive weeks. Cut sets ~40%, keep loads.</p>
+        <p><strong>Deload:</strong> every 6 weeks (after 2 full 5s PRO cycles), or earlier if performance drops 2+ consecutive weeks. Cut sets ~40%, keep loads. Target RIR 4–5 across all exercises — sessions should feel almost too easy. For 5s PRO sets, drop to ~40% and focus on clean, controlled reps.</p>
         <p><strong>Core:</strong> 10 min after each session (handstands, ab wheel, hollow body)</p>
       </div>
 
