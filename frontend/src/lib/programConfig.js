@@ -6,7 +6,7 @@ export const PROGRAM = {
       day: 'Monday',
       focus: 'Strength + Hypertrophy',
       exercises: [
-        { name: 'Barbell Back Squat', sets: 0, repRange: null, rir: null, rest: '3–4 min', note: '5/3/1 — not tracked in app' },
+        { name: 'Barbell Back Squat', sets: 0, repRange: null, rir: null, rest: '3–4 min', is531: true, note: '5/3/1 — track manually' },
         { name: 'Bulgarian Split Squat', sets: 3, repRange: [8, 12], rir: 2, rest: '90 sec', perSide: true },
         { name: 'Romanian Deadlift', sets: 3, repRange: [6, 10], rir: 2, rest: '2 min' },
         { name: 'Barbell Hip Thrust', sets: 3, repRange: [8, 12], rir: 2, rest: '90 sec' },
@@ -18,7 +18,7 @@ export const PROGRAM = {
       day: 'Tuesday',
       focus: 'Strength + Hypertrophy',
       exercises: [
-        { name: 'Flat Barbell Bench Press', sets: 0, repRange: null, rir: null, rest: '3–4 min', note: '5/3/1 — not tracked in app' },
+        { name: 'Flat Barbell Bench Press', sets: 0, repRange: null, rir: null, rest: '3–4 min', is531: true, note: '5/3/1 — track manually' },
         { name: 'Weighted Pull-Up', sets: 3, repRange: [6, 10], rir: 2, rest: '90 sec' },
         { name: 'Barbell Bent-Over Row', sets: 3, repRange: [8, 10], rir: 2, rest: '90 sec' },
         { name: 'Seated DB Shoulder Press', sets: 3, repRange: [8, 12], rir: 2, rest: '90 sec' },

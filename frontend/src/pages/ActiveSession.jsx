@@ -128,8 +128,22 @@ export default function ActiveSession() {
         Deload week
       </label>
 
-      {exercises.map((exercise, exIndex) => {
-        const exConfig = config.exercises.find(e => e.name === exercise.name)
+      {config.exercises.map((exConfig, idx) => {
+        if (exConfig.is531) {
+          return (
+            <div key={exConfig.name} className="exercise-block exercise-531">
+              <div className="exercise-header">
+                <h3>{exConfig.name}</h3>
+                <span className="exercise-target">{exConfig.note} · Rest {exConfig.rest}</span>
+                <span className="badge-531">5/3/1</span>
+              </div>
+            </div>
+          )
+        }
+
+        const exercise = exercises.find(e => e.name === exConfig.name)
+        if (!exercise) return null
+        const exIndex = exercises.indexOf(exercise)
         const lastEx = getLastExercise(exercise.name)
         const progReady = checkProgression(exercise, config)
 
@@ -137,16 +151,14 @@ export default function ActiveSession() {
           <div key={exercise.name} className="exercise-block">
             <div className="exercise-header">
               <h3>{exercise.name}</h3>
-              {exConfig && (
-                <span className="exercise-target">
-                  {exConfig.sets} × {exConfig.repRange[0]}–{exConfig.repRange[1]}
-                  {exConfig.perSide ? '/side' : ''} · RIR {exConfig.rir} · {exConfig.rest}
-                </span>
-              )}
-              {exConfig?.superset && (
+              <span className="exercise-target">
+                {exConfig.sets} × {exConfig.repRange[0]}–{exConfig.repRange[1]}
+                {exConfig.perSide ? '/side' : ''} · RIR {exConfig.rir} · {exConfig.rest}
+              </span>
+              {exConfig.superset && (
                 <span className="superset-badge">Superset {exConfig.superset}</span>
               )}
-              {exConfig?.optional && (
+              {exConfig.optional && (
                 <span className="optional-badge">Optional</span>
               )}
               {progReady && (

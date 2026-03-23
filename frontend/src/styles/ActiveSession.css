@@ -50,6 +50,21 @@
   margin-bottom: 0.25rem;
 }
 
+.exercise-531 {
+  opacity: 0.65;
+}
+
+.badge-531 {
+  display: inline-block;
+  font-size: 0.7rem;
+  font-weight: 600;
+  padding: 0.15rem 0.4rem;
+  border-radius: 3px;
+  background: #e5e7eb;
+  color: #374151;
+  margin-top: 0.25rem;
+}
+
 .superset-badge,
 .optional-badge {
   display: inline-block;
