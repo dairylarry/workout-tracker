@@ -32,6 +32,19 @@ function ceilTo5(weight) {
 }
 
 /**
+ * Get deload sets — 3 sets at 40/50/60% × 5 reps, no working sets.
+ */
+export function getDeloadSets(trainingMax) {
+  return WARMUP_SETS.map(s => ({
+    reps: 5,
+    pct: s.pct,
+    label: '1×5',
+    target: ceilTo5(trainingMax * s.pct),
+    isWarmup: false,
+  }))
+}
+
+/**
  * Get all sets (warmup + working) for a given week and training max.
  */
 export function getSetsForWeek(week, trainingMax) {

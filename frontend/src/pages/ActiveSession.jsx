@@ -2,7 +2,7 @@ import { useParams, useNavigate } from 'react-router-dom'
 import { useState, useEffect, useRef } from 'react'
 import { PROGRAM } from '../lib/programConfig'
 import { getSession, putSession, updateSessionExercises, updateSessionField, getRecentSessions, get531Config } from '../lib/dynamodb'
-import { getSetsForWeek, WEEK_LABELS } from '../lib/fiveThreeOne'
+import { getSetsForWeek, getDeloadSets, WEEK_LABELS } from '../lib/fiveThreeOne'
 import '../styles/ActiveSession.css'
 
 const EXERCISE_TO_531_KEY = {
@@ -341,8 +341,34 @@ export default function ActiveSession() {
           type="checkbox"
           checked={deload}
           onChange={e => {
-            setDeload(e.target.checked)
-            updateSessionField(sessionType, date, 'deload', e.target.checked)
+            const isDeload = e.target.checked
+            setDeload(isDeload)
+            updateSessionField(sessionType, date, 'deload', isDeload)
+            // Update 5/3/1 exercises to deload or normal sets
+            setExercises(prev => {
+              const updated = prev.map(ex => {
+                if (!ex.is531 || !ex.trainingMax) return ex
+                const newSets = isDeload
+                  ? getDeloadSets(ex.trainingMax)
+                  : getSetsForWeek(ex.week || 1, ex.trainingMax)
+                return {
+                  ...ex,
+                  sets: newSets.map((s, i) => ({
+                    setNumber: i + 1,
+                    target: s.target,
+                    label: s.label,
+                    isWarmup: s.isWarmup,
+                    weight: '',
+                    reps: '',
+                    rir: '',
+                  })),
+                }
+              })
+              updateSessionExercises(sessionType, date, updated).catch(e =>
+                console.error('Failed to save deload change:', e)
+              )
+              return updated
+            })
           }}
         />
         Deload week
