@@ -33,8 +33,8 @@ export const PROGRAM = {
       focus: 'Hypertrophy',
       exercises: [
         { name: 'Hack Squat', sets: 3, repRange: [8, 12], rir: 2, rest: '2 min', subs: ['Goblet Squat', 'Leg Press'] },
-        { name: 'Single-Leg Romanian Deadlift', sets: 3, repRange: [8, 10], rir: 2, rest: '90 sec', perSide: true, subs: ['DB Single-Leg RDL', 'KB Single-Leg RDL'] },
         { name: 'Nordic Curl', sets: 3, repRange: [5, 8], rir: 2, rest: '2 min', subs: ['Seated Leg Curl', 'Lying Leg Curl'] },
+        { name: 'Single-Leg Romanian Deadlift', sets: 3, repRange: [8, 10], rir: 2, rest: '90 sec', perSide: true, subs: ['DB Single-Leg RDL', 'KB Single-Leg RDL'] },
         { name: 'Barbell Hip Thrust', sets: 3, repRange: [8, 12], rir: 2, rest: '90 sec', subs: ['DB Hip Thrust', 'KB Hip Thrust'] },
         { name: 'Leg Extension', sets: 3, repRange: [12, 15], rir: 1, rest: '60 sec', optional: true, superset: 'A', subs: ['Cable Leg Extension'] },
         { name: 'Seated Calf Raise', sets: 3, repRange: [15, 20], rir: 1, rest: '60 sec', superset: 'A', subs: ['Seated DB Calf Raise'] },
