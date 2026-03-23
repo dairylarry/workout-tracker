@@ -38,10 +38,16 @@
   -webkit-tap-highlight-color: transparent;
 }
 
-.session-card:hover,
 .session-card:active {
   background: #000;
   color: #fff;
+}
+
+@media (hover: hover) {
+  .session-card:hover {
+    background: #000;
+    color: #fff;
+  }
 }
 
 .session-label {
