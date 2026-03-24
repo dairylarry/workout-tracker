@@ -308,14 +308,11 @@ export default function ActiveSession() {
     }
   }
 
-  function getExerciseHistory(name, swappedName) {
+  function getExerciseHistory(slotIndex) {
     return recentSessions
       .map(s => {
-        const ex = s.exercises?.find(e => {
-          const pastDisplay = e.swappedName || e.name
-          const currentDisplay = swappedName || name
-          return e.name === name || pastDisplay === currentDisplay
-        })
+        // Match by slot position first (shows all variations for this block)
+        const ex = s.exercises?.[slotIndex]
         if (!ex) return null
         return {
           date: s.date,
@@ -461,7 +458,7 @@ export default function ActiveSession() {
         const exercise = exercises.find(e => e.name === exConfig.name)
         if (!exercise) return null
         const exIndex = exercises.indexOf(exercise)
-        const history = getExerciseHistory(exercise.name, exercise.swappedName)
+        const history = getExerciseHistory(exIndex)
         const isExpanded = expandedHistory[exercise.name]
         const progReady = checkProgression(exercise, config)
         const displayName = exercise.swappedName || exercise.name
