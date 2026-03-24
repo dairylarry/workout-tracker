@@ -23,6 +23,7 @@ export const PROGRAM = {
         { name: 'Seated Cable Row', sets: 3, repRange: [8, 10], rir: 2, rest: '90 sec', subs: ['Barbell Bent-Over Row', 'DB Bent-Over Row'] },
         { name: 'Seated DB Shoulder Press', sets: 3, repRange: [8, 12], rir: 2, rest: '90 sec', subs: ['Standing DB Shoulder Press', 'Machine Shoulder Press'] },
         { name: 'Cable Lateral Raise', sets: 4, repRange: [12, 15], rir: 1, rest: '60 sec', subs: ['DB Lateral Raise'] },
+        { name: 'Incline Cable Fly', sets: 2, repRange: [12, 15], rir: 1, rest: '60 sec', subs: ['Incline DB Fly', 'Pec Deck', 'Flat Cable Fly', 'Decline Cable Fly'] },
         { name: 'Tricep Rope Pushdown', sets: 4, repRange: [10, 12], rir: 1, rest: '60 sec', superset: 'A', subs: ['Tricep Bar Pushdown', 'Band Tricep Pushdown'] },
         { name: 'EZ Bar Curl', sets: 4, repRange: [10, 12], rir: 1, rest: '60 sec', superset: 'A', subs: ['DB Curl', 'Barbell Curl'] },
       ],
@@ -32,7 +33,7 @@ export const PROGRAM = {
       day: 'Thursday',
       focus: 'Hypertrophy',
       exercises: [
-        { name: 'Hack Squat', sets: 3, repRange: [8, 12], rir: 2, rest: '2 min', subs: ['Goblet Squat', 'Leg Press'] },
+        { name: 'Pendulum Squat', sets: 3, repRange: [8, 12], rir: 2, rest: '2 min', subs: ['Hack Squat', 'Front Squat', 'Goblet Squat'] },
         { name: 'Seated Leg Curl', sets: 3, repRange: [10, 12], rir: 2, rest: '90 sec', subs: [{ name: 'Nordic Curl', sets: 2, repRange: [5, 8], rir: 2 }, { name: 'Glute Ham Raise', sets: 2, repRange: [5, 8], rir: 2 }, 'Lying Leg Curl'] },
         { name: 'Single-Leg Romanian Deadlift', sets: 2, repRange: [8, 10], rir: 2, rest: '90 sec', perSide: true, subs: ['DB Single-Leg RDL', 'KB Single-Leg RDL'] },
         { name: 'Leg Extension', sets: 3, repRange: [12, 15], rir: 1, rest: '60 sec', superset: 'A', subs: ['Cable Leg Extension'] },

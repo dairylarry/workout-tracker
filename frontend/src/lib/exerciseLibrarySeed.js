@@ -8,7 +8,9 @@ export const EXERCISE_SEED = [
   { name: 'Leg Press', muscleGroups: ['quads', 'glutes'], family: 'squat', defaultRepRange: [10, 15], defaultSets: 3 },
   { name: 'Bulgarian Split Squat', muscleGroups: ['quads', 'glutes'], family: 'squat', defaultRepRange: [8, 12], defaultSets: 3, unilateral: true },
   { name: 'Goblet Squat', muscleGroups: ['quads', 'glutes'], family: 'squat', defaultRepRange: [8, 12], defaultSets: 3 },
+  { name: 'Pendulum Squat', muscleGroups: ['quads'], family: 'squat', defaultRepRange: [8, 12], defaultSets: 3 },
   { name: 'Hack Squat', muscleGroups: ['quads'], family: 'squat', defaultRepRange: [8, 12], defaultSets: 3 },
+  { name: 'Front Squat', muscleGroups: ['quads', 'glutes'], family: 'squat', defaultRepRange: [6, 10], defaultSets: 3 },
   { name: 'Leg Extension', muscleGroups: ['quads'], family: 'leg-extension', defaultRepRange: [12, 15], defaultSets: 3 },
   { name: 'Cable Leg Extension', muscleGroups: ['quads'], family: 'leg-extension', defaultRepRange: [12, 15], defaultSets: 3 },
 

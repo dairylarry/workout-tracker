@@ -21,6 +21,7 @@ const SESSIONS = [
       { name: 'Seated Cable Row', sets: '3', reps: '8–10 (RIR 2)', rest: '90 sec', subs: ['Barbell Bent-Over Row', 'DB Bent-Over Row'] },
       { name: 'Seated DB Shoulder Press', sets: '3', reps: '8–12 (RIR 2)', rest: '90 sec', subs: ['Standing DB Shoulder Press', 'Machine Shoulder Press'] },
       { name: 'Cable Lateral Raise (or DB lateral raise)', sets: '4', reps: '12–15 (RIR 1)', rest: '60 sec', subs: ['DB Lateral Raise'] },
+      { name: 'Incline Cable Fly (or incline pec deck)', sets: '2', reps: '12–15 (RIR 1)', rest: '60 sec', subs: ['Incline DB Fly', 'Pec Deck', 'Flat Cable Fly', 'Decline Cable Fly'] },
       { name: 'Tricep Rope Pushdown', sets: '4', reps: '10–12 (RIR 1)', rest: '60 sec', subs: ['Tricep Bar Pushdown', 'Band Tricep Pushdown'] },
       { name: 'EZ Bar Curl (or DB curl)', sets: '4', reps: '10–12 (RIR 1)', rest: '60 sec', subs: ['DB Curl', 'Barbell Curl'] },
     ],
@@ -32,16 +33,17 @@ const SESSIONS = [
   {
     title: 'Lower B — Hypertrophy',
     exercises: [
-      { name: 'Hack Squat (or goblet squat)', sets: '3', reps: '8–12 (RIR 2)', rest: '2 min', subs: ['Goblet Squat', 'Leg Press'] },
+      { name: 'Pendulum Squat', sets: '3', reps: '8–12 (RIR 2)', rest: '2 min', subs: ['Hack Squat', 'Front Squat', 'Goblet Squat'] },
       { name: 'Seated Leg Curl', sets: '3', reps: '10–12 (RIR 2)', rest: '90 sec', subs: ['Nordic Curl 2×5–8', 'Glute Ham Raise 2×5–8', 'Lying Leg Curl'] },
       { name: 'Single-Leg Romanian Deadlift (DB or KB)', sets: '2', reps: '8–10/leg (RIR 2)', rest: '90 sec', subs: ['DB Single-Leg RDL', 'KB Single-Leg RDL'] },
       { name: 'Leg Extension (or cable leg extension)', sets: '3', reps: '12–15 (RIR 1)', rest: '60 sec', subs: ['Cable Leg Extension'] },
       { name: 'Seated Calf Raise (or seated DB calf raise)', sets: '3', reps: '15–20 (RIR 1)', rest: '60 sec', subs: ['Seated DB Calf Raise'] },
     ],
     notes: [
+      'Pendulum Squat: face toward the machine for maximum quad emphasis and depth. If unavailable, substitute in this order: (1) Hack Squat facing away, (2) Front Squat, (3) Heel-elevated Goblet Squat. Note: goblet squat has a load ceiling — use it as a last resort only.',
       'If leg curl machine is unavailable, substitute with Nordic Curl 2 × 5–8 (RIR 2). Note: Nordics cause significant DOMS early on — start at 3–4 reps, use a 3–5 sec eccentric, and build slowly. Avoid pushing these hard before a long run week.',
       'Single-leg RDL: use a weight that lets you hinge with control and balance. If balance is the limiter, use a rack or wall for light fingertip support.',
-      'If leg extension machine is unavailable, add an extra set of Hack Squat or Leg Press instead.',
+      'If leg extension machine is unavailable, add an extra set of Pendulum Squat, Hack Squat, or Leg Press instead.',
       'Superset: Leg Extension + Seated Calf Raise — do back to back, rest after the calf raise.',
     ],
   },
