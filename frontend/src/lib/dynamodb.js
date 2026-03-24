@@ -305,7 +305,8 @@ export async function updateExerciseMeta(exercise) {
     await docClient.send(new UpdateCommand({
       TableName: TABLE,
       Key: { PK: 'EXERCISE_LIB', SK: sk },
-      UpdateExpression: 'SET muscleGroups = :mg, family = :fam, defaultRepRange = :rr, defaultSets = :ds, createdAt = if_not_exists(createdAt, :ca)',
+      UpdateExpression: 'SET muscleGroups = :mg, #fam = :fam, defaultRepRange = :rr, defaultSets = :ds, createdAt = if_not_exists(createdAt, :ca)',
+      ExpressionAttributeNames: { '#fam': 'family' },
       ExpressionAttributeValues: {
         ':mg': exercise.muscleGroups,
         ':fam': exercise.family ?? null,
