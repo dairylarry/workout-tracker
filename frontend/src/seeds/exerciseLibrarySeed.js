@@ -15,6 +15,7 @@ export const EXERCISE_SEED = [
   { name: 'Cable Leg Extension', muscleGroups: ['quads'], family: 'leg-extension', defaultRepRange: [12, 15], defaultSets: 3 },
 
   // Lower body — hamstrings
+  { name: 'Deadlift', muscleGroups: ['hamstrings', 'glutes', 'back'], family: 'hinge', defaultRepRange: [3, 5], defaultSets: 3 },
   { name: 'Romanian Deadlift', muscleGroups: ['hamstrings', 'glutes'], family: 'hinge', defaultRepRange: [6, 10], defaultSets: 3 },
   { name: 'DB Romanian Deadlift', muscleGroups: ['hamstrings', 'glutes'], family: 'hinge', defaultRepRange: [6, 10], defaultSets: 3 },
   { name: 'KB Romanian Deadlift', muscleGroups: ['hamstrings', 'glutes'], family: 'hinge', defaultRepRange: [6, 10], defaultSets: 3 },
@@ -64,6 +65,7 @@ export const EXERCISE_SEED = [
   { name: 'Rear Delt Fly', muscleGroups: ['shoulders', 'back'], family: 'rear-delt', defaultRepRange: [12, 15], defaultSets: 3 },
 
   // Upper body — shoulders
+  { name: 'Barbell Overhead Press', muscleGroups: ['shoulders', 'triceps'], family: 'press', defaultRepRange: [5, 8], defaultSets: 3 },
   { name: 'Seated DB Shoulder Press', muscleGroups: ['shoulders', 'triceps'], family: 'press', defaultRepRange: [8, 12], defaultSets: 3 },
   { name: 'Standing DB Shoulder Press', muscleGroups: ['shoulders', 'triceps'], family: 'press', defaultRepRange: [8, 12], defaultSets: 3 },
   { name: 'Machine Shoulder Press', muscleGroups: ['shoulders', 'triceps'], family: 'press', defaultRepRange: [8, 12], defaultSets: 3 },

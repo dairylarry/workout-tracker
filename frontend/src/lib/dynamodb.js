@@ -299,6 +299,26 @@ export async function putExercise(exercise) {
   }
 }
 
+export async function updateExerciseMeta(exercise) {
+  const sk = `EXERCISE#${exercise.name.toLowerCase().replace(/\s+/g, '-')}`
+  try {
+    await docClient.send(new UpdateCommand({
+      TableName: TABLE,
+      Key: { PK: 'EXERCISE_LIB', SK: sk },
+      UpdateExpression: 'SET muscleGroups = :mg, family = :fam, defaultRepRange = :rr, defaultSets = :ds, createdAt = if_not_exists(createdAt, :ca)',
+      ExpressionAttributeValues: {
+        ':mg': exercise.muscleGroups,
+        ':fam': exercise.family ?? null,
+        ':rr': exercise.defaultRepRange ?? null,
+        ':ds': exercise.defaultSets ?? null,
+        ':ca': new Date().toISOString().split('T')[0],
+      },
+    }))
+  } catch (e) {
+    console.warn('Failed to update exercise meta:', e.message)
+  }
+}
+
 export async function deleteExercise(exerciseName) {
   try {
     await docClient.send(new DeleteCommand({

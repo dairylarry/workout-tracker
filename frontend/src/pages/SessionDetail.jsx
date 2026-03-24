@@ -1,7 +1,7 @@
 import { useParams, useNavigate } from 'react-router-dom'
 import { useState, useEffect } from 'react'
 import { getSession, deleteSession, updateSessionExercises, updateSessionField } from '../lib/dynamodb'
-import { useProgram } from '../lib/ProgramContext'
+import { useProgram } from '../context/ProgramContext'
 import '../styles/SessionDetail.css'
 
 export default function SessionDetail() {

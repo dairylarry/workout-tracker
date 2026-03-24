@@ -1,7 +1,7 @@
 import { createContext, useContext, useState, useEffect } from 'react'
-import { getAllSessionTypes, putSessionType, getExerciseLibrary, putExercise } from './dynamodb'
-import { PROGRAM } from './programConfig'
-import { EXERCISE_SEED } from './exerciseLibrarySeed'
+import { getAllSessionTypes, putSessionType, getExerciseLibrary, putExercise } from '../lib/dynamodb'
+import { PROGRAM } from '../seeds/programConfigSeed'
+import { EXERCISE_SEED } from '../seeds/exerciseLibrarySeed'
 
 const ProgramContext = createContext(null)
 

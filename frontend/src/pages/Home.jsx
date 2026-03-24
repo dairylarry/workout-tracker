@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { getToday } from '../lib/date'
 import { getSession } from '../lib/dynamodb'
-import { useProgram } from '../lib/ProgramContext'
+import { useProgram } from '../context/ProgramContext'
 import '../styles/Home.css'
 
 export default function Home() {

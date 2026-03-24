@@ -1,7 +1,7 @@
 import { useEffect } from 'react'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import { flushWriteQueue } from './lib/dynamodb'
-import { ProgramProvider } from './lib/ProgramContext'
+import { ProgramProvider } from './context/ProgramContext'
 import Home from './pages/Home'
 import StartSession from './pages/StartSession'
 import ActiveSession from './pages/ActiveSession'

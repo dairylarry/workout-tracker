@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { getAllSessionsForType } from '../lib/dynamodb'
-import { useProgram } from '../lib/ProgramContext'
+import { useProgram } from '../context/ProgramContext'
 import '../styles/History.css'
 
 export default function History() {

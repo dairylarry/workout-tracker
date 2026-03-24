@@ -1,6 +1,6 @@
 import { useState, useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { useProgram } from '../lib/ProgramContext'
+import { useProgram } from '../context/ProgramContext'
 import { putExercise, deleteExercise, getExerciseLibrary } from '../lib/dynamodb'
 import '../styles/ManageWorkout.css'
 
