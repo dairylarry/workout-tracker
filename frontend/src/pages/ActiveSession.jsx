@@ -74,6 +74,54 @@ export default function ActiveSession() {
 
   const [ftoConfigs, setFtoConfigs] = useState({})
   const saveTimeout = useRef(null)
+  const exercisesRef = useRef(exercises)
+  exercisesRef.current = exercises
+
+  // Shared function to write exercise history to DynamoDB
+  function writeExerciseHistory(currentExercises) {
+    const promises = currentExercises.map((ex, slotIndex) => {
+      const exerciseName = ex.swappedName || ex.name
+      const hasSets = ex.sets?.some(s => s.weight || s.reps)
+      if (!hasSets) return null
+      return updateExerciseHistory(exerciseName, {
+        date,
+        sessionType,
+        slotIndex,
+        sets: ex.sets.map(s => ({ weight: s.weight, reps: s.reps, rir: s.rir })),
+        weightUnit: ex.weightUnit || 'lbs',
+      })
+    }).filter(Boolean)
+    return Promise.all(promises)
+  }
+
+  // Write exercise history on unmount, visibilitychange, and beforeunload
+  useEffect(() => {
+    function handleVisibilityChange() {
+      if (document.visibilityState === 'hidden') {
+        writeExerciseHistory(exercisesRef.current).catch(e =>
+          console.error('Failed to save exercise history on visibility change:', e)
+        )
+      }
+    }
+
+    function handleBeforeUnload() {
+      writeExerciseHistory(exercisesRef.current).catch(e =>
+        console.error('Failed to save exercise history on unload:', e)
+      )
+    }
+
+    document.addEventListener('visibilitychange', handleVisibilityChange)
+    window.addEventListener('beforeunload', handleBeforeUnload)
+
+    return () => {
+      document.removeEventListener('visibilitychange', handleVisibilityChange)
+      window.removeEventListener('beforeunload', handleBeforeUnload)
+      // Write history on unmount (navigating away within the app)
+      writeExerciseHistory(exercisesRef.current).catch(e =>
+        console.error('Failed to save exercise history on unmount:', e)
+      )
+    }
+  }, [sessionType, date])
 
   useEffect(() => {
     async function load() {
@@ -299,21 +347,7 @@ export default function ActiveSession() {
       }
 
       await updateSessionExercises(sessionType, date, updated)
-
-      // Write exercise history for each exercise
-      const historyPromises = updated.map((ex, slotIndex) => {
-        const exerciseName = ex.swappedName || ex.name
-        const hasSets = ex.sets?.some(s => s.weight || s.reps)
-        if (!hasSets) return null
-        return updateExerciseHistory(exerciseName, {
-          date,
-          sessionType,
-          slotIndex,
-          sets: ex.sets.map(s => ({ weight: s.weight, reps: s.reps, rir: s.rir })),
-          weightUnit: ex.weightUnit || 'lbs',
-        })
-      }).filter(Boolean)
-      await Promise.all(historyPromises)
+      await writeExerciseHistory(updated)
 
       setSaveStatus('saved')
       setTimeout(() => setSaveStatus(null), 2000)
