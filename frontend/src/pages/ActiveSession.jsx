@@ -460,6 +460,14 @@ export default function ActiveSession() {
         const isSwapped = !!exercise.swappedName
         const isSwapOpen = swapOpen === exIndex
 
+        // Find sub config if swapped to a sub with custom ranges
+        const activeSub = isSwapped && exConfig.subs?.find(
+          s => typeof s === 'object' && s.name === exercise.swappedName
+        )
+        const displaySets = activeSub?.sets || exConfig.sets
+        const displayRange = activeSub?.repRange || exConfig.repRange
+        const displayRir = activeSub?.rir ?? exConfig.rir
+
         return (
           <div key={exercise.name} className="exercise-block">
             <div className="exercise-header">
@@ -486,8 +494,8 @@ export default function ActiveSession() {
                 <span className="swapped-from">Originally: {exercise.name}</span>
               )}
               <span className="exercise-target">
-                {exConfig.sets} × {exConfig.repRange[0]}–{exConfig.repRange[1]}
-                {exConfig.perSide ? '/side' : ''} · RIR {exConfig.rir} · {exConfig.rest}
+                {displaySets} × {displayRange[0]}–{displayRange[1]}
+                {exConfig.perSide ? '/side' : ''} · RIR {displayRir} · {exConfig.rest}
               </span>
               {exConfig.superset && (
                 <span className="superset-badge">Superset {exConfig.superset}</span>
@@ -502,11 +510,17 @@ export default function ActiveSession() {
 
             {isSwapOpen && (
               <div className="swap-panel">
-                {exConfig.subs?.map(sub => (
-                  <button key={sub} className="swap-option" onClick={() => handleSwap(exIndex, sub)}>
-                    {sub}
-                  </button>
-                ))}
+                {exConfig.subs?.map(sub => {
+                  const subName = typeof sub === 'object' ? sub.name : sub
+                  const subLabel = typeof sub === 'object'
+                    ? `${sub.name} (${sub.sets}×${sub.repRange[0]}–${sub.repRange[1]}, RIR ${sub.rir})`
+                    : sub
+                  return (
+                    <button key={subName} className="swap-option" onClick={() => handleSwap(exIndex, subName)}>
+                      {subLabel}
+                    </button>
+                  )
+                })}
                 <div className="swap-custom">
                   <input
                     type="text"
