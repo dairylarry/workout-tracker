@@ -41,6 +41,7 @@ const SESSIONS = [
     notes: [
       'If leg curl machine is unavailable, substitute with Nordic Curl 2 × 5–8 (RIR 2). Note: Nordics cause significant DOMS early on — start at 3–4 reps, use a 3–5 sec eccentric, and build slowly. Avoid pushing these hard before a long run week.',
       'Single-leg RDL: use a weight that lets you hinge with control and balance. If balance is the limiter, use a rack or wall for light fingertip support.',
+      'If leg extension machine is unavailable, add an extra set of Hack Squat or Leg Press instead.',
       'Superset: Leg Extension + Seated Calf Raise — do back to back, rest after the calf raise.',
     ],
   },
@@ -50,10 +51,10 @@ const SESSIONS = [
       { name: 'Incline DB Press', sets: '4', reps: '8–12 (RIR 2)', rest: '90 sec', subs: ['Incline Barbell Press', 'Machine Incline Press'] },
       { name: 'Pull-Up', sets: '3', reps: '8–12 (RIR 2)', rest: '90 sec', subs: ['Lat Pulldown', 'Band-Assisted Pull-Up'] },
       { name: 'Chest-Supported DB Row (or single-arm DB row)', sets: '3', reps: '10–12 (RIR 2)', rest: '90 sec', subs: ['Single-Arm DB Row', 'Machine Row'] },
-      { name: 'Incline Cable Fly (or incline pec deck)', sets: '3', reps: '12–15 (RIR 1)', rest: '60 sec', subs: ['Incline Pec Deck', 'Flat Cable Fly', 'Decline Cable Fly'] },
+      { name: 'Incline Cable Fly (or incline pec deck)', sets: '3', reps: '12–15 (RIR 1)', rest: '60 sec', subs: ['Incline DB Fly', 'Pec Deck', 'Flat Cable Fly', 'Decline Cable Fly'] },
       { name: 'Cable Face Pull', sets: '3', reps: '12–15 (RIR 1)', rest: '60 sec', subs: ['Band Face Pull', 'Rear Delt Fly'] },
       { name: 'Cable Lateral Raise (or DB lateral raise)', sets: '4', reps: '15–20 (RIR 1)', rest: '60 sec', subs: ['DB Lateral Raise'] },
-      { name: 'Overhead Tricep Extension (DB or cable)', sets: '2', reps: '10–12 (RIR 1)', rest: '60 sec', subs: ['DB Overhead Tricep Extension', 'Cable Overhead Extension'] },
+      { name: 'Cable Overhead Tricep Extension (or DB)', sets: '2', reps: '10–12 (RIR 1)', rest: '60 sec', subs: ['DB Overhead Tricep Extension'] },
       { name: 'Hammer Curl', sets: '3', reps: '10–12 (RIR 1)', rest: '60 sec', subs: ['DB Hammer Curl', 'Cross-Body Hammer Curl'] },
     ],
     notes: [
