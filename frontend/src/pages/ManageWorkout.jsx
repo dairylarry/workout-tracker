@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useProgram } from '../lib/ProgramContext'
-import { putSessionType, putExercise, deleteExercise, getExerciseLibrary } from '../lib/dynamodb'
+import { putSessionType } from '../lib/dynamodb'
 import '../styles/ManageWorkout.css'
 
 const SESSION_ORDER = ['lower-a', 'upper-a', 'lower-b', 'upper-b']
@@ -9,18 +9,11 @@ const MUSCLE_GROUPS = ['quads', 'hamstrings', 'glutes', 'calves', 'chest', 'back
 
 export default function ManageWorkout() {
   const navigate = useNavigate()
-  const { program, exerciseLibrary, updateProgram, refreshExerciseLibrary } = useProgram()
+  const { program, exerciseLibrary, updateProgram } = useProgram()
+  const [editMode, setEditMode] = useState(false)
   const [editingSubs, setEditingSubs] = useState(null) // { sessionId, exerciseName }
-  const [addingExercise, setAddingExercise] = useState(false)
-  const [libraryFilter, setLibraryFilter] = useState('')
   const [subFilter, setSubFilter] = useState('')
-
-  // New exercise form state
-  const [newName, setNewName] = useState('')
-  const [newMuscleGroups, setNewMuscleGroups] = useState([])
-  const [newFamily, setNewFamily] = useState('')
-  const [newRepRange, setNewRepRange] = useState(['', ''])
-  const [newSets, setNewSets] = useState('')
+  const [subFamilyFilter, setSubFamilyFilter] = useState('')
 
   if (!program) return <div className="manage-workout"><p>Loading...</p></div>
 
@@ -58,56 +51,36 @@ export default function ManageWorkout() {
     setEditingSubs(null)
   }
 
-  async function handleAddExercise() {
-    if (!newName.trim() || newMuscleGroups.length === 0) return
-    const exercise = {
-      name: newName.trim(),
-      muscleGroups: newMuscleGroups,
-      family: newFamily.trim() || null,
-      defaultRepRange: newRepRange[0] && newRepRange[1] ? [Number(newRepRange[0]), Number(newRepRange[1])] : null,
-      defaultSets: newSets ? Number(newSets) : null,
-      createdAt: new Date().toISOString().split('T')[0],
-    }
-    await putExercise(exercise)
-    const lib = await getExerciseLibrary()
-    refreshExerciseLibrary(lib)
-    setNewName('')
-    setNewMuscleGroups([])
-    setNewFamily('')
-    setNewRepRange(['', ''])
-    setNewSets('')
-    setAddingExercise(false)
-  }
-
-  async function handleDeleteExercise(name) {
-    await deleteExercise(name)
-    const lib = await getExerciseLibrary()
-    refreshExerciseLibrary(lib)
-  }
-
-  function toggleMuscleGroup(group) {
-    setNewMuscleGroups(prev =>
-      prev.includes(group) ? prev.filter(g => g !== group) : [...prev, group]
-    )
-  }
-
   // Filter exercise library for sub picker
   function getFilteredLibrary(exerciseName) {
-    const currentExConfig = null // could use to get family later
-    return exerciseLibrary
-      .filter(ex => ex.name !== exerciseName) // don't show the primary exercise
+    const muscleFiltered = exerciseLibrary
+      .filter(ex => ex.name !== exerciseName)
       .filter(ex => !subFilter || ex.muscleGroups?.some(mg => mg === subFilter))
+    return muscleFiltered
+      .filter(ex => !subFamilyFilter || ex.family === subFamilyFilter)
       .sort((a, b) => a.name.localeCompare(b.name))
   }
 
-  const filteredLibrary = exerciseLibrary
-    .filter(ex => !libraryFilter || ex.muscleGroups?.some(mg => mg === libraryFilter))
-    .sort((a, b) => a.name.localeCompare(b.name))
+  // Get available families from muscle-filtered results
+  function getAvailableFamilies(exerciseName) {
+    const muscleFiltered = exerciseLibrary
+      .filter(ex => ex.name !== exerciseName)
+      .filter(ex => !subFilter || ex.muscleGroups?.some(mg => mg === subFilter))
+    const families = new Set(muscleFiltered.map(ex => ex.family).filter(Boolean))
+    return [...families].sort()
+  }
 
   return (
     <div className="manage-workout">
       <button className="back" onClick={() => navigate('/')}>← Back</button>
       <h2>Manage Workout</h2>
+
+      {!editMode && (
+        <button className="mw-edit-btn" onClick={() => setEditMode(true)}>Edit Workout</button>
+      )}
+      {editMode && (
+        <button className="mw-done-btn" onClick={() => { setEditMode(false); setEditingSubs(null) }}>Done Editing</button>
+      )}
 
       {SESSION_ORDER.map(sessionId => {
         const session = program.sessionTypes[sessionId]
@@ -147,26 +120,36 @@ export default function ManageWorkout() {
                           return (
                             <div key={subName} className="mw-sub-chip">
                               <span>{subName}{subDetail}</span>
-                              <button className="mw-sub-remove" onClick={() => handleRemoveSub(sessionId, ex.name, subName)}>✕</button>
+                              {editMode && <button className="mw-sub-remove" onClick={() => handleRemoveSub(sessionId, ex.name, subName)}>✕</button>}
                             </div>
                           )
                         })}
                       </div>
-                      <button
-                        className="mw-add-sub-btn"
-                        onClick={() => setEditingSubs(isEditing ? null : { sessionId, exerciseName: ex.name })}
-                      >
-                        {isEditing ? 'Done' : '+ Add Sub'}
-                      </button>
+                      {editMode && (
+                        <button
+                          className="mw-add-sub-btn"
+                          onClick={() => { setEditingSubs(isEditing ? null : { sessionId, exerciseName: ex.name }); setSubFilter(''); setSubFamilyFilter('') }}
+                        >
+                          {isEditing ? 'Done' : '+ Add Sub'}
+                        </button>
+                      )}
 
-                      {isEditing && (
+                      {editMode && isEditing && (
                         <div className="mw-sub-picker">
-                          <select value={subFilter} onChange={e => setSubFilter(e.target.value)} className="mw-filter">
-                            <option value="">All muscle groups</option>
-                            {MUSCLE_GROUPS.map(mg => (
-                              <option key={mg} value={mg}>{mg}</option>
-                            ))}
-                          </select>
+                          <div className="mw-filter-row">
+                            <select value={subFilter} onChange={e => { setSubFilter(e.target.value); setSubFamilyFilter('') }} className="mw-filter">
+                              <option value="">All muscle groups</option>
+                              {MUSCLE_GROUPS.map(mg => (
+                                <option key={mg} value={mg}>{mg}</option>
+                              ))}
+                            </select>
+                            <select value={subFamilyFilter} onChange={e => setSubFamilyFilter(e.target.value)} className="mw-filter">
+                              <option value="">All families</option>
+                              {getAvailableFamilies(ex.name).map(f => (
+                                <option key={f} value={f}>{f}</option>
+                              ))}
+                            </select>
+                          </div>
                           <div className="mw-sub-picker-list">
                             {getFilteredLibrary(ex.name).map(libEx => (
                               <button
@@ -193,99 +176,9 @@ export default function ManageWorkout() {
         )
       })}
 
-      <div className="mw-library-section">
-        <h3>Exercise Library</h3>
-        <p className="mw-library-count">{exerciseLibrary.length} exercises</p>
-
-        <select value={libraryFilter} onChange={e => setLibraryFilter(e.target.value)} className="mw-filter">
-          <option value="">All muscle groups</option>
-          {MUSCLE_GROUPS.map(mg => (
-            <option key={mg} value={mg}>{mg}</option>
-          ))}
-        </select>
-
-        <div className="mw-library-list">
-          {filteredLibrary.map(ex => (
-            <div key={ex.name} className="mw-library-item">
-              <div>
-                <span className="mw-library-name">{ex.name}</span>
-                <span className="mw-library-meta">
-                  {ex.muscleGroups?.join(', ')}
-                  {ex.family ? ` · ${ex.family}` : ''}
-                  {ex.defaultRepRange ? ` · ${ex.defaultRepRange[0]}–${ex.defaultRepRange[1]}` : ''}
-                  {ex.defaultSets ? ` · ${ex.defaultSets} sets` : ''}
-                </span>
-              </div>
-              <button className="mw-library-delete" onClick={() => handleDeleteExercise(ex.name)}>✕</button>
-            </div>
-          ))}
-        </div>
-
-        {!addingExercise ? (
-          <button className="mw-add-exercise-btn" onClick={() => setAddingExercise(true)}>+ Add Exercise</button>
-        ) : (
-          <div className="mw-add-form">
-            <input
-              type="text"
-              placeholder="Exercise name"
-              value={newName}
-              onChange={e => setNewName(e.target.value)}
-              className="mw-input"
-            />
-            <div className="mw-muscle-groups">
-              {MUSCLE_GROUPS.map(mg => (
-                <button
-                  key={mg}
-                  className={`mw-mg-btn ${newMuscleGroups.includes(mg) ? 'active' : ''}`}
-                  onClick={() => toggleMuscleGroup(mg)}
-                >
-                  {mg}
-                </button>
-              ))}
-            </div>
-            <input
-              type="text"
-              placeholder="Family (e.g. curl, press, row)"
-              value={newFamily}
-              onChange={e => setNewFamily(e.target.value)}
-              className="mw-input"
-            />
-            <div className="mw-rep-range-row">
-              <input
-                type="number"
-                inputMode="numeric"
-                placeholder="Min reps"
-                value={newRepRange[0]}
-                onChange={e => setNewRepRange([e.target.value, newRepRange[1]])}
-                className="mw-input-small"
-              />
-              <span>–</span>
-              <input
-                type="number"
-                inputMode="numeric"
-                placeholder="Max reps"
-                value={newRepRange[1]}
-                onChange={e => setNewRepRange([newRepRange[0], e.target.value])}
-                className="mw-input-small"
-              />
-              <input
-                type="number"
-                inputMode="numeric"
-                placeholder="Sets"
-                value={newSets}
-                onChange={e => setNewSets(e.target.value)}
-                className="mw-input-small"
-              />
-            </div>
-            <div className="mw-form-actions">
-              <button className="mw-save-btn" onClick={handleAddExercise} disabled={!newName.trim() || newMuscleGroups.length === 0}>
-                Save
-              </button>
-              <button className="mw-cancel-btn" onClick={() => setAddingExercise(false)}>Cancel</button>
-            </div>
-          </div>
-        )}
-      </div>
+      <button className="mw-library-btn" onClick={() => navigate('/manage/library')}>
+        Exercise Library ({exerciseLibrary.length})
+      </button>
     </div>
   )
 }
