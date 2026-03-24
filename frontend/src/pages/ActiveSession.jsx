@@ -501,7 +501,7 @@ export default function ActiveSession() {
                 <span className="swapped-from">Originally: {exercise.name}</span>
               )}
               <span className="exercise-target">
-                {displaySets} × {displayRange[0]}–{displayRange[1]}
+                {displaySets} × {displayRange[0] === displayRange[1] ? displayRange[0] : `${displayRange[0]}–${displayRange[1]}`}
                 {exConfig.perSide ? '/side' : ''} · RIR {displayRir} · {exConfig.rest}
               </span>
               {exConfig.superset && (
@@ -520,7 +520,7 @@ export default function ActiveSession() {
                 {exConfig.subs?.map(sub => {
                   const subName = typeof sub === 'object' ? sub.name : sub
                   const subLabel = typeof sub === 'object'
-                    ? `${sub.name} (${sub.sets}×${sub.repRange[0]}–${sub.repRange[1]}, RIR ${sub.rir})`
+                    ? `${sub.name} (${sub.sets}×${sub.repRange[0] === sub.repRange[1] ? sub.repRange[0] : `${sub.repRange[0]}–${sub.repRange[1]}`}, RIR ${sub.rir})`
                     : sub
                   return (
                     <button key={subName} className="swap-option" onClick={() => handleSwap(exIndex, subName)}>
