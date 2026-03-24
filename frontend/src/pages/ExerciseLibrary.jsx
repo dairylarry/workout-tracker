@@ -10,6 +10,7 @@ export default function ExerciseLibrary() {
   const navigate = useNavigate()
   const { exerciseLibrary, refreshExerciseLibrary } = useProgram()
   const [libraryFilter, setLibraryFilter] = useState('')
+  const [familyFilter, setFamilyFilter] = useState('')
   const [addingExercise, setAddingExercise] = useState(false)
   const [deleteMode, setDeleteMode] = useState(false)
   const [confirmDelete, setConfirmDelete] = useState(null) // exercise name pending confirmation
@@ -55,8 +56,11 @@ export default function ExerciseLibrary() {
     )
   }
 
-  const filteredLibrary = exerciseLibrary
+  const muscleFiltered = exerciseLibrary
     .filter(ex => !libraryFilter || ex.muscleGroups?.some(mg => mg === libraryFilter))
+  const availableFamilies = [...new Set(muscleFiltered.map(ex => ex.family).filter(Boolean))].sort()
+  const filteredLibrary = muscleFiltered
+    .filter(ex => !familyFilter || ex.family === familyFilter)
     .sort((a, b) => a.name.localeCompare(b.name))
 
   return (
@@ -65,12 +69,20 @@ export default function ExerciseLibrary() {
       <h2>Exercise Library</h2>
       <p className="mw-library-count">{exerciseLibrary.length} exercises</p>
 
-      <select value={libraryFilter} onChange={e => setLibraryFilter(e.target.value)} className="mw-filter">
-        <option value="">All muscle groups</option>
-        {MUSCLE_GROUPS.map(mg => (
-          <option key={mg} value={mg}>{mg}</option>
-        ))}
-      </select>
+      <div className="mw-filter-row">
+        <select value={libraryFilter} onChange={e => { setLibraryFilter(e.target.value); setFamilyFilter('') }} className="mw-filter">
+          <option value="">All muscle groups</option>
+          {MUSCLE_GROUPS.map(mg => (
+            <option key={mg} value={mg}>{mg}</option>
+          ))}
+        </select>
+        <select value={familyFilter} onChange={e => setFamilyFilter(e.target.value)} className="mw-filter">
+          <option value="">All families</option>
+          {availableFamilies.map(f => (
+            <option key={f} value={f}>{f}</option>
+          ))}
+        </select>
+      </div>
 
       <div className="mw-library-list">
         {filteredLibrary.map(ex => (
