@@ -6,7 +6,7 @@ const SESSIONS = [
     title: 'Lower A — Strength + Hypertrophy',
     exercises: [
       { name: 'Barbell Back Squat', sets: '5s PRO', reps: '—', rest: '3–4 min' },
-      { name: 'Leg Press', sets: '3', reps: '10–15 (RIR 2)', rest: '90 sec', subs: ['Bulgarian Split Squat', 'Goblet Squat'] },
+      { name: 'Leg Press', sets: '3', reps: '10–15 (RIR 2)', rest: '90 sec', subs: ['Bulgarian Split Squat 2×8/leg', 'Goblet Squat'] },
       { name: 'Romanian Deadlift (or DB/KB RDL)', sets: '3', reps: '6–10 (RIR 2)', rest: '2 min', subs: ['DB Romanian Deadlift', 'KB Romanian Deadlift'] },
       { name: 'Barbell Hip Thrust (or DB/KB hip thrust)', sets: '2', reps: '8–12 (RIR 2)', rest: '90 sec', subs: ['DB Hip Thrust', 'KB Hip Thrust'] },
       { name: 'Standing Calf Raise (or single-leg DB calf raise)', sets: '3', reps: '15–20 (RIR 1)', rest: '60 sec', subs: ['Single-Leg DB Calf Raise'] },
@@ -33,7 +33,7 @@ const SESSIONS = [
     title: 'Lower B — Hypertrophy',
     exercises: [
       { name: 'Hack Squat (or goblet squat)', sets: '3', reps: '8–12 (RIR 2)', rest: '2 min', subs: ['Goblet Squat', 'Leg Press'] },
-      { name: 'Seated Leg Curl', sets: '3', reps: '10–12 (RIR 2)', rest: '90 sec', subs: ['Nordic Curl 2×5–8', 'Glute Ham Raise 3×6–10', 'Lying Leg Curl'] },
+      { name: 'Seated Leg Curl', sets: '3', reps: '10–12 (RIR 2)', rest: '90 sec', subs: ['Nordic Curl 2×5–8', 'Glute Ham Raise 2×5–8', 'Lying Leg Curl'] },
       { name: 'Single-Leg Romanian Deadlift (DB or KB)', sets: '2', reps: '8–10/leg (RIR 2)', rest: '90 sec', subs: ['DB Single-Leg RDL', 'KB Single-Leg RDL'] },
       { name: 'Leg Extension (or cable leg extension)', sets: '3', reps: '12–15 (RIR 1)', rest: '60 sec', subs: ['Cable Leg Extension'] },
       { name: 'Seated Calf Raise (or seated DB calf raise)', sets: '3', reps: '15–20 (RIR 1)', rest: '60 sec', subs: ['Seated DB Calf Raise'] },
