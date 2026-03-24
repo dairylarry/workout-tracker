@@ -63,6 +63,7 @@ export default function ActiveSession() {
   const navigate = useNavigate()
   const config = PROGRAM.sessionTypes[sessionType]
   const [exercises, setExercises] = useState(null)
+  const [startedAt, setStartedAt] = useState(null)
   const [deload, setDeload] = useState(false)
   const [recentSessions, setRecentSessions] = useState([])
   const [expandedHistory, setExpandedHistory] = useState({})
@@ -100,6 +101,7 @@ export default function ActiveSession() {
         if (existing) {
           setExercises(existing.exercises)
           setDeload(existing.deload || false)
+          setStartedAt(existing.startedAt || null)
         } else {
           // Infer week from last session's 5/3/1 exercises
           let inferredWeek = 1
@@ -128,6 +130,8 @@ export default function ActiveSession() {
             }
           })
 
+          const now = new Date().toISOString()
+          setStartedAt(now)
           setExercises(initial)
           await putSession({
             PK: `SESSION#${sessionType}`,
@@ -135,7 +139,7 @@ export default function ActiveSession() {
             type: 'SESSION',
             sessionType,
             date,
-            startedAt: new Date().toISOString(),
+            startedAt: now,
             deload: false,
             exercises: initial,
           })
@@ -334,7 +338,10 @@ export default function ActiveSession() {
     <div className="active-session">
       <button className="back" onClick={() => navigate('/')}>← Back</button>
       <h2>{config.name}</h2>
-      <p className="session-date">{date}</p>
+      <p className="session-date">
+        {date}
+        {startedAt && ` · Started ${new Date(startedAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false })}`}
+      </p>
 
       <label className="deload-toggle">
         <input
