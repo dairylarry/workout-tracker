@@ -82,6 +82,19 @@
 .mw-exercise-name {
   font-weight: 600;
   font-size: 0.95rem;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.mw-superset-badge {
+  font-size: 0.65rem;
+  font-weight: 600;
+  background: #e8e0f0;
+  color: #6b4c9a;
+  padding: 0.1rem 0.35rem;
+  border-radius: 3px;
+  white-space: nowrap;
 }
 
 .mw-exercise-meta {

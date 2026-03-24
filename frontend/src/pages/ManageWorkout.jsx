@@ -100,7 +100,10 @@ export default function ManageWorkout() {
               return (
                 <div key={ex.name} className="mw-exercise">
                   <div className="mw-exercise-header">
-                    <div className="mw-exercise-name">{ex.name}</div>
+                    <div className="mw-exercise-name">
+                      {ex.name}
+                      {ex.superset && <span className="mw-superset-badge">Superset {ex.superset}</span>}
+                    </div>
                     {ex.is531 ? (
                       <span className="mw-badge-531">5s PRO</span>
                     ) : (
