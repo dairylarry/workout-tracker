@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useProgram } from '../lib/ProgramContext'
 import { putExercise, deleteExercise, getExerciseLibrary } from '../lib/dynamodb'
@@ -21,6 +21,7 @@ export default function ExerciseLibrary() {
   const [newFamily, setNewFamily] = useState('')
   const [newRepRange, setNewRepRange] = useState(['', ''])
   const [newSets, setNewSets] = useState('')
+  const [expandedHistory, setExpandedHistory] = useState({}) // exerciseName -> show count (0 = hidden, 10, 20, ...)
 
   async function handleAddExercise() {
     if (!newName.trim() || newMuscleGroups.length === 0) return
@@ -56,6 +57,25 @@ export default function ExerciseLibrary() {
     )
   }
 
+  const exercisesWithHistory = useMemo(() => {
+    return new Set(exerciseLibrary.filter(ex => ex.history?.length > 0).map(ex => ex.name))
+  }, [exerciseLibrary])
+
+  function toggleExerciseHistory(name) {
+    setExpandedHistory(prev => {
+      const current = prev[name] || 0
+      if (current === 0) return { ...prev, [name]: 10 }
+      return { ...prev, [name]: 0 }
+    })
+  }
+
+  function showMoreHistory(name) {
+    setExpandedHistory(prev => ({
+      ...prev,
+      [name]: (prev[name] || 10) + 10,
+    }))
+  }
+
   const muscleFiltered = exerciseLibrary
     .filter(ex => !libraryFilter || ex.muscleGroups?.some(mg => mg === libraryFilter))
   const availableFamilies = [...new Set(muscleFiltered.map(ex => ex.family).filter(Boolean))].sort()
@@ -88,29 +108,62 @@ export default function ExerciseLibrary() {
       </div>
 
       <div className="mw-library-list">
-        {filteredLibrary.map(ex => (
-          <div key={ex.name} className="mw-library-item">
-            <div>
-              <span className="mw-library-name">{ex.name}</span>
-              <span className="mw-library-meta">
-                {ex.muscleGroups?.join(', ')}
-                {ex.family ? ` · ${ex.family}` : ''}
-                {ex.defaultRepRange ? ` · ${ex.defaultRepRange[0]}–${ex.defaultRepRange[1]}` : ''}
-                {ex.defaultSets ? ` · ${ex.defaultSets} sets` : ''}
-              </span>
-            </div>
-            {deleteMode && (
-              confirmDelete === ex.name ? (
-                <div className="mw-confirm-delete">
-                  <button className="mw-confirm-yes" onClick={() => handleConfirmDelete(ex.name)}>Delete</button>
-                  <button className="mw-confirm-no" onClick={() => setConfirmDelete(null)}>Cancel</button>
+        {filteredLibrary.map(ex => {
+          const historyCount = expandedHistory[ex.name] || 0
+          const hasHistory = exercisesWithHistory.has(ex.name)
+          const history = ex.history || []
+
+          return (
+            <div key={ex.name} className="mw-library-item-wrap">
+              <div className="mw-library-item">
+                <div className="mw-library-item-info">
+                  {hasHistory && (
+                    <button className="mw-history-toggle" onClick={() => toggleExerciseHistory(ex.name)}>
+                      {historyCount > 0 ? '−' : '+'}
+                    </button>
+                  )}
+                  <div>
+                    <span className="mw-library-name">{ex.name}</span>
+                    <span className="mw-library-meta">
+                      {ex.muscleGroups?.join(', ')}
+                      {ex.family ? ` · ${ex.family}` : ''}
+                      {ex.defaultRepRange ? ` · ${ex.defaultRepRange[0]}–${ex.defaultRepRange[1]}` : ''}
+                      {ex.defaultSets ? ` · ${ex.defaultSets} sets` : ''}
+                    </span>
+                  </div>
                 </div>
-              ) : (
-                <button className="mw-library-delete" onClick={() => setConfirmDelete(ex.name)}>✕</button>
-              )
-            )}
-          </div>
-        ))}
+                {deleteMode && (
+                  confirmDelete === ex.name ? (
+                    <div className="mw-confirm-delete">
+                      <button className="mw-confirm-yes" onClick={() => handleConfirmDelete(ex.name)}>Delete</button>
+                      <button className="mw-confirm-no" onClick={() => setConfirmDelete(null)}>Cancel</button>
+                    </div>
+                  ) : (
+                    <button className="mw-library-delete" onClick={() => setConfirmDelete(ex.name)}>✕</button>
+                  )
+                )}
+              </div>
+              {historyCount > 0 && history.length > 0 && (
+                <div className="mw-exercise-history">
+                  {history.slice(0, historyCount).map((h, i) => (
+                    <div key={`${h.date}-${h.sessionType}-${h.slotIndex}-${i}`} className="mw-history-entry">
+                      <span className="mw-history-date">{h.date}</span>
+                      <span className="mw-history-session">{h.sessionType}</span>
+                      <span className="mw-history-sets">
+                        {h.sets?.map(s => `${s.weight}${h.weightUnit === 'kg' ? 'kg' : ''}×${s.reps}`).join(', ')}
+                      </span>
+                    </div>
+                  ))}
+                  {history.length > historyCount && (
+                    <button className="mw-history-more" onClick={() => showMoreHistory(ex.name)}>
+                      Show more ({history.length - historyCount} remaining)
+                    </button>
+                  )}
+                </div>
+              )}
+            </div>
+          )
+        })}
       </div>
 
       {!addingExercise ? (

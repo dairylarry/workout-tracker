@@ -310,6 +310,37 @@ export async function deleteExercise(exerciseName) {
   }
 }
 
+// --- Exercise History ---
+
+export async function updateExerciseHistory(exerciseName, historyEntry) {
+  const sk = `EXERCISE#${exerciseName.toLowerCase().replace(/\s+/g, '-')}`
+  try {
+    const response = await docClient.send(new GetCommand({
+      TableName: TABLE,
+      Key: { PK: 'EXERCISE_LIB', SK: sk },
+    }))
+    const exercise = response.Item
+    if (!exercise) return
+
+    // Remove existing entry for same date+sessionType+slotIndex
+    let history = (exercise.history || []).filter(h =>
+      !(h.date === historyEntry.date && h.sessionType === historyEntry.sessionType && h.slotIndex === historyEntry.slotIndex)
+    )
+
+    // Prepend new entry, cap at 20
+    history = [historyEntry, ...history].slice(0, 20)
+
+    await docClient.send(new UpdateCommand({
+      TableName: TABLE,
+      Key: { PK: 'EXERCISE_LIB', SK: sk },
+      UpdateExpression: 'SET history = :history',
+      ExpressionAttributeValues: { ':history': history },
+    }))
+  } catch (e) {
+    console.warn('Failed to update exercise history:', e.message)
+  }
+}
+
 /**
  * Flush any queued writes from offline usage.
  * Call this when the app detects it's back online.

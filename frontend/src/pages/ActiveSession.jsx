@@ -1,7 +1,7 @@
 import { useParams, useNavigate } from 'react-router-dom'
 import { useState, useEffect, useRef } from 'react'
 import { useProgram } from '../lib/ProgramContext'
-import { getSession, putSession, updateSessionExercises, updateSessionField, getRecentSessions, get531Config } from '../lib/dynamodb'
+import { getSession, putSession, updateSessionExercises, updateSessionField, getRecentSessions, get531Config, updateExerciseHistory } from '../lib/dynamodb'
 import { getSetsForWeek, getDeloadSets, WEEK_LABELS } from '../lib/fiveThreeOne'
 import '../styles/ActiveSession.css'
 
@@ -299,6 +299,22 @@ export default function ActiveSession() {
       }
 
       await updateSessionExercises(sessionType, date, updated)
+
+      // Write exercise history for each exercise
+      const historyPromises = updated.map((ex, slotIndex) => {
+        const exerciseName = ex.swappedName || ex.name
+        const hasSets = ex.sets?.some(s => s.weight || s.reps)
+        if (!hasSets) return null
+        return updateExerciseHistory(exerciseName, {
+          date,
+          sessionType,
+          slotIndex,
+          sets: ex.sets.map(s => ({ weight: s.weight, reps: s.reps, rir: s.rir })),
+          weightUnit: ex.weightUnit || 'lbs',
+        })
+      }).filter(Boolean)
+      await Promise.all(historyPromises)
+
       setSaveStatus('saved')
       setTimeout(() => setSaveStatus(null), 2000)
     } catch (e) {
