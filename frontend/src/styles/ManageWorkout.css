@@ -39,6 +39,9 @@
 }
 
 .mw-session h3 {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
   margin-bottom: 0.75rem;
   font-size: 1.05rem;
 }
@@ -47,6 +50,18 @@
   font-weight: 400;
   font-size: 0.8rem;
   color: #888;
+  text-align: right;
+}
+
+.mw-reset-filters {
+  padding: 0.4rem 0.6rem;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 0.8rem;
+  background: #fff;
+  color: #666;
+  cursor: pointer;
+  white-space: nowrap;
 }
 
 .mw-exercise {

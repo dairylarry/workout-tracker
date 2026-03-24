@@ -82,6 +82,9 @@ export default function ExerciseLibrary() {
             <option key={f} value={f}>{f}</option>
           ))}
         </select>
+        {(libraryFilter || familyFilter) && (
+          <button className="mw-reset-filters" onClick={() => { setLibraryFilter(''); setFamilyFilter('') }}>Reset</button>
+        )}
       </div>
 
       <div className="mw-library-list">
