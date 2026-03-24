@@ -340,7 +340,7 @@ export default function ActiveSession() {
       <h2>{config.name}</h2>
       <p className="session-date">
         {date}
-        {startedAt && ` · Started ${new Date(startedAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false })}`}
+        {startedAt && ` · started ${new Date(startedAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false })}`}
       </p>
 
       <label className="deload-toggle">
