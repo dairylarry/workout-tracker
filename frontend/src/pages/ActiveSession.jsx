@@ -1,6 +1,6 @@
 import { useParams, useNavigate } from 'react-router-dom'
 import { useState, useEffect, useRef } from 'react'
-import { PROGRAM } from '../lib/programConfig'
+import { useProgram } from '../lib/ProgramContext'
 import { getSession, putSession, updateSessionExercises, updateSessionField, getRecentSessions, get531Config } from '../lib/dynamodb'
 import { getSetsForWeek, getDeloadSets, WEEK_LABELS } from '../lib/fiveThreeOne'
 import '../styles/ActiveSession.css'
@@ -61,7 +61,8 @@ function checkProgression(exercise, config) {
 export default function ActiveSession() {
   const { sessionType, date } = useParams()
   const navigate = useNavigate()
-  const config = PROGRAM.sessionTypes[sessionType]
+  const { program } = useProgram()
+  const config = program?.sessionTypes[sessionType]
   const [exercises, setExercises] = useState(null)
   const [startedAt, setStartedAt] = useState(null)
   const [deload, setDeload] = useState(false)
@@ -70,7 +71,7 @@ export default function ActiveSession() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
   const [swapOpen, setSwapOpen] = useState(null) // index of exercise with swap open
-  const [customSwap, setCustomSwap] = useState('')
+
   const [ftoConfigs, setFtoConfigs] = useState({})
   const saveTimeout = useRef(null)
 
@@ -234,7 +235,7 @@ export default function ActiveSession() {
       return updated
     })
     setSwapOpen(null)
-    setCustomSwap('')
+
   }
 
   function handleResetSwap(exIndex) {
@@ -528,20 +529,6 @@ export default function ActiveSession() {
                     </button>
                   )
                 })}
-                <div className="swap-custom">
-                  <input
-                    type="text"
-                    placeholder="Custom exercise..."
-                    value={customSwap}
-                    onChange={e => setCustomSwap(e.target.value)}
-                  />
-                  <button
-                    disabled={!customSwap.trim()}
-                    onClick={() => handleSwap(exIndex, customSwap.trim())}
-                  >
-                    Use
-                  </button>
-                </div>
                 {isSwapped && (
                   <button className="swap-reset" onClick={() => handleResetSwap(exIndex)}>
                     Reset to {exercise.name}

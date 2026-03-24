@@ -1,21 +1,21 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { getAllSessionsForType } from '../lib/dynamodb'
-import { PROGRAM } from '../lib/programConfig'
+import { useProgram } from '../lib/ProgramContext'
 import '../styles/History.css'
-
-const SESSION_TYPES = Object.keys(PROGRAM.sessionTypes)
 
 export default function History() {
   const navigate = useNavigate()
+  const { program } = useProgram()
   const [sessions, setSessions] = useState([])
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
+    if (!program) return
     async function load() {
       try {
         const results = await Promise.all(
-          SESSION_TYPES.map(type => getAllSessionsForType(type))
+          Object.keys(program.sessionTypes).map(type => getAllSessionsForType(type))
         )
         const all = results
           .flat()
@@ -28,7 +28,7 @@ export default function History() {
       }
     }
     load()
-  }, [])
+  }, [program])
 
   return (
     <div className="history">
@@ -43,7 +43,7 @@ export default function History() {
 
       <div className="history-list">
         {sessions.map(session => {
-          const config = PROGRAM.sessionTypes[session.sessionType]
+          const config = program?.sessionTypes[session.sessionType]
           return (
             <button
               key={`${session.sessionType}-${session.date}`}

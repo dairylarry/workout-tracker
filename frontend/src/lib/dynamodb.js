@@ -215,6 +215,101 @@ export async function put531Config(exercise, trainingMax, history) {
   }
 }
 
+// --- Program Config ---
+
+const PROGRAM_PK = 'PROGRAM#spring2026'
+
+export async function getSessionType(sessionTypeId) {
+  try {
+    const response = await docClient.send(new GetCommand({
+      TableName: TABLE,
+      Key: { PK: PROGRAM_PK, SK: `SESSION_TYPE#${sessionTypeId}` },
+    }))
+    return response.Item || null
+  } catch (e) {
+    console.warn('Failed to load session type:', e.message)
+    return null
+  }
+}
+
+export async function getAllSessionTypes() {
+  try {
+    const response = await docClient.send(new QueryCommand({
+      TableName: TABLE,
+      KeyConditionExpression: 'PK = :pk AND begins_with(SK, :prefix)',
+      ExpressionAttributeValues: { ':pk': PROGRAM_PK, ':prefix': 'SESSION_TYPE#' },
+    }))
+    return response.Items || []
+  } catch (e) {
+    console.warn('Failed to load session types:', e.message)
+    return []
+  }
+}
+
+export async function putSessionType(sessionTypeId, data) {
+  const item = {
+    PK: PROGRAM_PK,
+    SK: `SESSION_TYPE#${sessionTypeId}`,
+    ...data,
+  }
+  try {
+    await docClient.send(new PutCommand({ TableName: TABLE, Item: item }))
+  } catch (e) {
+    console.warn('Failed to save session type:', e.message)
+  }
+}
+
+export async function updateSessionTypeSubs(sessionTypeId, exerciseName, subs) {
+  // Load current session type, update the subs for one exercise, save back
+  const current = await getSessionType(sessionTypeId)
+  if (!current) return
+  const exercises = current.exercises.map(ex => {
+    if (ex.name !== exerciseName) return ex
+    return { ...ex, subs }
+  })
+  await putSessionType(sessionTypeId, { ...current, exercises, PK: undefined, SK: undefined })
+}
+
+// --- Exercise Library ---
+
+export async function getExerciseLibrary() {
+  try {
+    const response = await docClient.send(new QueryCommand({
+      TableName: TABLE,
+      KeyConditionExpression: 'PK = :pk',
+      ExpressionAttributeValues: { ':pk': 'EXERCISE_LIB' },
+    }))
+    return response.Items || []
+  } catch (e) {
+    console.warn('Failed to load exercise library:', e.message)
+    return []
+  }
+}
+
+export async function putExercise(exercise) {
+  const item = {
+    PK: 'EXERCISE_LIB',
+    SK: `EXERCISE#${exercise.name.toLowerCase().replace(/\s+/g, '-')}`,
+    ...exercise,
+  }
+  try {
+    await docClient.send(new PutCommand({ TableName: TABLE, Item: item }))
+  } catch (e) {
+    console.warn('Failed to save exercise:', e.message)
+  }
+}
+
+export async function deleteExercise(exerciseName) {
+  try {
+    await docClient.send(new DeleteCommand({
+      TableName: TABLE,
+      Key: { PK: 'EXERCISE_LIB', SK: `EXERCISE#${exerciseName.toLowerCase().replace(/\s+/g, '-')}` },
+    }))
+  } catch (e) {
+    console.warn('Failed to delete exercise:', e.message)
+  }
+}
+
 /**
  * Flush any queued writes from offline usage.
  * Call this when the app detects it's back online.

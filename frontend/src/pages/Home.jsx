@@ -2,24 +2,25 @@ import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { getToday } from '../lib/date'
 import { getSession } from '../lib/dynamodb'
-import { PROGRAM } from '../lib/programConfig'
+import { useProgram } from '../lib/ProgramContext'
 import '../styles/Home.css'
-
-const SESSION_TYPES = Object.keys(PROGRAM.sessionTypes)
 
 export default function Home() {
   const navigate = useNavigate()
+  const { program, loading: programLoading } = useProgram()
   const [todaySession, setTodaySession] = useState(null)
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
+    if (programLoading || !program) return
     async function findToday() {
       const today = getToday()
+      const sessionTypes = Object.keys(program.sessionTypes)
       try {
-        for (const type of SESSION_TYPES) {
+        for (const type of sessionTypes) {
           const session = await getSession(type, today)
           if (session) {
-            setTodaySession({ type, date: today, name: PROGRAM.sessionTypes[type].name })
+            setTodaySession({ type, date: today, name: program.sessionTypes[type].name })
             break
           }
         }
@@ -30,7 +31,7 @@ export default function Home() {
       }
     }
     findToday()
-  }, [])
+  }, [programLoading, program])
 
   return (
     <div className="home">
@@ -47,6 +48,7 @@ export default function Home() {
         <button onClick={() => navigate('/session/start')}>New Session</button>
         <button onClick={() => navigate('/history')}>View Sessions</button>
         <button onClick={() => navigate('/weight')}>Log Weight</button>
+        <button onClick={() => navigate('/manage')}>Manage Workout</button>
         <button onClick={() => navigate('/531')}>5/3/1 Config</button>
         <button onClick={() => navigate('/plan')}>View Plan</button>
         <button onClick={() => navigate('/progression')}>Progression Guide</button>

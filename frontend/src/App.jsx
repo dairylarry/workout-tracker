@@ -1,6 +1,7 @@
 import { useEffect } from 'react'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import { flushWriteQueue } from './lib/dynamodb'
+import { ProgramProvider } from './lib/ProgramContext'
 import Home from './pages/Home'
 import StartSession from './pages/StartSession'
 import ActiveSession from './pages/ActiveSession'
@@ -10,6 +11,7 @@ import Plan from './pages/Plan'
 import DoubleProgression from './pages/DoubleProgression'
 import LogWeight from './pages/LogWeight'
 import FiveThreeOneConfig from './pages/FiveThreeOneConfig'
+import ManageWorkout from './pages/ManageWorkout'
 import './styles/App.css'
 
 export default function App() {
@@ -20,6 +22,7 @@ export default function App() {
   }, [])
 
   return (
+    <ProgramProvider>
     <BrowserRouter basename="/workout-tracker">
       <Routes>
         <Route path="/" element={<Home />} />
@@ -31,7 +34,9 @@ export default function App() {
         <Route path="/progression" element={<DoubleProgression />} />
         <Route path="/weight" element={<LogWeight />} />
         <Route path="/531" element={<FiveThreeOneConfig />} />
+        <Route path="/manage" element={<ManageWorkout />} />
       </Routes>
     </BrowserRouter>
+    </ProgramProvider>
   )
 }
