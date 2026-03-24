@@ -82,6 +82,10 @@ export default function ManageWorkout() {
         <button className="mw-done-btn" onClick={() => { setEditMode(false); setEditingSubs(null) }}>Done Editing</button>
       )}
 
+      <button className="mw-library-btn" onClick={() => navigate('/manage/library')}>
+        Exercise Library ({exerciseLibrary.length})
+      </button>
+
       {SESSION_ORDER.map(sessionId => {
         const session = program.sessionTypes[sessionId]
         if (!session) return null
@@ -176,9 +180,6 @@ export default function ManageWorkout() {
         )
       })}
 
-      <button className="mw-library-btn" onClick={() => navigate('/manage/library')}>
-        Exercise Library ({exerciseLibrary.length})
-      </button>
     </div>
   )
 }
