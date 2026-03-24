@@ -342,6 +342,38 @@ export async function updateExerciseHistory(exerciseName, historyEntry) {
 }
 
 /**
+ * One-time backfill: reads all sessions from DynamoDB and populates exercise history.
+ * Call from browser console: import('/src/lib/dynamodb.js').then(m => m.backfillExerciseHistory())
+ */
+export async function backfillExerciseHistory() {
+  const sessionTypes = ['lower-a', 'upper-a', 'lower-b', 'upper-b']
+  let totalUpdates = 0
+
+  for (const st of sessionTypes) {
+    const sessions = await getRecentSessions(st, 50)
+    for (const session of sessions) {
+      if (!session.exercises) continue
+      for (let i = 0; i < session.exercises.length; i++) {
+        const ex = session.exercises[i]
+        if (!ex.sets || ex.sets.length === 0) continue
+        const exerciseName = ex.swappedName || ex.name
+        const historyEntry = {
+          date: session.date,
+          sessionType: st,
+          slotIndex: i,
+          sets: ex.sets,
+          weightUnit: ex.weightUnit || 'lbs',
+        }
+        await updateExerciseHistory(exerciseName, historyEntry)
+        totalUpdates++
+        console.log(`Backfilled: ${exerciseName} (${st} / ${session.date})`)
+      }
+    }
+  }
+  console.log(`Backfill complete. ${totalUpdates} exercise history entries updated.`)
+}
+
+/**
  * Flush any queued writes from offline usage.
  * Call this when the app detects it's back online.
  */

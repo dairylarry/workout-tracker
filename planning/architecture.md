@@ -1,7 +1,7 @@
 # Workout Tracker — System Design & Architecture
 
 ## Goal
-Mobile-friendly app to log workouts from the Spring 2026 program (plans/final.md). Replaces spreadsheet tracking with a purpose-built UI that supports double progression and RIR-based logging.
+Mobile-friendly PWA to log workouts from the Spring 2026 program (plans/final.md). Replaces spreadsheet tracking with a purpose-built UI supporting double progression, RIR-based logging, 5s PRO tracking, exercise management, and offline use.
 
 ---
 
@@ -9,94 +9,107 @@ Mobile-friendly app to log workouts from the Spring 2026 program (plans/final.md
 
 | Layer | Technology |
 |---|---|
-| Frontend | React (Vite), hosted on GitHub Pages |
-| Auth | None (v1 — single user, no auth) |
+| Frontend | React (Vite), PWA with service worker |
+| Hosting | GitHub Pages |
+| Auth | None (v1 — single user) |
 | Database | AWS DynamoDB (free tier, single-table design) |
 | CI/CD | GitHub Actions → GitHub Pages on push to main |
-| Backend | None (browser calls DynamoDB directly via AWS SDK) |
+| Backend | None — browser calls DynamoDB directly via AWS SDK |
 
 ---
 
-## Core User Flows
+## Pages & User Flows
 
-1. **Start a session** — pick today's day (Lower A / Upper A / Lower B / Upper B)
-2. **Log sets** — for each exercise, enter weight / reps / RIR per set
-3. **Progression indicator** — app flags when all sets hit top of rep range at RIR ≤ 1 (time to add load)
-4. **Reference last session** — previous session's numbers shown alongside current input
-5. **Session history** — view past sessions by day
+### Home
+Landing page with navigation:
+- **Resume Session** — one tap back to today's most recent session (hidden if none exists today)
+- **New Session** — pick session type (Lower A / Upper A / Lower B / Upper B), starts or resumes for today's date
+- **View Sessions** — session history list
+- **View Plan** — static rendering of final.md
+- **Log Weight** — bodyweight logging
+- **Manage Workout** — program config viewer + exercise library
+- **5s PRO Config** — training max management
+- **Progression Guide** — double progression reference
 
----
+### Active Session
+Core logging UI. Route: `/session/:sessionType/:date`
+- Exercises listed with target sets/reps/RIR from program config
+- Per-exercise: weight, reps, RIR inputs per set
+- lbs/kg toggle per exercise
+- Exercise swap panel (configured subs from program config + custom subs from Manage Workout)
+- Last session reference (1 shown, expandable to 3, then 5) — reads from recent sessions by slot position
+- Progression flag when all sets hit top of rep range at target RIR
+- 5s PRO exercises show target weights based on training max and selected week
+- Deload toggle (adjusts 5s PRO targets to deload percentages)
+- Manual save button (writes session + exercise history)
+- Session start time displayed at top
 
-## Data Model (DynamoDB — single table)
+### View Sessions
+List of all past sessions, newest first. Each entry shows date, session type, and deload badge if applicable. Tapping opens read-only Session Detail. Edit mode allows modifying weight/reps/RIR and swapping exercises. Delete with confirmation.
 
-| PK | SK | Data |
-|---|---|---|
-| `user#<id>` | `session#<date>#<day>` | `{ exercises: [{ name, sets: [{ weight, reps, rir }] }] }` |
-| `user#<id>` | `config#program` | `{ days, exercises per day, rep ranges }` |
+### Manage Workout
+Two sections:
+1. **Exercise Library** (top) — full catalog of exercises with metadata. Filter by muscle group and family. Add new exercises. Delete with confirmation mode.
+2. **Program View** (below) — all 4 sessions displayed in order, card-per-exercise layout. Read-only by default, "Edit Workout" button enables editing. In edit mode, can add/remove subs for each exercise by picking from the exercise library (filtered by muscle group and family). Superset badges displayed.
 
----
+### 5s PRO Config
+- Set training max for Squat and Bench
+- Full wave table showing all 3 weeks with warmup + working sets, weights rounded to nearest 5 (ceiling)
+- Deload row at the bottom
+- Training max history with delete mode
 
-## Program Config (from plans/final.md)
-
-### Days
-- **Lower A** — Mon — Strength + Hypertrophy
-- **Upper A** — Tue — Strength + Hypertrophy
-- **Lower B** — Thu — Hypertrophy
-- **Upper B** — Fri — Hypertrophy
-
-### Progression Rules
-- **Double progression only (v1):** add reps to top of range at RIR ≤ 1, then add load and reset
-- **5/3/1** (Bench Press, Back Squat) — not tracked in v1, logged manually if at all
+### Log Weight
+- Date input (default today), weight input, lbs/kg toggle
+- Entries listed newest first with time-of-day label (morning/afternoon/night)
+- Delete mode with confirmation
 
 ---
 
 ## Key Design Decisions
 
-- **No auth (v1):** Single user, no login. AWS credentials hardcoded or via env vars. Auth added in v2 via Cognito.
-- **Optimistic instant sync:** Every set logged is immediately written to DynamoDB. No save button, no batching.
-- **No backend:** DynamoDB called directly from browser via AWS SDK. Avoids API Gateway cost and complexity.
-- **No lock file committed:** Work machine uses Indeed npm proxy; package-lock.json is gitignored. CI installs fresh from public registry each run.
-- **Single-table DynamoDB:** All data under one table, access patterns covered by PK/SK structure.
+- **No auth (v1):** Single user. IAM credentials passed as env vars at build time, baked into JS bundle. Blast radius = one DynamoDB table of workout data. Cognito planned for v2.
+- **Manual save:** Active Session uses a manual save button that writes to DynamoDB. This triggers both the session instance write and exercise history denormalization.
+- **No backend:** DynamoDB called directly from browser via AWS SDK. No API Gateway, no Lambda.
+- **PWA + offline:** Service worker caches app shell. localStorage provides offline data fallback with sync queue that flushes when online.
+- **No lock file committed:** Work machine uses corporate npm proxy; package-lock.json is gitignored. CI installs fresh from public registry.
+- **4am date rollover:** "Today" rolls over at 4am instead of midnight to handle late-night sessions.
+- **Program config flow:** programConfig.js is the seed source. On first load, it's written to DynamoDB. After that, DynamoDB is the runtime source of truth. Plan.jsx stays hardcoded/static and independent.
 
 ---
 
-## IAM Setup (v1)
+## IAM Setup
 
-1. Create a DynamoDB table `workout-tracker` with `PK` (String) and `SK` (String)
-2. Create an IAM user `workout-tracker-app` with no console access
-3. Attach an inline policy scoped to only that table:
-   - `dynamodb:GetItem`
-   - `dynamodb:PutItem`
-   - `dynamodb:UpdateItem`
-   - `dynamodb:Query`
-   - `dynamodb:DeleteItem`
-   - Resource: `arn:aws:dynamodb:<region>:<account-id>:table/workout-tracker`
-4. Generate access key + secret for that user
-5. Add to GitHub repo secrets:
-   - `VITE_AWS_ACCESS_KEY_ID`
-   - `VITE_AWS_SECRET_ACCESS_KEY`
-   - `VITE_AWS_REGION`
-6. Reference in app via `import.meta.env.VITE_AWS_ACCESS_KEY_ID` etc.
-7. Add to CI workflow as env vars on the build step
+- DynamoDB table: `workout-tracker-db` (PK: String, SK: String)
+- GSI: `date-index` (PK: `type`, SK: `date`)
+- IAM user: `workout-tracker-app` — inline policy scoped to table + GSI
+- Permissions: GetItem, PutItem, UpdateItem, DeleteItem, Query, ListTables
+- Credentials stored as GitHub repository secrets, injected at build time
+- AWS budget alarm at $1/month, alert at 50%
 
 ---
 
-## V1 Scope
+## Offline Strategy
 
-- [ ] Session selection (pick the day)
-- [ ] Exercise list per day (from final.md)
-- [ ] Log sets: weight / reps / RIR
-- [ ] Show last session's numbers as reference
-- [ ] Progression flag when criteria met
-- [ ] Session history view
+1. **Service worker** — caches all app files (HTML/JS/CSS) for offline loading
+2. **localStorage fallback** — Active Session caches data locally on every change
+3. **Sync queue** — failed DynamoDB writes queue in localStorage, flush on reconnect
+4. **PWA manifest** — installable to home screen, standalone display
 
-## V1 TODOs
-- [ ] Fill out 5/3/1 section (currently read-only placeholder)
+---
 
-## V2
+## V1 Status (Complete)
+- Session logging with double progression
+- 5s PRO tracking with training max config
+- Exercise swaps (configured subs + custom subs via Manage Workout)
+- Exercise library with metadata and history
+- Session history with edit/delete
+- Bodyweight logging
+- PWA with offline support
+- Manage Workout with exercise library and sub editing
+
+## V2 Roadmap
+- [ ] Auth (Cognito) + multiple users
 - [ ] Rest timer
-- [ ] Add and customize workouts
-- [ ] Auth (Cognito)
-- [ ] 5/3/1 tracking
+- [ ] Full workout creation/editing via Manage Workout UI
 - [ ] Progress charts per exercise
-- [ ] Multiple users
+- [ ] Exercise history backfill from sessions
