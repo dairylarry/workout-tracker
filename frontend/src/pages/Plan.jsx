@@ -55,7 +55,7 @@ const SESSIONS = [
       { name: 'Cable Face Pull', sets: '3', reps: '12–15 (RIR 1)', rest: '60 sec', subs: ['Band Face Pull', 'Rear Delt Fly'] },
       { name: 'Cable Lateral Raise (or DB lateral raise)', sets: '4', reps: '15–20 (RIR 1)', rest: '60 sec', subs: ['DB Lateral Raise'] },
       { name: 'Cable Overhead Tricep Extension (or DB)', sets: '2', reps: '10–12 (RIR 1)', rest: '60 sec', subs: ['DB Overhead Tricep Extension'] },
-      { name: 'Hammer Curl', sets: '3', reps: '10–12 (RIR 1)', rest: '60 sec', subs: ['DB Hammer Curl', 'Cross-Body Hammer Curl'] },
+      { name: 'Hammer Curl', sets: '3', reps: '10–12 (RIR 1)', rest: '60 sec', subs: ['Cross-Body Hammer Curl'] },
     ],
     notes: [
       'Monitor total pressing fatigue across the week — if anterior shoulder discomfort develops, reduce Incline DB Press volume first.',

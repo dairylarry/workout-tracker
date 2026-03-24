@@ -51,7 +51,7 @@ export const PROGRAM = {
         { name: 'Cable Face Pull', sets: 3, repRange: [12, 15], rir: 1, rest: '60 sec', superset: 'A', subs: ['Band Face Pull', 'Rear Delt Fly'] },
         { name: 'Cable Lateral Raise', sets: 4, repRange: [15, 20], rir: 1, rest: '60 sec', superset: 'A', subs: ['DB Lateral Raise'] },
         { name: 'Cable Overhead Tricep Extension', sets: 2, repRange: [10, 12], rir: 1, rest: '60 sec', superset: 'B', subs: ['DB Overhead Tricep Extension'] },
-        { name: 'Hammer Curl', sets: 3, repRange: [10, 12], rir: 1, rest: '60 sec', superset: 'B', subs: ['DB Hammer Curl', 'Cross-Body Hammer Curl'] },
+        { name: 'Hammer Curl', sets: 3, repRange: [10, 12], rir: 1, rest: '60 sec', superset: 'B', subs: ['Cross-Body Hammer Curl'] },
       ],
     },
   },
