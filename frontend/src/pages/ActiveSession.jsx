@@ -524,7 +524,7 @@ export default function ActiveSession() {
                 {exConfig.perSide ? '/side' : ''} · RIR {displayRir} · {exConfig.rest}
               </span>
               {exConfig.superset && (
-                <span className="superset-badge">Superset {exConfig.superset}</span>
+                <span className={`superset-badge superset-${exConfig.superset.toLowerCase()}`}>Superset {exConfig.superset}</span>
               )}
               {exConfig.optional && (
                 <span className="optional-badge">Optional</span>

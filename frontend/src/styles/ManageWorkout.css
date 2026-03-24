@@ -90,11 +90,26 @@
 .mw-superset-badge {
   font-size: 0.65rem;
   font-weight: 600;
-  background: #e8e0f0;
-  color: #6b4c9a;
   padding: 0.1rem 0.35rem;
   border-radius: 3px;
   white-space: nowrap;
+  background: #e8f0fe;
+  color: #1a56db;
+}
+
+.mw-superset-badge.superset-a {
+  background: #e8f0fe;
+  color: #1a56db;
+}
+
+.mw-superset-badge.superset-b {
+  background: #fce8f0;
+  color: #b91c5a;
+}
+
+.mw-superset-badge.superset-c {
+  background: #e0f2e9;
+  color: #1a7a4c;
 }
 
 .mw-exercise-meta {

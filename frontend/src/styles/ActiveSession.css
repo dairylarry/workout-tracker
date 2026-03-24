@@ -238,6 +238,21 @@
   color: #1a56db;
 }
 
+.superset-a {
+  background: #e8f0fe;
+  color: #1a56db;
+}
+
+.superset-b {
+  background: #fce8f0;
+  color: #b91c5a;
+}
+
+.superset-c {
+  background: #e0f2e9;
+  color: #1a7a4c;
+}
+
 .optional-badge {
   background: #fef3c7;
   color: #92400e;
