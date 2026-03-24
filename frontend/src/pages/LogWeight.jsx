@@ -11,7 +11,7 @@ function getTimeOfDay() {
   return 'night'
 }
 
-const TIME_LABELS = { morning: 'Morning', afternoon: 'Afternoon', night: 'Night' }
+const TIME_LABELS = { morning: 'morning', afternoon: 'afternoon', night: 'night' }
 
 export default function LogWeight() {
   const navigate = useNavigate()
