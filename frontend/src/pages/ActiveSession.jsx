@@ -67,7 +67,7 @@ export default function ActiveSession() {
   const [startedAt, setStartedAt] = useState(null)
   const [deload, setDeload] = useState(false)
   const [recentSessions, setRecentSessions] = useState([])
-  const [expandedHistory, setExpandedHistory] = useState({})
+  const [historyLevel, setHistoryLevel] = useState({})
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
   const [swapOpen, setSwapOpen] = useState(null) // index of exercise with swap open
@@ -93,11 +93,11 @@ export default function ActiveSession() {
 
         const [existing, recent] = await Promise.all([
           getSession(sessionType, date),
-          getRecentSessions(sessionType, 4),
+          getRecentSessions(sessionType, 6),
         ])
 
         const pastSessions = recent.filter(s => s.SK !== `DATE#${date}`)
-        setRecentSessions(pastSessions.slice(0, 3))
+        setRecentSessions(pastSessions.slice(0, 5))
 
         if (existing) {
           setExercises(existing.exercises)
@@ -324,8 +324,13 @@ export default function ActiveSession() {
       .filter(Boolean)
   }
 
-  function toggleHistory(exName) {
-    setExpandedHistory(prev => ({ ...prev, [exName]: !prev[exName] }))
+  function cycleHistory(exName) {
+    setHistoryLevel(prev => {
+      const current = prev[exName] || 1
+      if (current === 1) return { ...prev, [exName]: 3 }
+      if (current === 3) return { ...prev, [exName]: 5 }
+      return { ...prev, [exName]: 1 }
+    })
   }
 
   if (!config) return <div className="active-session"><p>Unknown session type.</p></div>
@@ -379,7 +384,7 @@ export default function ActiveSession() {
         Deload week
       </label>
 
-      {config.exercises.map((exConfig, idx) => {
+      {config.exercises.map((exConfig) => {
         if (exConfig.is531) {
           const exercise = exercises.find(e => e.name === exConfig.name)
           if (!exercise) {
@@ -459,7 +464,7 @@ export default function ActiveSession() {
         if (!exercise) return null
         const exIndex = exercises.indexOf(exercise)
         const history = getExerciseHistory(exIndex)
-        const isExpanded = expandedHistory[exercise.name]
+        const expandLevel = historyLevel[exercise.name] || 1
         const progReady = checkProgression(exercise, config)
         const displayName = exercise.swappedName || exercise.name
         const isSwapped = !!exercise.swappedName
@@ -536,24 +541,18 @@ export default function ActiveSession() {
 
             {history.length > 0 && (
               <div className="history-section">
-                <div className="last-session">
-                  <span className="history-date">{history[0].date}:</span>{' '}
-                  <span className="history-variant">{history[0].displayName}</span>{' '}
-                  {history[0].sets.map(s => `${s.weight}${history[0].weightUnit === 'kg' ? 'kg' : ''}×${s.reps}`).join(', ')}
-                </div>
-                {history.length > 1 && (
-                  <>
-                    <button className="show-more" onClick={() => toggleHistory(exercise.name)}>
-                      {isExpanded ? 'Hide' : `Show ${history.length - 1} more`}
-                    </button>
-                    {isExpanded && history.slice(1).map(h => (
-                      <div key={h.date} className="last-session">
-                        <span className="history-date">{h.date}:</span>{' '}
-                        <span className="history-variant">{h.displayName}</span>{' '}
-                        {h.sets.map(s => `${s.weight}${h.weightUnit === 'kg' ? 'kg' : ''}×${s.reps}`).join(', ')}
-                      </div>
-                    ))}
-                  </>
+                {history.slice(0, expandLevel).map(h => (
+                  <div key={h.date} className="last-session">
+                    <span className="history-date">{h.date}:</span>{' '}
+                    <span className="history-variant">{h.displayName}</span>{' '}
+                    {h.sets.map(s => `${s.weight}${h.weightUnit === 'kg' ? 'kg' : ''}×${s.reps}`).join(', ')}
+                  </div>
+                ))}
+                {history.length > expandLevel && (
+                  <button className="show-more" onClick={() => cycleHistory(exercise.name)}>+</button>
+                )}
+                {expandLevel > 1 && expandLevel >= history.length && (
+                  <button className="show-more" onClick={() => cycleHistory(exercise.name)}>−</button>
                 )}
               </div>
             )}
