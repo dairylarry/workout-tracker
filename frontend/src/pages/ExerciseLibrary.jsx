@@ -5,6 +5,7 @@ import { putExercise, deleteExercise, getExerciseLibrary } from '../lib/dynamodb
 import '../styles/ManageWorkout.css'
 
 const MUSCLE_GROUPS = ['quads', 'hamstrings', 'glutes', 'calves', 'chest', 'back', 'shoulders', 'biceps', 'triceps', 'core']
+const EXERCISES_531 = ['Barbell Back Squat', 'Flat Barbell Bench Press']
 
 export default function ExerciseLibrary() {
   const navigate = useNavigate()
@@ -117,11 +118,6 @@ export default function ExerciseLibrary() {
             <div key={ex.name} className="mw-library-item-wrap">
               <div className="mw-library-item">
                 <div className="mw-library-item-info">
-                  {hasHistory && (
-                    <button className="mw-history-toggle" onClick={() => toggleExerciseHistory(ex.name)}>
-                      {historyCount > 0 ? '−' : '+'}
-                    </button>
-                  )}
                   <div>
                     <span className="mw-library-name">{ex.name}</span>
                     <span className="mw-library-meta">
@@ -132,6 +128,11 @@ export default function ExerciseLibrary() {
                     </span>
                   </div>
                 </div>
+                {hasHistory && !EXERCISES_531.includes(ex.name) && (
+                  <button className="mw-history-toggle" onClick={() => toggleExerciseHistory(ex.name)}>
+                    {historyCount > 0 ? '−' : '+'}
+                  </button>
+                )}
                 {deleteMode && (
                   confirmDelete === ex.name ? (
                     <div className="mw-confirm-delete">
