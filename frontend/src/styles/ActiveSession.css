@@ -70,6 +70,39 @@
   background: #f0f0f0;
 }
 
+.swap-btn--active {
+  background: #f0f0f0;
+  border-color: #999;
+  color: #333;
+}
+
+.set-edit-controls {
+  display: flex;
+  gap: 0.4rem;
+  margin-top: 0.4rem;
+}
+
+.set-edit-btn {
+  flex: 1;
+  padding: 0.35rem 0;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+  font-size: 0.75rem;
+  background: #fafafa;
+  color: #555;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.set-edit-btn:active {
+  background: #f0f0f0;
+}
+
+.set-edit-btn--remove:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+
 .swapped-from {
   display: block;
   font-size: 0.72rem;

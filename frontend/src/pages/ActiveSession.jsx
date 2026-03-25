@@ -71,6 +71,7 @@ export default function ActiveSession() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
   const [swapOpen, setSwapOpen] = useState(null) // index of exercise with swap open
+  const [setEditOpen, setSetEditOpen] = useState(null) // index of exercise with ± panel open
 
   const [ftoConfigs, setFtoConfigs] = useState({})
   const saveTimeout = useRef(null)
@@ -268,6 +269,39 @@ export default function ActiveSession() {
     })
   }
 
+  function handleAddSet(exIndex) {
+    setExercises(prev => {
+      const updated = prev.map((ex, ei) => {
+        if (ei !== exIndex) return ex
+        const newSet = { setNumber: ex.sets.length + 1, weight: '', reps: '', rir: '' }
+        return { ...ex, sets: [...ex.sets, newSet] }
+      })
+      if (saveTimeout.current) clearTimeout(saveTimeout.current)
+      saveTimeout.current = setTimeout(() => {
+        updateSessionExercises(sessionType, date, updated).catch(e =>
+          console.error('Failed to save:', e)
+        )
+      }, 500)
+      return updated
+    })
+  }
+
+  function handleRemoveSet(exIndex) {
+    setExercises(prev => {
+      const updated = prev.map((ex, ei) => {
+        if (ei !== exIndex || ex.sets.length <= 1) return ex
+        return { ...ex, sets: ex.sets.slice(0, -1) }
+      })
+      if (saveTimeout.current) clearTimeout(saveTimeout.current)
+      saveTimeout.current = setTimeout(() => {
+        updateSessionExercises(sessionType, date, updated).catch(e =>
+          console.error('Failed to save:', e)
+        )
+      }, 500)
+      return updated
+    })
+  }
+
   function handleSwap(exIndex, newName) {
     setExercises(prev => {
       const updated = prev.map((ex, ei) => {
@@ -283,7 +317,7 @@ export default function ActiveSession() {
       return updated
     })
     setSwapOpen(null)
-
+    setSetEditOpen(null)
   }
 
   function handleResetSwap(exIndex) {
@@ -299,6 +333,7 @@ export default function ActiveSession() {
       return updated
     })
     setSwapOpen(null)
+    setSetEditOpen(null)
   }
 
   const [saveStatus, setSaveStatus] = useState(null)
@@ -536,9 +571,15 @@ export default function ActiveSession() {
                   <h3>{displayName}</h3>
                   <button
                     className="swap-btn"
-                    onClick={() => setSwapOpen(isSwapOpen ? null : exIndex)}
+                    onClick={() => { setSwapOpen(isSwapOpen ? null : exIndex); setSetEditOpen(null) }}
                   >
                     Swap
+                  </button>
+                  <button
+                    className={`swap-btn${setEditOpen === exIndex ? ' swap-btn--active' : ''}`}
+                    onClick={() => { setSetEditOpen(setEditOpen === exIndex ? null : exIndex); setSwapOpen(null) }}
+                  >
+                    ±
                   </button>
                 </div>
                 <select
@@ -641,6 +682,16 @@ export default function ActiveSession() {
                 </div>
               ))}
             </div>
+            {setEditOpen === exIndex && (
+              <div className="set-edit-controls">
+                <button className="set-edit-btn" onClick={() => handleAddSet(exIndex)}>+ Set</button>
+                <button
+                  className="set-edit-btn set-edit-btn--remove"
+                  onClick={() => handleRemoveSet(exIndex)}
+                  disabled={exercise.sets.length <= 1}
+                >− Set</button>
+              </div>
+            )}
           </div>
         )
       })}
