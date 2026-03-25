@@ -90,6 +90,7 @@ export default function ActiveSession() {
         slotIndex,
         sets: ex.sets.map(s => ({ weight: s.weight, reps: s.reps, rir: s.rir })),
         weightUnit: ex.weightUnit || 'lbs',
+        ...(deload && { deload: true }),
       })
     }).filter(Boolean)
     return Promise.all(promises)
@@ -636,6 +637,7 @@ export default function ActiveSession() {
                   <div key={h.date} className="last-session">
                     <span className="history-date">{h.date}:</span>{' '}
                     <span className="history-variant">{h.displayName}</span>{' '}
+                    {h.deload && <span className="deload-tag">deload</span>}{' '}
                     {h.sets.map(s => `${s.weight}${h.weightUnit === 'kg' ? 'kg' : ''}×${s.reps}`).join(', ')}
                   </div>
                 ))}

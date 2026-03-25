@@ -150,6 +150,7 @@ export default function ExerciseLibrary() {
                     <div key={`${h.date}-${h.sessionType}-${h.slotIndex}-${i}`} className="mw-history-entry">
                       <span className="mw-history-date">{h.date}</span>
                       <span className="mw-history-session">{h.sessionType}</span>
+                      {h.deload && <span className="deload-tag">deload</span>}
                       <span className="mw-history-sets">
                         {h.sets?.map(s => `${s.weight}${h.weightUnit === 'kg' ? 'kg' : ''}×${s.reps}`).join(', ')}
                       </span>
