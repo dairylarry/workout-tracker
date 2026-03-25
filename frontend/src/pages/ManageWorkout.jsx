@@ -1,7 +1,8 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { useProgram } from '../context/ProgramContext'
+import { useProgram, seedFromConfig } from '../context/ProgramContext'
 import { putSessionType } from '../lib/dynamodb'
+import { reseedExerciseLibraryMetaOnly } from '../seeds/reseed'
 import '../styles/ManageWorkout.css'
 
 const SESSION_ORDER = ['lower-a', 'upper-a', 'lower-b', 'upper-b']
@@ -14,6 +15,8 @@ export default function ManageWorkout() {
   const [editingSubs, setEditingSubs] = useState(null) // { sessionId, exerciseName }
   const [subFilter, setSubFilter] = useState('')
   const [subFamilyFilter, setSubFamilyFilter] = useState('')
+  const [syncLibStatus, setSyncLibStatus] = useState(null) // null | 'syncing' | 'done' | 'error'
+  const [syncConfigStatus, setSyncConfigStatus] = useState(null) // null | 'confirm' | 'syncing' | 'done' | 'error'
 
   if (!program) return <div className="manage-workout"><p>Loading...</p></div>
 
@@ -51,6 +54,32 @@ export default function ManageWorkout() {
     setEditingSubs(null)
   }
 
+  async function handleSyncLibrary() {
+    setSyncLibStatus('syncing')
+    try {
+      await reseedExerciseLibraryMetaOnly()
+      setSyncLibStatus('done')
+      setTimeout(() => setSyncLibStatus(null), 2000)
+    } catch (e) {
+      console.error('Sync exercise library failed:', e)
+      setSyncLibStatus('error')
+      setTimeout(() => setSyncLibStatus(null), 3000)
+    }
+  }
+
+  async function handleSyncConfig() {
+    setSyncConfigStatus('syncing')
+    try {
+      await seedFromConfig()
+      setSyncConfigStatus('done')
+      setTimeout(() => setSyncConfigStatus(null), 2000)
+    } catch (e) {
+      console.error('Sync program config failed:', e)
+      setSyncConfigStatus('error')
+      setTimeout(() => setSyncConfigStatus(null), 3000)
+    }
+  }
+
   // Filter exercise library for sub picker
   function getFilteredLibrary(exerciseName) {
     const muscleFiltered = exerciseLibrary
@@ -85,6 +114,35 @@ export default function ManageWorkout() {
       <button className="mw-library-btn" onClick={() => navigate('/manage/library')}>
         Exercise Library ({exerciseLibrary.length})
       </button>
+
+      {editMode && (
+        <div className="mw-sync-section">
+          <button
+            className="mw-sync-btn"
+            onClick={handleSyncLibrary}
+            disabled={syncLibStatus === 'syncing'}
+          >
+            {syncLibStatus === 'syncing' ? 'Syncing...' : syncLibStatus === 'done' ? 'Synced' : syncLibStatus === 'error' ? 'Failed — retry' : 'Sync Exercise Library'}
+          </button>
+          {syncConfigStatus === 'confirm' ? (
+            <div className="mw-sync-confirm">
+              <p className="mw-sync-warning">This will reset all subs to defaults from the seed config.</p>
+              <div className="mw-sync-confirm-actions">
+                <button className="mw-confirm-yes" onClick={() => { setSyncConfigStatus(null); handleSyncConfig() }}>Confirm</button>
+                <button className="mw-confirm-no" onClick={() => setSyncConfigStatus(null)}>Cancel</button>
+              </div>
+            </div>
+          ) : (
+            <button
+              className="mw-sync-btn"
+              onClick={() => setSyncConfigStatus('confirm')}
+              disabled={syncConfigStatus === 'syncing'}
+            >
+              {syncConfigStatus === 'syncing' ? 'Syncing...' : syncConfigStatus === 'done' ? 'Synced' : syncConfigStatus === 'error' ? 'Failed — retry' : 'Sync Program Config'}
+            </button>
+          )}
+        </div>
+      )}
 
       {SESSION_ORDER.map(sessionId => {
         const session = program.sessionTypes[sessionId]

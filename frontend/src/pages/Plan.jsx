@@ -152,9 +152,26 @@ export default function Plan() {
 
       <div className="plan-section">
         <h3>Nutrition</h3>
+        <h4>Calorie Targets</h4>
+        <p className="plan-note"><strong>Stats:</strong> 29M · 5′8″ · 179 lb<br /><strong>BMR (no activity):</strong> ~1,752 kcal/day (Mifflin-St Jeor)</p>
+        <div className="table-wrap">
+          <table>
+            <thead>
+              <tr><th>Activity Level</th><th>Multiplier</th><th>TDEE</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>Sedentary (desk job, no exercise)</td><td>1.20</td><td>~2,100</td></tr>
+              <tr><td>Lightly active (1–3x/week)</td><td>1.375</td><td>~2,410</td></tr>
+              <tr><td>Moderately active (3–5x/week)</td><td>1.55</td><td>~2,715</td></tr>
+              <tr className="highlight-row"><td><strong>Active (current — 4x lift + 2x run + 2x yoga)</strong></td><td><strong>1.65</strong></td><td><strong>~2,890</strong></td></tr>
+              <tr><td>Very active (hard training 6–7x/week)</td><td>1.725</td><td>~3,020</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p className="plan-note"><strong>Current goal (slight deficit):</strong> ~2,500 kcal/day (~350–400 kcal below TDEE → ~0.5–0.75 lb/week loss)</p>
         <ul>
           <li>Protein: 170–190g/day</li>
-          <li>Calories: ~150–300 kcal below maintenance. Eat near maintenance on Lower days.</li>
+          <li>Calories: ~150–300 kcal below maintenance. Eat near maintenance on Lower days; hold the deficit on Upper and rest days.</li>
           <li>Pre-lift (60–90 min before): 30–50g carbs + 30g protein, low fat</li>
           <li>Post-lift (within 90 min): 40–60g carbs + 40g protein</li>
           <li>If weight drops faster than 0.5 lb/week for 2+ weeks, add 150–200 kcal on training days</li>

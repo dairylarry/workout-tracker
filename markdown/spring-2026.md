@@ -117,6 +117,21 @@
 
 **Nutrition**
 
+### Calorie Targets
+
+**Stats:** 29M · 5'8" · 179 lb
+**BMR (no activity):** ~1,752 kcal/day *(Mifflin-St Jeor)*
+
+| Activity Level | Multiplier | TDEE |
+| --- | --- | --- |
+| Sedentary (desk job, no exercise) | 1.20 | ~2,100 |
+| Lightly active (1–3x/week) | 1.375 | ~2,410 |
+| Moderately active (3–5x/week) | 1.55 | ~2,715 |
+| **Active (current — 4x lift + 2x run + 2x yoga)** | **1.65** | **~2,890** |
+| Very active (hard training 6–7x/week) | 1.725 | ~3,020 |
+
+**Current goal (slight deficit):** ~2,500 kcal/day (~350–400 kcal below TDEE → ~0.5–0.75 lb/week loss)
+
 - Protein: 170–190g/day.
 - Calories: ~150–300 kcal below maintenance. Eat near maintenance on Lower days; hold the deficit on Upper and rest days.
 - Pre-lift (60–90 min before): 30–50g carbs + 30g protein, low fat.
