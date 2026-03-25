@@ -55,20 +55,14 @@
 }
 
 .dp ul {
-  list-style: none;
-  padding: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 0.3rem;
+  padding-left: 1.25rem;
   margin-bottom: 0.75rem;
 }
 
 .dp li {
   font-size: 0.9rem;
-  padding: 0.5rem 0.75rem;
-  background: #fff;
-  border: 1px solid #ddd;
-  border-radius: 4px;
+  line-height: 1.5;
+  margin-bottom: 0.3rem;
 }
 
 .dp hr {
