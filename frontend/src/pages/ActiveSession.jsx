@@ -405,6 +405,7 @@ export default function ActiveSession() {
           sets: ex.sets,
           weightUnit: ex.weightUnit || 'lbs',
           displayName: ex.swappedName || ex.name,
+          deload: s.deload || false,
         }
       })
       .filter(Boolean)
