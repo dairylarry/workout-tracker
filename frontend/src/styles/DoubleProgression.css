@@ -5,70 +5,61 @@
   padding-bottom: 4rem;
 }
 
-.back {
-  background: none;
-  border: none;
-  cursor: pointer;
-  font-size: 0.9rem;
-  padding: 0;
-  margin-bottom: 1rem;
-  display: block;
-  -webkit-tap-highlight-color: transparent;
-}
-
-.dp h1 {
-  font-size: 1.3rem;
-  font-weight: 700;
-  margin-bottom: 1rem;
-}
-
 .dp h2 {
+  margin-bottom: 1rem;
+}
+
+.dp-section {
+  margin-bottom: 1.5rem;
+}
+
+.dp-section h3 {
   font-size: 1rem;
-  font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  margin-top: 2rem;
   margin-bottom: 0.5rem;
 }
 
-.dp h3 {
-  font-size: 0.95rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  margin-top: 1.25rem;
-  margin-bottom: 0.5rem;
-}
-
-.dp p {
+.dp-intro {
   font-size: 0.9rem;
   line-height: 1.5;
-  margin-bottom: 0.75rem;
-}
-
-/* Intro paragraph — first p after h1 */
-.dp h1 + p {
   background: #fff;
   border: 1px solid #ddd;
   border-radius: 4px;
   padding: 1rem;
 }
 
-.dp ul {
-  padding-left: 1.25rem;
-  margin-bottom: 0.75rem;
+.dp-config {
+  font-size: 0.9rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
 }
 
-.dp li {
+.dp-key-points {
+  list-style: none;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.dp-key-points li {
+  font-size: 0.9rem;
+  padding: 0.5rem 0.75rem;
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.dp p {
   font-size: 0.9rem;
   line-height: 1.5;
-  margin-bottom: 0.3rem;
 }
 
-.dp hr {
-  border: none;
-  border-top: 1px solid #e5e5e5;
-  margin: 1.5rem 0;
+.dp-note {
+  font-size: 0.8rem;
+  color: #666;
+  margin-top: 0.5rem;
 }
 
 .table-wrap {
@@ -100,4 +91,25 @@
 
 .dp tr:last-child td {
   border-bottom: none;
+}
+
+.highlight-row td {
+  background: #d1fae5;
+  font-weight: 600;
+}
+
+.note-cell {
+  font-size: 0.75rem;
+  color: #666;
+}
+
+.back {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 0.9rem;
+  padding: 0;
+  margin-bottom: 1rem;
+  display: block;
+  -webkit-tap-highlight-color: transparent;
 }

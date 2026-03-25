@@ -2,7 +2,6 @@
   padding: 1.5rem;
   max-width: 600px;
   margin: 0 auto;
-  padding-bottom: 4rem;
 }
 
 .back {
@@ -13,52 +12,33 @@
   padding: 0;
   margin-bottom: 1rem;
   display: block;
-  -webkit-tap-highlight-color: transparent;
-}
-
-.plan h1 {
-  font-size: 1.3rem;
-  font-weight: 700;
-  margin-bottom: 1rem;
 }
 
 .plan h2 {
-  font-size: 1rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  margin-top: 2rem;
-  margin-bottom: 0.75rem;
-}
-
-.plan p {
-  font-size: 0.9rem;
-  line-height: 1.5;
-  margin-bottom: 0.5rem;
-}
-
-.plan-note {
-  font-size: 0.8rem;
-  color: #555;
-  margin-top: 0.25rem;
-  margin-bottom: 0.25rem;
-}
-
-.plan ul {
-  padding-left: 1.25rem;
   margin-bottom: 1rem;
 }
 
-.plan li {
+.plan-meta {
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  padding: 1rem;
+  margin-bottom: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
   font-size: 0.9rem;
-  line-height: 1.5;
-  margin-bottom: 0.35rem;
 }
 
-.plan hr {
-  border: none;
-  border-top: 1px solid #e5e5e5;
-  margin: 1.5rem 0;
+.plan-section {
+  margin-bottom: 2rem;
+}
+
+.plan-section h3 {
+  margin-bottom: 0.75rem;
+  font-size: 1rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
 }
 
 .table-wrap {
@@ -67,14 +47,14 @@
   margin-bottom: 0.75rem;
 }
 
-.plan table {
+table {
   width: 100%;
   border-collapse: collapse;
   font-size: 0.875rem;
   min-width: 340px;
 }
 
-.plan th {
+th {
   text-align: left;
   padding: 0.5rem 0.75rem;
   background: #111;
@@ -82,12 +62,42 @@
   font-weight: 600;
 }
 
-.plan td {
+td {
   padding: 0.5rem 0.75rem;
   border-bottom: 1px solid #e5e5e5;
   background: #fff;
 }
 
-.plan tr:last-child td {
+tr:last-child td {
   border-bottom: none;
+}
+
+.plan-subs {
+  display: block;
+  font-size: 0.75rem;
+  color: #888;
+  font-style: italic;
+  margin-top: 0.15rem;
+}
+
+.plan-note {
+  font-size: 0.8rem;
+  color: #555;
+  margin-top: 0.25rem;
+}
+
+.plan-section ul {
+  list-style: none;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.plan-section li {
+  font-size: 0.9rem;
+  padding: 0.6rem 0.75rem;
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 4px;
 }
