@@ -61,7 +61,7 @@
   border-radius: 3px;
   font-size: 0.7rem;
   padding: 0.2rem 0.5rem;
-  min-width: 2.8rem;
+  min-width: 2.8rem; /* swap-btn default */
   cursor: pointer;
   color: #666;
   -webkit-tap-highlight-color: transparent;
@@ -69,6 +69,10 @@
 
 .swap-btn:active {
   background: #f0f0f0;
+}
+
+.set-count-btn {
+  width: 3.2rem;
 }
 
 .swap-btn--active {

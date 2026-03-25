@@ -578,7 +578,7 @@ export default function ActiveSession() {
                     Swap
                   </button>
                   <button
-                    className={`swap-btn${setEditOpen === exIndex ? ' swap-btn--active' : ''}`}
+                    className={`swap-btn set-count-btn${setEditOpen === exIndex ? ' swap-btn--active' : ''}`}
                     onClick={() => { setSetEditOpen(setEditOpen === exIndex ? null : exIndex); setSwapOpen(null) }}
                   >
                     {setEditOpen === exIndex ? 'Done' : '±'}
