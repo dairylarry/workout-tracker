@@ -1,5 +1,6 @@
 import { useNavigate } from 'react-router-dom'
 import ReactMarkdown from 'react-markdown'
+import remarkGfm from 'remark-gfm'
 import { Children, isValidElement } from 'react'
 import content from '../static/spring-2026.md?raw'
 import '../styles/Plan.css'
@@ -20,7 +21,7 @@ export default function Plan() {
   return (
     <div className="plan">
       <button className="back" onClick={() => navigate('/')}>← Back</button>
-      <ReactMarkdown components={components}>{content}</ReactMarkdown>
+      <ReactMarkdown remarkPlugins={[remarkGfm]} components={components}>{content}</ReactMarkdown>
     </div>
   )
 }
