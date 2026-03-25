@@ -579,7 +579,7 @@ export default function ActiveSession() {
                     className={`swap-btn${setEditOpen === exIndex ? ' swap-btn--active' : ''}`}
                     onClick={() => { setSetEditOpen(setEditOpen === exIndex ? null : exIndex); setSwapOpen(null) }}
                   >
-                    ±
+                    {setEditOpen === exIndex ? 'Done' : '±'}
                   </button>
                 </div>
                 <select
@@ -684,12 +684,12 @@ export default function ActiveSession() {
             </div>
             {setEditOpen === exIndex && (
               <div className="set-edit-controls">
-                <button className="set-edit-btn" onClick={() => handleAddSet(exIndex)}>+ Set</button>
                 <button
                   className="set-edit-btn set-edit-btn--remove"
                   onClick={() => handleRemoveSet(exIndex)}
                   disabled={exercise.sets.length <= 1}
                 >− Set</button>
+                <button className="set-edit-btn" onClick={() => handleAddSet(exIndex)}>+ Set</button>
               </div>
             )}
           </div>

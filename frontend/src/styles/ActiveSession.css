@@ -61,6 +61,7 @@
   border-radius: 3px;
   font-size: 0.7rem;
   padding: 0.2rem 0.5rem;
+  min-width: 2.8rem;
   cursor: pointer;
   color: #666;
   -webkit-tap-highlight-color: transparent;
