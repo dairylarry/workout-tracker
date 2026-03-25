@@ -115,35 +115,6 @@ export default function ManageWorkout() {
         Exercise Library ({exerciseLibrary.length})
       </button>
 
-      {editMode && (
-        <div className="mw-sync-section">
-          <button
-            className="mw-sync-btn"
-            onClick={handleSyncLibrary}
-            disabled={syncLibStatus === 'syncing'}
-          >
-            {syncLibStatus === 'syncing' ? 'Syncing...' : syncLibStatus === 'done' ? 'Synced' : syncLibStatus === 'error' ? 'Failed — retry' : 'Sync Exercise Library'}
-          </button>
-          {syncConfigStatus === 'confirm' ? (
-            <div className="mw-sync-confirm">
-              <p className="mw-sync-warning">This will reset all subs to defaults from the seed config.</p>
-              <div className="mw-sync-confirm-actions">
-                <button className="mw-confirm-yes" onClick={() => { setSyncConfigStatus(null); handleSyncConfig() }}>Confirm</button>
-                <button className="mw-confirm-no" onClick={() => setSyncConfigStatus(null)}>Cancel</button>
-              </div>
-            </div>
-          ) : (
-            <button
-              className="mw-sync-btn"
-              onClick={() => setSyncConfigStatus('confirm')}
-              disabled={syncConfigStatus === 'syncing'}
-            >
-              {syncConfigStatus === 'syncing' ? 'Syncing...' : syncConfigStatus === 'done' ? 'Synced' : syncConfigStatus === 'error' ? 'Failed — retry' : 'Sync Program Config'}
-            </button>
-          )}
-        </div>
-      )}
-
       {SESSION_ORDER.map(sessionId => {
         const session = program.sessionTypes[sessionId]
         if (!session) return null
@@ -240,6 +211,35 @@ export default function ManageWorkout() {
           </div>
         )
       })}
+
+      {editMode && (
+        <div className="mw-sync-section">
+          <button
+            className="mw-sync-btn"
+            onClick={handleSyncLibrary}
+            disabled={syncLibStatus === 'syncing'}
+          >
+            {syncLibStatus === 'syncing' ? 'Syncing...' : syncLibStatus === 'done' ? 'Synced' : syncLibStatus === 'error' ? 'Failed — retry' : 'Sync Exercise Library'}
+          </button>
+          {syncConfigStatus === 'confirm' ? (
+            <div className="mw-sync-confirm">
+              <p className="mw-sync-warning">This will reset all subs to defaults from the seed config.</p>
+              <div className="mw-sync-confirm-actions">
+                <button className="mw-confirm-yes" onClick={() => { setSyncConfigStatus(null); handleSyncConfig() }}>Confirm</button>
+                <button className="mw-confirm-no" onClick={() => setSyncConfigStatus(null)}>Cancel</button>
+              </div>
+            </div>
+          ) : (
+            <button
+              className="mw-sync-btn"
+              onClick={() => setSyncConfigStatus('confirm')}
+              disabled={syncConfigStatus === 'syncing'}
+            >
+              {syncConfigStatus === 'syncing' ? 'Syncing...' : syncConfigStatus === 'done' ? 'Synced' : syncConfigStatus === 'error' ? 'Failed — retry' : 'Sync Program Config'}
+            </button>
+          )}
+        </div>
+      )}
 
     </div>
   )
