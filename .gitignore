@@ -23,3 +23,7 @@ build/
 
 # logs
 npm-debug.log*
+
+# timer script
+**/.venv
+**/output
