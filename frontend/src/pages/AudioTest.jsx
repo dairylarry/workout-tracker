@@ -133,6 +133,27 @@ export default function AudioTest() {
   const [timerState, setTimerState] = useState('idle')  // idle | running | done
   const [display, setDisplay] = useState({ phase: '', remaining: null })
 
+  // Cleanup on unmount (e.g. navigating away mid-timer)
+  useEffect(() => {
+    return () => {
+      clearInterval(intervalRef.current)
+      if (scheduleRef.current) {
+        for (const node of scheduleRef.current.nodes) {
+          try { node.stop() } catch (_) {}
+        }
+      }
+      if (silentOscRef.current) {
+        try { silentOscRef.current.stop() } catch (_) {}
+      }
+      if (ctxRef.current) {
+        ctxRef.current.close()
+      }
+      if (wakeLockRef.current) {
+        wakeLockRef.current.release()
+      }
+    }
+  }, [])
+
   // Resume AudioContext and re-acquire wake lock if iOS drops them after backgrounding.
   useEffect(() => {
     function onVisibilityChange() {
