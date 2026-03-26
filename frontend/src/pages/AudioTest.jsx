@@ -19,16 +19,17 @@ const FREQ_REST = 523  // C5 — rest beep
 // ─────────────────────────────────────────────────────────────────────────────
 
 /** Schedule a sine-wave tone. All times are relative seconds from `origin`. */
-function scheduleTone(ctx, dest, freq, dur, vol, relT, origin) {
+function scheduleTone(ctx, dest, freq, dur, vol, relT, origin, masterVol) {
   const osc = ctx.createOscillator()
   const gain = ctx.createGain()
   osc.connect(gain)
   gain.connect(dest)
   osc.frequency.value = freq
   const at = origin + relT
-  gain.gain.setValueAtTime(vol * VOLUME, at)
+  const v = vol * masterVol
+  gain.gain.setValueAtTime(v, at)
   // Short linear fade-out to avoid clicks
-  gain.gain.setValueAtTime(vol * VOLUME, at + dur - 0.005)
+  gain.gain.setValueAtTime(v, at + dur - 0.005)
   gain.gain.linearRampToValueAtTime(0.0001, at + dur)
   osc.start(at)
   osc.stop(at + dur)
@@ -53,7 +54,7 @@ function buildTimer(ctx) {
   const nodes = []
 
   function tone(freq, dur, vol, relT) {
-    nodes.push(scheduleTone(ctx, ctx.destination, freq, dur, vol, relT, origin))
+    nodes.push(scheduleTone(ctx, ctx.destination, freq, dur, vol, relT, origin, VOLUME))
   }
 
   // Three warning ticks, one per second (matching generate_transition_ticks)
@@ -78,9 +79,10 @@ function buildTimer(ctx) {
     const workT = COUNTDOWN_S + elapsed
 
     if (isLast) {
-      // Double-tap matching generate_last_round_beep: 0.08s + 0.06s gap + main strike
-      tone(FREQ_WORK, 0.08, 0.5, workT)
-      tone(FREQ_WORK, Math.max(0.2, TRANSITION_S - 0.14), 0.6, workT + 0.14)
+      // Triple-tap bell: tap-tap-ring with tightening gaps and decreasing volume
+      tone(FREQ_WORK, 0.08, 0.55, workT)           // strong initial hit
+      tone(FREQ_WORK, 0.08, 0.50, workT + 0.14)    // quick follow (0.06s gap)
+      tone(FREQ_WORK, 0.30, 0.45, workT + 0.26)    // longer ring-out (0.04s gap)
     } else {
       tone(FREQ_WORK, TRANSITION_S, 0.4, workT)
     }
@@ -307,8 +309,6 @@ export default function AudioTest() {
 
   return (
     <div className="audio-test-page">
-      <h1>Interval Timer</h1>
-
       <p className="audio-test-status">{statusText}</p>
 
       <div className="audio-test-buttons">
