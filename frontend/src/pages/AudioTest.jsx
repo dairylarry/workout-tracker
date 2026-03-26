@@ -128,21 +128,49 @@ export default function AudioTest() {
   const silentOscRef  = useRef(null)
   const scheduleRef   = useRef(null)
   const intervalRef   = useRef(null)
+  const wakeLockRef   = useRef(null)
 
   const [timerState, setTimerState] = useState('idle')  // idle | running | done
   const [display, setDisplay] = useState({ phase: '', remaining: null })
 
-  // Resume the AudioContext if iOS suspends it after the screen un-locks.
-  // This won't prevent suspension but will recover playback once visible again.
+  // Resume AudioContext and re-acquire wake lock if iOS drops them after backgrounding.
   useEffect(() => {
     function onVisibilityChange() {
+      if (document.visibilityState !== 'visible') return
       if (ctxRef.current?.state === 'suspended') {
         ctxRef.current.resume().then(() => console.log('[Timer] AudioContext resumed'))
+      }
+      // Wake lock is released when page becomes hidden; re-acquire when visible again
+      if (wakeLockRef.current !== null && timerState === 'running') {
+        requestWakeLock()
       }
     }
     document.addEventListener('visibilitychange', onVisibilityChange)
     return () => document.removeEventListener('visibilitychange', onVisibilityChange)
-  }, [])
+  })
+
+  async function requestWakeLock() {
+    if (!('wakeLock' in navigator)) {
+      console.warn('[Timer] Wake Lock API not supported')
+      return
+    }
+    try {
+      wakeLockRef.current = await navigator.wakeLock.request('screen')
+      console.log('[Timer] wake lock acquired — screen will stay on')
+      wakeLockRef.current.addEventListener('release', () => {
+        console.log('[Timer] wake lock released')
+      })
+    } catch (e) {
+      console.warn('[Timer] wake lock request failed:', e)
+    }
+  }
+
+  function releaseWakeLock() {
+    if (wakeLockRef.current) {
+      wakeLockRef.current.release()
+      wakeLockRef.current = null
+    }
+  }
 
   function getContext() {
     if (!ctxRef.current || ctxRef.current.state === 'closed') {
@@ -180,6 +208,9 @@ export default function AudioTest() {
       silentOscRef.current = osc
     }
 
+    // Keep the screen awake so iOS doesn't lock and suspend audio
+    requestWakeLock()
+
     // Pre-schedule all beeps on the audio thread
     scheduleRef.current = buildTimer(ctx)
     setTimerState('running')
@@ -193,6 +224,7 @@ export default function AudioTest() {
       if (elapsed >= endTime) {
         clearInterval(intervalRef.current)
         stopKeepalive()
+        releaseWakeLock()
         setTimerState('done')
         setDisplay({ phase: 'Done', remaining: null })
         return
@@ -231,6 +263,7 @@ export default function AudioTest() {
     }
 
     stopKeepalive()
+    releaseWakeLock()
 
     if (ctxRef.current) {
       ctxRef.current.close()
