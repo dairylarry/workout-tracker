@@ -307,21 +307,18 @@ export default function AudioTest() {
 
   return (
     <div className="audio-test-page">
-      <h1>Test Audio Cue</h1>
-      <p className="audio-test-desc">
-        Start the timer, then lock your phone. Beeps should continue playing over Spotify.
-      </p>
+      <h1>Interval Timer</h1>
+
+      <p className="audio-test-status">{statusText}</p>
 
       <div className="audio-test-buttons">
         <button className="audio-test-play" onClick={handleStart} disabled={isRunning}>
-          Start Timer
+          Start
         </button>
         <button className="audio-test-stop" onClick={handleStop} disabled={timerState === 'idle'}>
           Stop
         </button>
       </div>
-
-      <p className="audio-test-status">{statusText}</p>
 
       <button className="audio-test-back" onClick={() => { handleStop(); navigate('/') }}>
         Back
