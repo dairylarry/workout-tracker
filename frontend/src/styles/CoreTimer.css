@@ -32,7 +32,7 @@
 /* ── Running state ── */
 
 .core-timer-counter {
-  font-size: 0.95rem;
+  font-size: 1.1rem;
   color: #555;
   margin: 0;
   letter-spacing: 0.05em;
@@ -171,6 +171,12 @@
   top: 0.75rem;
   left: 0.75rem;
   min-height: auto;
+}
+
+/* ── Running state: shift content up in portrait ── */
+.core-timer.running {
+  justify-content: flex-start;
+  padding-top: 20vh;
 }
 
 /* ── Landscape orientation ── */
