@@ -7,6 +7,7 @@
   min-height: 100vh;
   padding: 2rem;
   padding-top: 3.5rem;
+  padding-bottom: 6rem;
   gap: 1.5rem;
 }
 
@@ -98,8 +99,12 @@
 .core-timer-actions {
   display: flex;
   gap: 0.75rem;
-  width: 100%;
+  width: calc(100% - 4rem);
   max-width: 400px;
+  position: fixed;
+  bottom: 1.5rem;
+  left: 50%;
+  transform: translateX(-50%);
 }
 
 .core-btn {
@@ -188,7 +193,7 @@
   .core-timer-cue      { order: 4; margin-bottom: 0.3rem; }
   .core-timer-time     { order: 5; margin-top: 0.25rem; }
   .core-timer-paused   { order: 6; }
-  .core-timer-next     { order: 7; margin-top: 0.2rem; }
+  .core-timer-next     { order: 7; margin-top: 0; }
   .core-timer-actions  { order: 8; margin-top: 0.75rem; }
   .core-btn-select     { order: 9; }
 
@@ -217,6 +222,8 @@
   }
 
   .core-timer-actions {
+    position: static;
+    transform: none;
     flex-direction: row;
     width: 100%;
     max-width: 400px;
