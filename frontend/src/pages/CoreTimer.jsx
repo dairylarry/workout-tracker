@@ -365,6 +365,9 @@ export default function CoreTimer() {
   if (timerState === 'idle') {
     return (
       <div className="core-timer idle">
+        <button className="core-btn core-btn-back core-btn-back-top" onClick={() => navigate('/')}>
+          ← Back
+        </button>
         <div className="core-timer-idle-info">
           <h2 className="core-timer-name">{selectedRoutine?.name || 'No routine selected'}</h2>
           {stats && (
@@ -379,9 +382,6 @@ export default function CoreTimer() {
         <button className="core-btn core-btn-select" onClick={() => navigate('/core/select')}>
           Select Workout
         </button>
-        <button className="core-btn core-btn-back" onClick={() => navigate('/')}>
-          ← Back
-        </button>
       </div>
     )
   }
@@ -390,6 +390,9 @@ export default function CoreTimer() {
   if (timerState === 'done') {
     return (
       <div className="core-timer done">
+        <button className="core-btn core-btn-back core-btn-back-top" onClick={() => navigate('/')}>
+          ← Back
+        </button>
         <p className="core-timer-time">Done</p>
         <p className="core-timer-exercise">{selectedRoutine?.name}</p>
         <div className="core-timer-actions">
@@ -400,54 +403,53 @@ export default function CoreTimer() {
         <button className="core-btn core-btn-select" onClick={() => navigate('/core/select')}>
           Select Workout
         </button>
-        <button className="core-btn core-btn-back" onClick={() => navigate('/')}>
-          ← Back
-        </button>
       </div>
     )
   }
 
   // ── Running / Paused ──
   const isRunning = timerState === 'running'
+  const isWork = display.type === 'work'
+  const showNext = display.type === 'work' || display.type === 'rest' || display.type === 'countdown'
 
   return (
     <div className="core-timer running">
-      {/* Exercise counter — only during work phases */}
-      {display.type === 'work' && (
-        <p className="core-timer-counter">
-          {display.exerciseIndex} / {exCountRef.current}
-        </p>
-      )}
+      <button className="core-btn core-btn-back core-btn-back-top" onClick={() => { handleStop(); navigate('/') }}>
+        ← Back
+      </button>
+
+      {/* Exercise counter — always rendered for layout stability */}
+      <p className={`core-timer-counter${isWork ? '' : ' invisible'}`}>
+        {isWork ? `${display.exerciseIndex} / ${exCountRef.current}` : '\u00A0'}
+      </p>
 
       {/* Time remaining — the hero element */}
       <p className="core-timer-time">
         {display.remaining != null ? `${display.remaining}s` : ''}
       </p>
 
-      {/* Block label — small muted text above exercise name */}
-      {display.type === 'work' && display.blockLabel && (
-        <p className="core-timer-block">{display.blockLabel}</p>
-      )}
+      {/* Block label — always rendered for layout stability */}
+      <p className={`core-timer-block${isWork && display.blockLabel ? '' : ' invisible'}`}>
+        {isWork && display.blockLabel ? display.blockLabel : '\u00A0'}
+      </p>
 
       {/* Exercise name or "Rest" or "Get Ready" */}
       <p className="core-timer-exercise">{display.label || ''}</p>
 
-      {/* Cue — only during work phases */}
-      {display.type === 'work' && display.cue && (
-        <p className="core-timer-cue">{display.cue}</p>
-      )}
+      {/* Cue — always rendered for layout stability */}
+      <p className={`core-timer-cue${isWork && display.cue ? '' : ' invisible'}`}>
+        {isWork && display.cue ? display.cue : '\u00A0'}
+      </p>
 
-      {/* Paused indicator */}
-      {timerState === 'paused' && (
-        <p className="core-timer-paused">Paused</p>
-      )}
+      {/* Paused indicator — always rendered for layout stability */}
+      <p className={`core-timer-paused${timerState === 'paused' ? '' : ' invisible'}`}>
+        {timerState === 'paused' ? 'Paused' : '\u00A0'}
+      </p>
 
-      {/* Next exercise preview */}
-      {(display.type === 'work' || display.type === 'rest' || display.type === 'countdown') && (
-        <p className="core-timer-next">
-          {display.next === null ? 'Last exercise' : `Next: ${display.next}`}
-        </p>
-      )}
+      {/* Next exercise preview — always rendered for layout stability */}
+      <p className={`core-timer-next${showNext ? '' : ' invisible'}`}>
+        {showNext ? (display.next === null ? 'Last exercise' : `Next: ${display.next}`) : '\u00A0'}
+      </p>
 
       {/* Action buttons */}
       <div className="core-timer-actions">
@@ -458,10 +460,6 @@ export default function CoreTimer() {
         )}
         <button className="core-btn core-btn-stop" onClick={handleStop}>Stop</button>
       </div>
-
-      <button className="core-btn core-btn-back" onClick={() => { handleStop(); navigate('/') }}>
-        ← Back
-      </button>
     </div>
   )
 }

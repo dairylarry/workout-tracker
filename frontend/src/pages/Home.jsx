@@ -53,7 +53,6 @@ export default function Home() {
         <button onClick={() => navigate('/plan')}>View Plan</button>
         <button onClick={() => navigate('/progression')}>Progression Guide</button>
         <button onClick={() => navigate('/core')}>Core Work</button>
-        <button onClick={() => navigate('/audio-test')}>Audio Test</button>
       </nav>
     </div>
   )
