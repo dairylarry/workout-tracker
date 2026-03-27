@@ -438,7 +438,7 @@ export default function CoreTimer() {
 
       {/* Cue — always rendered for layout stability */}
       <p className={`core-timer-cue${isWork && display.cue ? '' : ' invisible'}`}>
-        {isWork && display.cue ? display.cue : '\u00A0'}
+        {isWork && display.cue ? `"${display.cue}"` : '\u00A0'}
       </p>
 
       {/* Paused indicator — always rendered for layout stability */}

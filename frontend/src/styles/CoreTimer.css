@@ -168,15 +168,13 @@
 
 @media (orientation: landscape) and (max-height: 500px) {
   .core-timer {
-    flex-direction: row;
-    flex-wrap: wrap;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
     min-height: 100vh;
-    padding: 1rem 1.5rem;
-    padding-top: 2.5rem;
-    gap: 0.5rem;
-    column-gap: 2rem;
+    padding: 0.5rem 1.5rem;
+    padding-top: 2.25rem;
+    gap: 0.35rem;
   }
 
   .core-btn-back-top {
@@ -184,56 +182,49 @@
     left: 0.5rem;
   }
 
-  /* Left column: counter + time + exercise name + cue */
-  .core-timer-counter,
-  .core-timer-time,
-  .core-timer-block,
-  .core-timer-exercise,
-  .core-timer-cue,
-  .core-timer-paused {
-    width: 100%;
-    max-width: 280px;
-    text-align: center;
-  }
+  /* Reorder: exercise info above countdown */
+  .core-timer-counter  { order: 1; }
+  .core-timer-block    { order: 2; }
+  .core-timer-exercise { order: 3; }
+  .core-timer-cue      { order: 4; }
+  .core-timer-time     { order: 5; }
+  .core-timer-paused   { order: 6; }
+  .core-timer-next     { order: 7; }
+  .core-timer-actions  { order: 8; }
+  .core-btn-select     { order: 9; }
 
   .core-timer-time {
-    font-size: 4rem;
-    min-height: 4rem;
+    font-size: 4.5rem;
+    min-height: 4.5rem;
   }
 
   .core-timer-exercise {
-    font-size: 1.4rem;
+    font-size: 1.5rem;
   }
 
   .core-timer-next {
     font-size: 1rem;
   }
 
-  /* Right column: next + buttons */
-  .core-timer-next,
-  .core-timer-actions,
-  .core-timer-idle-info,
-  .core-btn-select {
-    width: 100%;
-    max-width: 200px;
-    text-align: center;
+  /* Block label: smaller and more muted in landscape */
+  .core-timer-block {
+    font-size: 0.75rem;
+    color: #888;
   }
 
   .core-timer-actions {
-    flex-direction: column;
+    flex-direction: row;
+    width: 100%;
+    max-width: 400px;
   }
 
   .core-timer-actions .core-btn {
-    flex: none;
+    flex: 1;
   }
 
   /* Idle state landscape */
   .core-timer.idle {
-    flex-direction: row;
-    align-items: center;
-    justify-content: center;
     gap: 1rem;
-    column-gap: 2.5rem;
   }
 
   .core-timer-name {
