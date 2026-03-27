@@ -245,6 +245,11 @@
     flex: 1;
   }
 
+  /* Reset running portrait overrides in landscape */
+  .core-timer.running {
+    padding-top: 2rem;
+  }
+
   /* Idle state landscape */
   .core-timer.idle {
     justify-content: center;
