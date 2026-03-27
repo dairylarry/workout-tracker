@@ -1,0 +1,167 @@
+.core-timer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  padding: 2rem;
+  gap: 1.5rem;
+}
+
+/* ── Idle state ── */
+
+.core-timer-idle-info {
+  text-align: center;
+}
+
+.core-timer-name {
+  font-size: 1.4rem;
+  font-weight: 600;
+  margin: 0 0 0.5rem;
+}
+
+.core-timer-duration {
+  font-size: 1.1rem;
+  color: #666;
+  margin: 0;
+  font-family: monospace;
+}
+
+/* ── Running state ── */
+
+.core-timer-counter {
+  font-size: 0.85rem;
+  color: #888;
+  margin: 0;
+  letter-spacing: 0.05em;
+}
+
+.core-timer-time {
+  font-size: 4rem;
+  font-weight: 700;
+  font-family: monospace;
+  color: #111;
+  margin: 0;
+  line-height: 1;
+  min-height: 4.5rem;
+}
+
+.core-timer-block {
+  font-size: 0.75rem;
+  color: #999;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin: 0;
+}
+
+.core-timer-exercise {
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: #111;
+  margin: 0;
+  text-align: center;
+  max-width: 340px;
+}
+
+.core-timer-cue {
+  font-size: 0.85rem;
+  color: #777;
+  margin: 0;
+  text-align: center;
+  max-width: 300px;
+  line-height: 1.3;
+}
+
+.core-timer-paused {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #b45309;
+  margin: 0;
+}
+
+.core-timer-next {
+  font-size: 0.85rem;
+  color: #888;
+  margin: 0;
+  text-align: center;
+}
+
+/* ── Buttons ── */
+
+.core-timer-actions {
+  display: flex;
+  gap: 0.75rem;
+  width: 100%;
+  max-width: 400px;
+}
+
+.core-btn {
+  padding: 0.9rem 1rem;
+  min-height: 52px;
+  font-size: 1rem;
+  border: 2px solid #1a1a1a;
+  border-radius: 4px;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition: opacity 0.15s;
+}
+
+.core-btn:active {
+  opacity: 0.7;
+}
+
+.core-btn:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+
+.core-timer-actions .core-btn {
+  flex: 1;
+}
+
+.core-btn-start {
+  background: #e8f5e9;
+  color: #1a1a1a;
+}
+
+.core-btn-pause {
+  background: #fff3e0;
+  color: #1a1a1a;
+}
+
+.core-btn-stop {
+  background: #fce4ec;
+  color: #1a1a1a;
+}
+
+.core-btn-select {
+  width: 100%;
+  max-width: 400px;
+  background: #fff;
+  color: #1a1a1a;
+}
+
+.core-btn-back {
+  padding: 0.7rem 2rem;
+  font-size: 0.9rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background: #fff;
+  color: #333;
+}
+
+.core-btn-back:active {
+  background: #eee;
+}
+
+/* ── Done state ── */
+
+.core-timer.done .core-timer-time {
+  color: #065f46;
+}
+
+.core-timer.done .core-timer-exercise {
+  font-size: 1rem;
+  font-weight: 400;
+  color: #666;
+}

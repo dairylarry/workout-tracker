@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { useProgram, seedFromConfig } from '../context/ProgramContext'
+import { useProgram, seedFromConfig, seedCoreRoutines } from '../context/ProgramContext'
 import { putSessionType } from '../lib/dynamodb'
 import { reseedExerciseLibraryMetaOnly } from '../seeds/reseed'
 import '../styles/ManageWorkout.css'
@@ -17,6 +17,7 @@ export default function ManageWorkout() {
   const [subFamilyFilter, setSubFamilyFilter] = useState('')
   const [syncLibStatus, setSyncLibStatus] = useState(null) // null | 'syncing' | 'done' | 'error'
   const [syncConfigStatus, setSyncConfigStatus] = useState(null) // null | 'confirm' | 'syncing' | 'done' | 'error'
+  const [syncCoreStatus, setSyncCoreStatus] = useState(null) // null | 'syncing' | 'done' | 'error'
 
   if (!program) return <div className="manage-workout"><p>Loading...</p></div>
 
@@ -64,6 +65,19 @@ export default function ManageWorkout() {
       console.error('Sync exercise library failed:', e)
       setSyncLibStatus('error')
       setTimeout(() => setSyncLibStatus(null), 3000)
+    }
+  }
+
+  async function handleSyncCoreRoutines() {
+    setSyncCoreStatus('syncing')
+    try {
+      await seedCoreRoutines()
+      setSyncCoreStatus('done')
+      setTimeout(() => setSyncCoreStatus(null), 2000)
+    } catch (e) {
+      console.error('Sync core routines failed:', e)
+      setSyncCoreStatus('error')
+      setTimeout(() => setSyncCoreStatus(null), 3000)
     }
   }
 
@@ -238,6 +252,13 @@ export default function ManageWorkout() {
               {syncConfigStatus === 'syncing' ? 'Syncing...' : syncConfigStatus === 'done' ? 'Synced' : syncConfigStatus === 'error' ? 'Failed — retry' : 'Sync Program Config'}
             </button>
           )}
+          <button
+            className="mw-sync-btn"
+            onClick={handleSyncCoreRoutines}
+            disabled={syncCoreStatus === 'syncing'}
+          >
+            {syncCoreStatus === 'syncing' ? 'Syncing...' : syncCoreStatus === 'done' ? 'Synced' : syncCoreStatus === 'error' ? 'Failed — retry' : 'Sync Core Routines'}
+          </button>
         </div>
       )}
 

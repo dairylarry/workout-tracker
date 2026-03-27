@@ -1,7 +1,8 @@
 import { createContext, useContext, useState, useEffect } from 'react'
-import { getAllSessionTypes, putSessionType, getExerciseLibrary, putExercise } from '../lib/dynamodb'
+import { getAllSessionTypes, putSessionType, getExerciseLibrary, putExercise, getCoreRoutines, putCoreRoutine } from '../lib/dynamodb'
 import { PROGRAM } from '../seeds/programConfigSeed'
 import { EXERCISE_SEED } from '../seeds/exerciseLibrarySeed'
+import { CORE_WORKOUT_SEED } from '../seeds/coreWorkoutLibrarySeed'
 
 const ProgramContext = createContext(null)
 
@@ -38,6 +39,13 @@ export function ProgramProvider({ children }) {
           lib = await getExerciseLibrary()
         }
         setExerciseLibrary(lib)
+
+        // Load core routines (seed if empty)
+        const coreRoutines = await getCoreRoutines()
+        if (coreRoutines.length === 0) {
+          console.log('No core routines in DynamoDB — seeding')
+          await seedCoreRoutines()
+        }
       } catch (e) {
         console.error('Failed to load program config:', e)
         // Fallback to hardcoded config
@@ -95,4 +103,14 @@ export async function seedExerciseLibrary() {
     await putExercise({ ...exercise, createdAt: new Date().toISOString().split('T')[0] })
   }
   console.log(`Exercise library seeded: ${EXERCISE_SEED.length} exercises`)
+}
+
+/**
+ * Seed core workout routines from coreWorkoutLibrarySeed.js.
+ */
+export async function seedCoreRoutines() {
+  for (const routine of CORE_WORKOUT_SEED) {
+    await putCoreRoutine(routine)
+  }
+  console.log(`Core routines seeded: ${CORE_WORKOUT_SEED.length} routines`)
 }

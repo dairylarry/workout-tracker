@@ -395,6 +395,35 @@ export async function backfillExerciseHistory() {
   console.log(`Backfill complete. ${totalUpdates} exercise history entries updated.`)
 }
 
+// --- Core Routines ---
+
+export async function getCoreRoutines() {
+  try {
+    const response = await docClient.send(new QueryCommand({
+      TableName: TABLE,
+      KeyConditionExpression: 'PK = :pk',
+      ExpressionAttributeValues: { ':pk': 'CORE_ROUTINE' },
+    }))
+    return response.Items || []
+  } catch (e) {
+    console.warn('Failed to load core routines:', e.message)
+    return []
+  }
+}
+
+export async function putCoreRoutine(routine) {
+  const item = {
+    PK: 'CORE_ROUTINE',
+    SK: `ROUTINE#${routine.id}`,
+    ...routine,
+  }
+  try {
+    await docClient.send(new PutCommand({ TableName: TABLE, Item: item }))
+  } catch (e) {
+    console.warn('Failed to save core routine:', e.message)
+  }
+}
+
 /**
  * Flush any queued writes from offline usage.
  * Call this when the app detects it's back online.

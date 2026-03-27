@@ -14,6 +14,8 @@ import FiveThreeOneConfig from './pages/FiveThreeOneConfig'
 import ManageWorkout from './pages/ManageWorkout'
 import ExerciseLibrary from './pages/ExerciseLibrary'
 import AudioTest from './pages/AudioTest'
+import CoreTimer from './pages/CoreTimer'
+import CoreSelect from './pages/CoreSelect'
 import './styles/App.css'
 
 export default function App() {
@@ -39,6 +41,8 @@ export default function App() {
         <Route path="/manage" element={<ManageWorkout />} />
         <Route path="/manage/library" element={<ExerciseLibrary />} />
         <Route path="/audio-test" element={<AudioTest />} />
+        <Route path="/core" element={<CoreTimer />} />
+        <Route path="/core/select" element={<CoreSelect />} />
       </Routes>
     </BrowserRouter>
     </ProgramProvider>

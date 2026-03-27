@@ -1,0 +1,210 @@
+.core-select {
+  padding: 1.5rem;
+  max-width: 600px;
+  margin: 0 auto;
+  padding-bottom: 4rem;
+}
+
+.core-select-title {
+  font-size: 1.4rem;
+  margin: 0 0 1rem;
+}
+
+/* ── Filters ── */
+
+.core-select-filters {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-bottom: 1.25rem;
+}
+
+.filter-group {
+  display: flex;
+  gap: 0.4rem;
+  flex-wrap: wrap;
+}
+
+.filter-pill {
+  padding: 0.3rem 0.65rem;
+  font-size: 0.78rem;
+  border: 1px solid #ddd;
+  border-radius: 3px;
+  background: #fff;
+  color: #555;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.filter-pill.active {
+  background: #111;
+  color: #fff;
+  border-color: #111;
+}
+
+.filter-pill.diff {
+  letter-spacing: 0.02em;
+}
+
+/* ── Routine cards ── */
+
+.core-select-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.routine-card {
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  padding: 0.85rem;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.routine-card:active {
+  background: #fafafa;
+}
+
+.routine-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 0.5rem;
+  margin-bottom: 0.25rem;
+}
+
+.routine-card-name {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #111;
+}
+
+.routine-card-badges {
+  display: flex;
+  gap: 0.3rem;
+  flex-shrink: 0;
+}
+
+.badge {
+  font-size: 0.68rem;
+  padding: 0.1rem 0.4rem;
+  border-radius: 3px;
+}
+
+.badge-cat {
+  background: #e5e7eb;
+  color: #374151;
+}
+
+.badge-diff {
+  background: #fef3c7;
+  color: #92400e;
+  letter-spacing: -0.02em;
+}
+
+.routine-card-meta {
+  font-size: 0.78rem;
+  color: #777;
+  margin: 0 0 0.5rem;
+}
+
+/* Notes — truncated to 2 lines by default */
+.routine-card-notes {
+  font-size: 0.78rem;
+  color: #888;
+  margin: 0 0 0.5rem;
+  line-height: 1.4;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.routine-card-notes.expanded {
+  -webkit-line-clamp: unset;
+  overflow: visible;
+}
+
+/* ── Exercise list ── */
+
+.routine-card-exercises {
+  margin: 0.4rem 0;
+}
+
+.routine-block {
+  margin-bottom: 0.25rem;
+}
+
+.block-label {
+  font-size: 0.7rem;
+  color: #999;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin: 0.35rem 0 0.1rem;
+  font-weight: 600;
+}
+
+.routine-exercise-row {
+  font-size: 0.78rem;
+  color: #555;
+  margin: 0;
+  padding: 0.08rem 0;
+  line-height: 1.35;
+}
+
+/* ── Progressions ── */
+
+.routine-card-prog {
+  margin-top: 0.4rem;
+  border-top: 1px solid #eee;
+  padding-top: 0.4rem;
+}
+
+.prog-toggle {
+  font-size: 0.78rem;
+  color: #888;
+  margin: 0;
+  cursor: pointer;
+}
+
+.prog-list {
+  font-size: 0.75rem;
+  color: #777;
+  margin: 0.3rem 0 0;
+  padding-left: 1.2rem;
+  line-height: 1.45;
+}
+
+.prog-list li {
+  margin-bottom: 0.2rem;
+}
+
+/* ── Empty state ── */
+
+.core-select-empty {
+  text-align: center;
+  color: #999;
+  font-size: 0.9rem;
+  padding: 2rem 0;
+}
+
+/* ── Back button (reuse from CoreTimer) ── */
+
+.core-select .core-btn-back {
+  display: block;
+  margin: 1.5rem auto 0;
+  padding: 0.7rem 2rem;
+  font-size: 0.9rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background: #fff;
+  color: #333;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.core-select .core-btn-back:active {
+  background: #eee;
+}
