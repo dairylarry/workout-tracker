@@ -588,16 +588,14 @@ export default function ActiveSession() {
           <div key={exercise.name} className="exercise-block">
             <div className="exercise-header">
               <div className="exercise-top-row">
-                <div className="exercise-name-row">
-                  <h3>{displayName}</h3>
+                <h3 className="exercise-name">{displayName}</h3>
+                <div className="exercise-controls">
                   <button
                     className="swap-btn"
                     onClick={() => { setSwapOpen(isSwapOpen ? null : exIndex); setSetEditOpen(null) }}
                   >
                     Swap
                   </button>
-                </div>
-                <div className="exercise-right-controls">
                   <select
                     className="unit-toggle"
                     value={exercise.weightUnit || 'lbs'}
