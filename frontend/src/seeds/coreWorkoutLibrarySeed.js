@@ -441,4 +441,33 @@ export const CORE_WORKOUT_SEED = [
       'Add volume: add a 4th round to Freestanding as comfort with kick-ups builds.',
     ],
   },
+  {
+    id: 'jess-sims-2023',
+    name: 'Jess Sims Hollow Hold 2023',
+    category: 'mat',
+    difficulty: 5,
+    equipment: 'mat',
+    routine: [
+      {
+        numberOfTimes: 2,
+        exercises: [
+          { name: 'Hollow Body Hold', workSeconds: 30, restSeconds: 0, cue: 'Low back glued to the mat, arms/legs extended.' },
+          { name: 'Oblique Heel Taps', workSeconds: 30, restSeconds: 0, cue: '' },
+          { name: 'Hollow Body Hold', workSeconds: 30, restSeconds: 0, cue: 'Keep that "banana" shape!' },
+          { name: 'Dead Bug', workSeconds: 30, restSeconds: 0, cue: '' },
+          { name: 'Hollow Body Hold', workSeconds: 30, restSeconds: 0, cue: 'Keep that "banana" shape!' },
+          { name: 'Bicycle Crunches', workSeconds: 30, restSeconds: 0, cue: 'Elbow to opposite knee, slow and controlled.' },
+          { name: 'Hollow Body Hold', workSeconds: 30, restSeconds: 0, cue: 'Keep that "banana" shape!' },
+          { name: 'Scissor Kicks', workSeconds: 30, restSeconds: 0, cue: 'Legs straight, alternating up and down.' },
+          { name: 'Hollow Body Hold', workSeconds: 30, restSeconds: 0, cue: 'Keep that "banana" shape!' },
+          { name: 'Plank Shoulder Tap', workSeconds: 30, restSeconds: 0, cue: '' },
+        ],
+      },
+    ],
+    notes: '',
+    progressions: [
+      '2023: (1) Beggin, Maneskin (2) Physical, Dua Lipa (3) Wanksta, 50 Cent (4) Calm Down, Rema',
+      '2022: (1) LA FAMA, Rosalia (2) In Da Getto, J Balvin & Skrillex (3) Tití Me Preguntó, Bad Bunny (4) Chicken Teriyaki, Rosalia',
+    ],
+  }
 ]
