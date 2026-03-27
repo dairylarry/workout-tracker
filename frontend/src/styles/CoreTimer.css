@@ -189,16 +189,16 @@
   .core-timer-time     { order: 5; margin-top: 0.25rem; }
   .core-timer-paused   { order: 6; }
   .core-timer-next     { order: 7; margin-top: 0.4rem; }
-  .core-timer-actions  { order: 8; margin-top: 0.5rem; }
+  .core-timer-actions  { order: 8; margin-top: 0.75rem; }
   .core-btn-select     { order: 9; }
 
   .core-timer-time {
-    font-size: 4.5rem;
-    min-height: 4.5rem;
+    font-size: 5.5rem;
+    min-height: 5.5rem;
   }
 
   .core-timer-exercise {
-    font-size: 1.8rem;
+    font-size: 2.2rem;
     max-width: 90vw;
   }
 
@@ -207,7 +207,7 @@
   }
 
   .core-timer-next {
-    font-size: 1.2rem;
+    font-size: 1.4rem;
   }
 
   /* Block label: smaller and more muted in landscape */
