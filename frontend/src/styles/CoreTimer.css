@@ -154,7 +154,6 @@
   cursor: pointer;
   font-size: 0.9rem;
   padding: 0;
-  color: #333;
 }
 
 .core-btn-back-top {
@@ -170,11 +169,11 @@
   .core-timer {
     flex-direction: column;
     align-items: center;
-    justify-content: center;
+    justify-content: flex-start;
     min-height: 100vh;
     padding: 0.5rem 1.5rem;
-    padding-top: 2.25rem;
-    gap: 0.35rem;
+    padding-top: 2rem;
+    gap: 0.2rem;
   }
 
   .core-btn-back-top {
@@ -187,10 +186,10 @@
   .core-timer-block    { order: 2; }
   .core-timer-exercise { order: 3; }
   .core-timer-cue      { order: 4; }
-  .core-timer-time     { order: 5; }
+  .core-timer-time     { order: 5; margin-top: 0.25rem; }
   .core-timer-paused   { order: 6; }
-  .core-timer-next     { order: 7; }
-  .core-timer-actions  { order: 8; }
+  .core-timer-next     { order: 7; margin-top: 0.4rem; }
+  .core-timer-actions  { order: 8; margin-top: 0.5rem; }
   .core-btn-select     { order: 9; }
 
   .core-timer-time {
@@ -199,17 +198,22 @@
   }
 
   .core-timer-exercise {
-    font-size: 1.5rem;
+    font-size: 1.8rem;
+    max-width: 90vw;
+  }
+
+  .core-timer-cue {
+    max-width: 80vw;
   }
 
   .core-timer-next {
-    font-size: 1rem;
+    font-size: 1.2rem;
   }
 
   /* Block label: smaller and more muted in landscape */
   .core-timer-block {
-    font-size: 0.75rem;
-    color: #888;
+    font-size: 0.7rem;
+    color: #999;
   }
 
   .core-timer-actions {
@@ -224,6 +228,7 @@
 
   /* Idle state landscape */
   .core-timer.idle {
+    justify-content: center;
     gap: 1rem;
   }
 
