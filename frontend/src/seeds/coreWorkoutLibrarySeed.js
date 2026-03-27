@@ -434,7 +434,7 @@ export const CORE_WORKOUT_SEED = [
         ],
       },
     ],
-    notes: 'Back-to-wall means kicking up with your back facing the wall. Block D: let yourself fall and reset between attempts rather than grinding a bad hold.',
+    notes: 'Back-to-wall means kicking up with your back facing the wall. For the last block, let yourself fall and reset between attempts rather than grinding a bad hold.',
     progressions: [
       'Extend holds: increase Back-to-Wall holds to 40s.',
       'Increase intensity: raise shoulder tap tempo in Shoulder Taps block.',
