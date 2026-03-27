@@ -185,10 +185,10 @@
   .core-timer-counter  { order: 1; }
   .core-timer-block    { order: 2; }
   .core-timer-exercise { order: 3; }
-  .core-timer-cue      { order: 4; }
+  .core-timer-cue      { order: 4; margin-bottom: 0.3rem; }
   .core-timer-time     { order: 5; margin-top: 0.25rem; }
   .core-timer-paused   { order: 6; }
-  .core-timer-next     { order: 7; margin-top: 0.4rem; }
+  .core-timer-next     { order: 7; margin-top: 0.2rem; }
   .core-timer-actions  { order: 8; margin-top: 0.75rem; }
   .core-btn-select     { order: 9; }
 
