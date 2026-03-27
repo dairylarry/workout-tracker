@@ -424,6 +424,38 @@ export async function putCoreRoutine(routine) {
   }
 }
 
+// --- Core / Interval Routine Completions ---
+// (Core workouts = interval workouts — the timed routines, not the main lifting sessions.)
+
+export async function recordCoreRoutineCompletion(routineId, date) {
+  const item = {
+    PK: 'CORE_ROUTINE_COMPLETION',
+    SK: `ROUTINE#${routineId}#DATE#${date}`,
+    routineId,
+    date,
+  }
+  try {
+    await docClient.send(new PutCommand({ TableName: TABLE, Item: item }))
+  } catch (e) {
+    console.warn('Failed to record routine completion:', e.message)
+    queueWrite('recordCoreRoutineCompletion', [routineId, date])
+  }
+}
+
+export async function getCoreRoutineCompletions() {
+  try {
+    const response = await docClient.send(new QueryCommand({
+      TableName: TABLE,
+      KeyConditionExpression: 'PK = :pk',
+      ExpressionAttributeValues: { ':pk': 'CORE_ROUTINE_COMPLETION' },
+    }))
+    return response.Items || []
+  } catch (e) {
+    console.warn('Failed to load routine completions:', e.message)
+    return []
+  }
+}
+
 /**
  * Flush any queued writes from offline usage.
  * Call this when the app detects it's back online.
@@ -433,7 +465,7 @@ export async function flushWriteQueue() {
   const queue = getWriteQueue()
   if (queue.length === 0) return
 
-  const actions = { putSession, updateSessionField, updateSessionExercises, deleteSession, putBodyweight, deleteBodyweight, put531Config }
+  const actions = { putSession, updateSessionField, updateSessionExercises, deleteSession, putBodyweight, deleteBodyweight, put531Config, recordCoreRoutineCompletion }
 
   for (const entry of queue) {
     try {

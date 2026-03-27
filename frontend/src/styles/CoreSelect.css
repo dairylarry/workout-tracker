@@ -110,6 +110,11 @@
   margin: 0 0 0.5rem;
 }
 
+.routine-card-done {
+  color: #065f46;
+  font-weight: 600;
+}
+
 /* Notes — truncated to 2 lines by default */
 .routine-card-notes {
   font-size: 0.78rem;
