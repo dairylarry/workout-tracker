@@ -149,11 +149,11 @@
 }
 
 .core-btn-back {
-  padding: 0.7rem 2rem;
+  background: none;
+  border: none;
+  cursor: pointer;
   font-size: 0.9rem;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  background: #fff;
+  padding: 0;
   color: #333;
 }
 
@@ -161,13 +161,7 @@
   position: absolute;
   top: 0.75rem;
   left: 0.75rem;
-  padding: 0.4rem 0.75rem;
-  font-size: 0.8rem;
   min-height: auto;
-}
-
-.core-btn-back:active {
-  background: #eee;
 }
 
 /* ── Landscape orientation ── */

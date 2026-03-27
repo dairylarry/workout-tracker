@@ -190,21 +190,16 @@
   padding: 2rem 0;
 }
 
-/* ── Back button (reuse from CoreTimer) ── */
+/* ── Back button ── */
 
 .core-select .core-btn-back {
   display: block;
   margin: 1.5rem auto 0;
-  padding: 0.7rem 2rem;
-  font-size: 0.9rem;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  background: #fff;
-  color: #333;
+  background: none;
+  border: none;
   cursor: pointer;
+  font-size: 0.9rem;
+  padding: 0;
+  color: #333;
   -webkit-tap-highlight-color: transparent;
-}
-
-.core-select .core-btn-back:active {
-  background: #eee;
 }
