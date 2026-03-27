@@ -65,7 +65,7 @@ export default function CoreSelect() {
               className={`filter-pill diff${filterDiff === d ? ' active' : ''}`}
               onClick={() => setFilterDiff(filterDiff === d ? null : d)}
             >
-              {'★'.repeat(d)}
+              {d}/5
             </button>
           ))}
         </div>
@@ -86,7 +86,7 @@ export default function CoreSelect() {
                 <span className="routine-card-name">{routine.name}</span>
                 <span className="routine-card-badges">
                   <span className="badge badge-cat">{routine.category}</span>
-                  <span className="badge badge-diff">{'★'.repeat(routine.difficulty)}</span>
+                  <span className="badge badge-diff">{routine.difficulty}/5</span>
                 </span>
               </div>
 

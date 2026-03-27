@@ -8,7 +8,7 @@ import '../styles/CoreTimer.css'
 const COUNTDOWN_S  = 10
 const TICKS        = 3
 const TRANSITION_S = 0.5
-const VOLUME       = 0.65
+const VOLUME       = 0.72
 
 const FREQ_TICK = 440  // A4 — countdown + warning ticks
 const FREQ_WORK = 784  // G5 — work beep

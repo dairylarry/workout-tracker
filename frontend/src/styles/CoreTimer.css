@@ -154,6 +154,70 @@
   background: #eee;
 }
 
+/* ── Landscape orientation ── */
+
+@media (orientation: landscape) and (max-height: 500px) {
+  .core-timer {
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    padding: 1rem 1.5rem;
+    gap: 0.75rem;
+    column-gap: 2rem;
+  }
+
+  /* Left column: counter + time + exercise name + cue */
+  .core-timer-counter,
+  .core-timer-time,
+  .core-timer-block,
+  .core-timer-exercise,
+  .core-timer-cue,
+  .core-timer-paused {
+    width: 100%;
+    max-width: 280px;
+    text-align: center;
+  }
+
+  .core-timer-time {
+    font-size: 3rem;
+    min-height: 3.5rem;
+  }
+
+  /* Right column: next + buttons + back */
+  .core-timer-next,
+  .core-timer-actions,
+  .core-btn-back,
+  .core-timer-idle-info,
+  .core-btn-select {
+    width: 100%;
+    max-width: 200px;
+    text-align: center;
+  }
+
+  .core-timer-actions {
+    flex-direction: column;
+  }
+
+  .core-timer-actions .core-btn {
+    flex: none;
+  }
+
+  /* Idle state landscape */
+  .core-timer.idle {
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    column-gap: 2.5rem;
+  }
+
+  .core-timer-name {
+    font-size: 1.2rem;
+  }
+}
+
 /* ── Done state ── */
 
 .core-timer.done .core-timer-time {
