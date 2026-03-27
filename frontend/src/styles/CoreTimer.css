@@ -7,7 +7,6 @@
   min-height: 100vh;
   padding: 2rem;
   padding-top: 3.5rem;
-  padding-bottom: 6rem;
   gap: 1.5rem;
 }
 
@@ -99,12 +98,18 @@
 .core-timer-actions {
   display: flex;
   gap: 0.75rem;
-  width: calc(100% - 4rem);
+  width: 100%;
   max-width: 400px;
+}
+
+/* Pin buttons in portrait while timer is active */
+.core-timer.running .core-timer-actions {
   position: fixed;
-  bottom: 1.5rem;
+  bottom: 12vh;
   left: 50%;
   transform: translateX(-50%);
+  width: calc(100% - 4rem);
+  max-width: 400px;
 }
 
 .core-btn {
@@ -221,7 +226,8 @@
     color: #999;
   }
 
-  .core-timer-actions {
+  .core-timer-actions,
+  .core-timer.running .core-timer-actions {
     position: static;
     transform: none;
     flex-direction: row;
