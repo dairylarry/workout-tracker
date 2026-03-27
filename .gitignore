@@ -27,3 +27,5 @@ npm-debug.log*
 # timer script
 **/.venv
 **/output
+
+scratch/
