@@ -72,11 +72,15 @@ export default function ActiveSession() {
   const [error, setError] = useState(null)
   const [swapOpen, setSwapOpen] = useState(null) // index of exercise with swap open
   const [setEditOpen, setSetEditOpen] = useState(null) // index of exercise with ± panel open
+  const [notes, setNotes] = useState('')
 
   const [ftoConfigs, setFtoConfigs] = useState({})
   const saveTimeout = useRef(null)
+  const notesTimeout = useRef(null)
   const exercisesRef = useRef(exercises)
   exercisesRef.current = exercises
+  const notesRef = useRef(notes)
+  notesRef.current = notes
 
   // Shared function to write exercise history to DynamoDB
   function writeExerciseHistory(currentExercises) {
@@ -96,12 +100,19 @@ export default function ActiveSession() {
     return Promise.all(promises)
   }
 
-  // Write exercise history on unmount, visibilitychange, and beforeunload
+  function saveNotes(currentNotes) {
+    return updateSessionField(sessionType, date, 'notes', currentNotes)
+  }
+
+  // Write exercise history + notes on unmount, visibilitychange, and beforeunload
   useEffect(() => {
     function handleVisibilityChange() {
       if (document.visibilityState === 'hidden') {
         writeExerciseHistory(exercisesRef.current).catch(e =>
           console.error('Failed to save exercise history on visibility change:', e)
+        )
+        saveNotes(notesRef.current).catch(e =>
+          console.error('Failed to save notes on visibility change:', e)
         )
       }
     }
@@ -109,6 +120,9 @@ export default function ActiveSession() {
     function handleBeforeUnload() {
       writeExerciseHistory(exercisesRef.current).catch(e =>
         console.error('Failed to save exercise history on unload:', e)
+      )
+      saveNotes(notesRef.current).catch(e =>
+        console.error('Failed to save notes on unload:', e)
       )
     }
 
@@ -118,9 +132,12 @@ export default function ActiveSession() {
     return () => {
       document.removeEventListener('visibilitychange', handleVisibilityChange)
       window.removeEventListener('beforeunload', handleBeforeUnload)
-      // Write history on unmount (navigating away within the app)
+      // Write history + notes on unmount (navigating away within the app)
       writeExerciseHistory(exercisesRef.current).catch(e =>
         console.error('Failed to save exercise history on unmount:', e)
+      )
+      saveNotes(notesRef.current).catch(e =>
+        console.error('Failed to save notes on unmount:', e)
       )
     }
   }, [sessionType, date])
@@ -153,6 +170,7 @@ export default function ActiveSession() {
           setExercises(existing.exercises)
           setDeload(existing.deload || false)
           setStartedAt(existing.startedAt || null)
+          setNotes(existing.notes || '')
         } else {
           // Infer week from last session's 5/3/1 exercises
           let inferredWeek = 1
@@ -384,6 +402,7 @@ export default function ActiveSession() {
 
       await updateSessionExercises(sessionType, date, updated)
       await writeExerciseHistory(updated)
+      await saveNotes(notes)
 
       setSaveStatus('saved')
       setTimeout(() => setSaveStatus(null), 2000)
@@ -577,6 +596,16 @@ export default function ActiveSession() {
                   >
                     Swap
                   </button>
+                </div>
+                <div className="exercise-right-controls">
+                  <select
+                    className="unit-toggle"
+                    value={exercise.weightUnit || 'lbs'}
+                    onChange={e => handleUnitChange(exIndex, e.target.value)}
+                  >
+                    <option value="lbs">lbs</option>
+                    <option value="kg">kg</option>
+                  </select>
                   <button
                     className={`swap-btn set-count-btn${setEditOpen === exIndex ? ' swap-btn--active' : ''}`}
                     onClick={() => { setSetEditOpen(setEditOpen === exIndex ? null : exIndex); setSwapOpen(null) }}
@@ -584,14 +613,6 @@ export default function ActiveSession() {
                     {setEditOpen === exIndex ? 'Done' : '±'}
                   </button>
                 </div>
-                <select
-                  className="unit-toggle"
-                  value={exercise.weightUnit || 'lbs'}
-                  onChange={e => handleUnitChange(exIndex, e.target.value)}
-                >
-                  <option value="lbs">lbs</option>
-                  <option value="kg">kg</option>
-                </select>
               </div>
               {isSwapped && (
                 <span className="swapped-from">Originally: {exercise.name}</span>
@@ -698,6 +719,27 @@ export default function ActiveSession() {
           </div>
         )
       })}
+
+      <div className="session-notes">
+        <label className="session-notes-label" htmlFor="session-notes">Notes</label>
+        <textarea
+          id="session-notes"
+          className="session-notes-input"
+          value={notes}
+          placeholder="Session notes..."
+          onChange={e => {
+            const val = e.target.value
+            setNotes(val)
+            if (notesTimeout.current) clearTimeout(notesTimeout.current)
+            notesTimeout.current = setTimeout(() => {
+              updateSessionField(sessionType, date, 'notes', val).catch(err =>
+                console.error('Failed to save notes:', err)
+              )
+            }, 500)
+          }}
+          rows={3}
+        />
+      </div>
 
       <button className="save-btn" onClick={handleManualSave} disabled={saveStatus === 'saving'}>
         {saveStatus === 'saving' ? 'Saving...' : saveStatus === 'saved' ? 'Saved' : saveStatus === 'error' ? 'Save failed — retry' : 'Save'}

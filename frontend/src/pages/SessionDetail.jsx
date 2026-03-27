@@ -16,6 +16,7 @@ export default function SessionDetail() {
   const [editExercises, setEditExercises] = useState(null)
   const [editDeload, setEditDeload] = useState(false)
   const [swapOpen, setSwapOpen] = useState(null)
+  const [editNotes, setEditNotes] = useState('')
   const [saveStatus, setSaveStatus] = useState(null)
 
   useEffect(() => {
@@ -35,6 +36,7 @@ export default function SessionDetail() {
   function startEditing() {
     setEditExercises(JSON.parse(JSON.stringify(session.exercises)))
     setEditDeload(session.deload || false)
+    setEditNotes(session.notes || '')
     setEditing(true)
   }
 
@@ -53,7 +55,10 @@ export default function SessionDetail() {
       if (editDeload !== (session.deload || false)) {
         await updateSessionField(sessionType, date, 'deload', editDeload)
       }
-      setSession(prev => ({ ...prev, exercises: editExercises, deload: editDeload }))
+      if (editNotes !== (session.notes || '')) {
+        await updateSessionField(sessionType, date, 'notes', editNotes)
+      }
+      setSession(prev => ({ ...prev, exercises: editExercises, deload: editDeload, notes: editNotes }))
       setEditing(false)
       setEditExercises(null)
       setSaveStatus(null)
@@ -227,6 +232,25 @@ export default function SessionDetail() {
           </div>
         )
       })}
+
+      {editing ? (
+        <div className="detail-notes">
+          <label className="detail-notes-label" htmlFor="detail-notes">Notes</label>
+          <textarea
+            id="detail-notes"
+            className="detail-notes-input"
+            value={editNotes}
+            placeholder="Session notes..."
+            onChange={e => setEditNotes(e.target.value)}
+            rows={3}
+          />
+        </div>
+      ) : session.notes ? (
+        <div className="detail-notes">
+          <span className="detail-notes-label">Notes</span>
+          <p className="detail-notes-text">{session.notes}</p>
+        </div>
+      ) : null}
 
       {editing && (
         <div className="edit-actions">

@@ -224,6 +224,45 @@
   margin: 0;
 }
 
+.detail-notes {
+  margin-top: 1rem;
+}
+
+.detail-notes-label {
+  display: block;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #666;
+  margin-bottom: 0.35rem;
+}
+
+.detail-notes-input {
+  width: 100%;
+  padding: 0.6rem;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 0.85rem;
+  font-family: inherit;
+  resize: vertical;
+  background: #fff;
+  box-sizing: border-box;
+}
+
+.detail-notes-input:focus {
+  outline: none;
+  border-color: #111;
+}
+
+.detail-notes-text {
+  font-size: 0.85rem;
+  color: #444;
+  white-space: pre-wrap;
+  margin: 0;
+  padding: 0.5rem 0.6rem;
+  background: #fafafa;
+  border-radius: 4px;
+}
+
 .edit-actions {
   display: flex;
   flex-direction: column;
