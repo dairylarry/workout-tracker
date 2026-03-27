@@ -468,6 +468,7 @@ export const CORE_WORKOUT_SEED = [
     progressions: [
       '2023: (1) Beggin, Maneskin (2) Physical, Dua Lipa (3) Wanksta, 50 Cent (4) Calm Down, Rema',
       '2022: (1) LA FAMA, Rosalia (2) In Da Getto, J Balvin & Skrillex (3) Tití Me Preguntó, Bad Bunny (4) Chicken Teriyaki, Rosalia',
+      'Alternative exercises: mountain climbers, russian twists, bird dog',
     ],
   }
 ]
