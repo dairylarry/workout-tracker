@@ -447,6 +447,7 @@ export const CORE_WORKOUT_SEED = [
     category: 'mat',
     difficulty: 5,
     equipment: 'mat',
+    equipmentOptional: null,
     routine: [
       {
         numberOfTimes: 2,
@@ -470,5 +471,45 @@ export const CORE_WORKOUT_SEED = [
       '2022: (1) LA FAMA, Rosalia (2) In Da Getto, J Balvin & Skrillex (3) Tití Me Preguntó, Bad Bunny (4) Chicken Teriyaki, Rosalia',
       'Alternative exercises: mountain climbers, russian twists, bird dog',
     ],
-  }
+  },
+  {
+    id: 'kb-warm-up-lower',
+    name: 'Kettlebell Warm-Up--Lower',
+    category: 'equipment',
+    difficulty: 1,
+    equipment: 'kettlebell',
+    equipmentOptional: null,
+    routine: [
+      {
+        label: 'Hinge Patterning',
+        numberOfTimes: 1,
+        exercises: [
+          { name: '10x KB Deadlifts; Light KB Alternating Swings', workSeconds: 120, restSeconds: 0, cue: 'Repeat KB continuously after done with deadlift' },
+        ],
+      },
+      {
+        label: 'Goblet Mobility + Depth',
+        numberOfTimes: 1,
+        exercises: [
+          { name: '6x Goblet Squat (slow 3s descend); Goblet Squat Hold', workSeconds: 90, restSeconds: 0, cue: 'Chest tall, elbows push knees out, with fast, controlled up; pry hips open on hold' },
+        ],
+      },
+      {
+        label: 'Single-Leg + Core Stability',
+        numberOfTimes: 1,
+        exercises: [
+          { name: '6x Goblet Reverse Lunges/leg; 20s Suitcase Hold/side', workSeconds: 120, restSeconds: 0, cue: 'stay tall, don’t lean; anti-collapse core work' },
+        ],
+      },
+      {
+        label: 'Power Primer',
+        numberOfTimes: 1,
+        exercises: [
+          { name: '5x KB Cleans/side', workSeconds: 60, restSeconds: 0, cue: 'sharp, explosive, crisp' },
+        ],
+      },
+    ],
+    notes: 'Goal: hips, glutes, bracing, single-leg stability.',
+    progressions: [],
+  },
 ]
