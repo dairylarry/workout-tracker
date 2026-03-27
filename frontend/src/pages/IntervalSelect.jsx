@@ -8,7 +8,7 @@ const COUNTDOWN_S = 10
 const LS_KEY = 'core-selected-routine-id'
 
 const CATEGORIES = ['mat', 'handstand', 'skill', 'equipment']
-const DIFFICULTIES = [3, 4, 5]
+const DIFFICULTIES = [1, 3, 4, 5]
 
 // NOTE: Renamed from CoreSelect → IntervalSelect. CSS classes remain "core-*".
 export default function IntervalSelect() {
