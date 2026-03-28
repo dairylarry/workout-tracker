@@ -529,22 +529,23 @@ export const CORE_WORKOUT_SEED = [
         label: 'Shoulder Mobility (Halos)',
         numberOfTimes: 1,
         exercises: [
-          { name: '6x Halos each direction; switch directions each set', workSeconds: 90, restSeconds: 0, cue: 'ribs down, move slow.' },
+          { name: '6x Halos each direction; switch directions after every 6', workSeconds: 90, restSeconds: 0, cue: 'ribs down, move slow.' },
         ],
       },
       {
         label: 'Scapula + Press Pattern',
-        numberOfTimes: 1,
+        numberOfTimes: 2,
         exercises: [
-          { name: '6x/side KB Floor Press or Light Strict Press', workSeconds: 120, restSeconds: 0, cue: 'controlled tempo, pack shoulders, smooth reps' },
+          { name: 'Light Strict Press (right)', workSeconds: 25, restSeconds: 5, cue: 'controlled tempo, pack shoulders, smooth reps, aim for 6' },
+          { name: 'Light Strict Press (left)', workSeconds: 25, restSeconds: 5, cue: 'controlled tempo, pack shoulders, smooth reps, aim for 6' },
         ],
       },
       {
         label: 'Stability + Anti-Rotation (core lock in)',
         numberOfTimes: 1,
         exercises: [
-          { name: 'Front Rack Hold (right)', workSeconds: 25, restSeconds: 5, cue: 'no torso twisting' },
-          { name: 'Front Rack Hold (left)', workSeconds: 25, restSeconds: 5, cue: 'no torso twisting' },
+          { name: 'Front Rack Hold (right)', workSeconds: 25, restSeconds: 5, cue: 'Stay tight in rack (do not lean)' },
+          { name: 'Front Rack Hold (left)', workSeconds: 25, restSeconds: 5, cue: 'Stay tight in rack (do not lean)' },
           { name: '8-10x Plank Drags', workSeconds: 60, restSeconds: 0, cue: 'no torso twisting' },
         ],
       },
@@ -552,12 +553,15 @@ export const CORE_WORKOUT_SEED = [
         label: 'Overhead Activation',
         numberOfTimes: 1,
         exercises: [
-          { name: '5x KB Push Press (right)', workSeconds: 25, restSeconds: 5, cue: 'stable lockout, ribs down' },
-          { name: '5x KB Push Press (left)', workSeconds: 25, restSeconds: 5, cue: 'sstable lockout, ribs down' },
+          { name: 'Overhead Hold (right)', workSeconds: 25, restSeconds: 5, cue: 'stable lockout, ribs down' },
+          { name: 'Overhead Hold (left', workSeconds: 25, restSeconds: 5, cue: 'stable lockout, ribs down' },
         ],
       },
     ],
     notes: '',
-    progressions: [],
+    progressions: [
+      'Press Pattern: Do KB Floor Press instead of Strict Press when shoulders feel tight',
+      'Overhead Activation: Do Push Press (5 reps/side) when feeling sluggish'
+    ],
   },
 ]
