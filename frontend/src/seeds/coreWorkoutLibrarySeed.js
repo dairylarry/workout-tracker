@@ -498,7 +498,7 @@ export const CORE_WORKOUT_SEED = [
         label: 'Single-Leg + Core Stability',
         numberOfTimes: 1,
         exercises: [
-          { name: '6x Goblet Reverse Lunges (right)', workSeconds: 25, restSeconds: 5, cue: 'stay tall, don’t lean; anti-collapse core work' },                    { name: '6x Goblet Reverse Lunges/leg', workSeconds: 60, restSeconds: 0, cue: 'stay tall, don’t lean; anti-collapse core work' },
+          { name: '6x Goblet Reverse Lunges (right)', workSeconds: 25, restSeconds: 5, cue: 'stay tall, don’t lean; anti-collapse core work' },
           { name: 'Suitcase Hold (right)', workSeconds: 25, restSeconds: 5, cue: 'stay tall, don’t lean; anti-collapse core work' },
           { name: '6x Goblet Reverse Lunges (left)', workSeconds: 25, restSeconds: 5, cue: 'stay tall, don’t lean; anti-collapse core work' },
           { name: 'Suitcase Hold (left)', workSeconds: 25, restSeconds: 5, cue: 'stay tall, don’t lean; anti-collapse core work' },
