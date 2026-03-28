@@ -489,9 +489,10 @@ export const CORE_WORKOUT_SEED = [
       },
       {
         label: 'Goblet Mobility + Depth',
-        numberOfTimes: 1,
+        numberOfTimes: 2,
         exercises: [
-          { name: '6x Goblet Squat (slow 3s descend); Goblet Squat Hold', workSeconds: 90, restSeconds: 0, cue: 'Chest tall, elbows push knees out, with fast, controlled up; pry hips open on hold' },
+          { name: 'Goblet Squat (slow 3s descend)', workSeconds: 40, restSeconds: 0, cue: 'chest tall, elbows push knees out, with fast, controlled up' },
+          { name: 'Goblet Squat Hold (15s)', workSeconds: 15, restSeconds: 5, cue: 'pry hips open on hold' },
         ],
       },
       {
