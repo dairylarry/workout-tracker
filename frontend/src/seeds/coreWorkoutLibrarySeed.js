@@ -545,7 +545,7 @@ export const CORE_WORKOUT_SEED = [
         exercises: [
           { name: 'Front Rack Hold (right)', workSeconds: 25, restSeconds: 5, cue: 'no torso twisting' },
           { name: 'Front Rack Hold (left)', workSeconds: 25, restSeconds: 5, cue: 'no torso twisting' },
-          { name: '8-10 Plank Drags', workSeconds: 60, restSeconds: 0, cue: 'no torso twisting' },
+          { name: '8-10x Plank Drags', workSeconds: 60, restSeconds: 0, cue: 'no torso twisting' },
         ],
       },
       {
