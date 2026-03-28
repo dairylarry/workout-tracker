@@ -509,7 +509,7 @@ export const CORE_WORKOUT_SEED = [
         label: 'Power Primer',
         numberOfTimes: 1,
         exercises: [
-          { name: '5x KB Cleans (right)', workSeconds: 30, restSeconds: 0, cue: 'sharp, explosive, crisp' },                    { name: '5x KB Cleans/side', workSeconds: 60, restSeconds: 0, cue: 'sharp, explosive, crisp' },
+          { name: '5x KB Cleans (right)', workSeconds: 30, restSeconds: 0, cue: 'sharp, explosive, crisp' },
           { name: '5x KB Cleans (left)', workSeconds: 30, restSeconds: 0, cue: 'sharp, explosive, crisp' },
         ],
       },
