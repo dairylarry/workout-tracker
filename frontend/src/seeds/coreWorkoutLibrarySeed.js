@@ -474,7 +474,7 @@ export const CORE_WORKOUT_SEED = [
   },
   {
     id: 'kb-warm-up-lower',
-    name: 'Kettlebell Warm-Up--Lower',
+    name: 'Kettlebell Warm-Up: Lower',
     category: 'equipment',
     difficulty: 1,
     equipment: 'kettlebell',
@@ -498,18 +498,65 @@ export const CORE_WORKOUT_SEED = [
         label: 'Single-Leg + Core Stability',
         numberOfTimes: 1,
         exercises: [
-          { name: '6x Goblet Reverse Lunges/leg; 20s Suitcase Hold/side', workSeconds: 120, restSeconds: 0, cue: 'stay tall, don’t lean; anti-collapse core work' },
+          { name: '6x Goblet Reverse Lunges/leg; 20s Suitcase Hold/side', workSeconds: 60, restSeconds: 0, cue: 'stay tall, don’t lean; anti-collapse core work' },
+          { name: 'Suitcase Hold (right)', workSeconds: 25, restSeconds: 5, cue: 'stay tall, don’t lean; anti-collapse core work' },
+          { name: 'Suitcase Hold (left)', workSeconds: 25, restSeconds: 5, cue: 'stay tall, don’t lean; anti-collapse core work' },
+
         ],
       },
       {
         label: 'Power Primer',
         numberOfTimes: 1,
         exercises: [
-          { name: '5x KB Cleans/side', workSeconds: 60, restSeconds: 0, cue: 'sharp, explosive, crisp' },
+          { name: '5x KB Cleans (right)', workSeconds: 30, restSeconds: 0, cue: 'sharp, explosive, crisp' },                    { name: '5x KB Cleans/side', workSeconds: 60, restSeconds: 0, cue: 'sharp, explosive, crisp' },
+          { name: '5x KB Cleans (left)', workSeconds: 30, restSeconds: 0, cue: 'sharp, explosive, crisp' },
         ],
       },
     ],
     notes: 'Goal: hips, glutes, bracing, single-leg stability.',
+    progressions: [],
+  },
+    {
+    id: 'kb-warm-up-upper',
+    name: 'Kettlebell Warm-Up: Upper',
+    category: 'equipment',
+    difficulty: 1,
+    equipment: 'kettlebell',
+    equipmentOptional: null,
+    routine: [
+      {
+        label: 'Shoulder Mobility (Halos)',
+        numberOfTimes: 1,
+        exercises: [
+          { name: '6x Halos each direction; switch directions each set', workSeconds: 90, restSeconds: 0, cue: 'ribs down, move slow.' },
+        ],
+      },
+      {
+        label: 'Scapula + Press Pattern',
+        numberOfTimes: 1,
+        exercises: [
+          { name: '6x/side KB Floor Press or Light Strict Press', workSeconds: 120, restSeconds: 0, cue: 'controlled tempo, pack shoulders, smooth reps' },
+        ],
+      },
+      {
+        label: 'Stability + Anti-Rotation (core lock in)',
+        numberOfTimes: 1,
+        exercises: [
+          { name: 'Front Rack Hold (right)', workSeconds: 25, restSeconds: 5, cue: 'no torso twisting' },
+          { name: 'Front Rack Hold (left)', workSeconds: 25, restSeconds: 5, cue: 'no torso twisting' },
+          { name: '8-10 Plank Drags', workSeconds: 60, restSeconds: 0, cue: 'no torso twisting' },
+        ],
+      },
+      {
+        label: 'Overhead Activation',
+        numberOfTimes: 1,
+        exercises: [
+          { name: '5x KB Push Press (right)', workSeconds: 25, restSeconds: 5, cue: 'stable lockout, ribs down' },
+          { name: '5x KB Push Press (left)', workSeconds: 25, restSeconds: 5, cue: 'sstable lockout, ribs down' },
+        ],
+      },
+    ],
+    notes: '',
     progressions: [],
   },
 ]
