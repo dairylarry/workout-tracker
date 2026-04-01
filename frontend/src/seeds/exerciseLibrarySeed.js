@@ -29,6 +29,7 @@ export const EXERCISE_SEED = [
 
   // Lower body — glutes
   { name: 'Barbell Hip Thrust', muscleGroups: ['glutes', 'hamstrings'], family: 'hip-thrust', defaultRepRange: [8, 12], defaultSets: 2 },
+  { name: 'Cable Hip Thrust', muscleGroups: ['glutes', 'hamstrings'], family: 'hip-thrust', defaultRepRange: [8, 12], defaultSets: 2 },
   { name: 'DB Hip Thrust', muscleGroups: ['glutes', 'hamstrings'], family: 'hip-thrust', defaultRepRange: [8, 12], defaultSets: 2 },
   { name: 'KB Hip Thrust', muscleGroups: ['glutes', 'hamstrings'], family: 'hip-thrust', defaultRepRange: [8, 12], defaultSets: 2 },
 

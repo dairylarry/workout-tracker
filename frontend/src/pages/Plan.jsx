@@ -8,7 +8,7 @@ const SESSIONS = [
       { name: 'Barbell Back Squat', sets: '5s PRO', reps: '—', rest: '3–4 min' },
       { name: 'Leg Press', sets: '3', reps: '10–15 (RIR 2)', rest: '90 sec', subs: ['Bulgarian Split Squat 2×8/leg', 'Goblet Squat'] },
       { name: 'Romanian Deadlift (or DB/KB RDL)', sets: '3', reps: '6–10 (RIR 2)', rest: '2 min', subs: ['DB Romanian Deadlift', 'KB Romanian Deadlift'] },
-      { name: 'Barbell Hip Thrust (or DB/KB hip thrust)', sets: '2', reps: '8–12 (RIR 2)', rest: '90 sec', subs: ['DB Hip Thrust', 'KB Hip Thrust'] },
+      { name: 'Barbell Hip Thrust (or DB/KB hip thrust)', sets: '2', reps: '8–12 (RIR 2)', rest: '90 sec', subs: ['DB Hip Thrust', 'KB Hip Thrust', 'Cable Hip Thrust'] },
       { name: 'Standing Calf Raise (or single-leg DB calf raise)', sets: '3', reps: '15–20 (RIR 1)', rest: '60 sec', subs: ['Single-Leg DB Calf Raise'] },
     ],
     notes: ['On lighter running weeks (long run under 60 min or no long run), substitute Leg Press with Bulgarian Split Squat 2 × 8/leg (RIR 2).'],
