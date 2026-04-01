@@ -43,9 +43,11 @@ Core logging UI. Route: `/session/:sessionType/:date`
 - Deload toggle (adjusts 5s PRO targets to deload percentages)
 - Manual save button (writes session + exercise history)
 - Session start time displayed at top
+- Session notes textarea (persisted on save, visibility change, unmount)
+- Supplemental exercises: ad hoc additions per session, appended below program exercises, marked with a badge, history tracked by name
 
 ### View Sessions
-List of all past sessions, newest first. Each entry shows date, session type, and deload badge if applicable. Tapping opens read-only Session Detail. Edit mode allows modifying weight/reps/RIR and swapping exercises. Delete with confirmation.
+List of all past sessions, newest first. Each entry shows date, session type, and deload badge if applicable. Tapping opens read-only Session Detail. Edit mode allows modifying weight/reps/RIR, swapping exercises, and editing session notes. Delete with confirmation.
 
 ### Manage Workout
 Two sections:
@@ -74,6 +76,8 @@ Two sections:
 - **No lock file committed:** Work machine uses corporate npm proxy; package-lock.json is gitignored. CI installs fresh from public registry.
 - **4am date rollover:** "Today" rolls over at 4am instead of midnight to handle late-night sessions.
 - **Program config flow:** programConfig.js is the seed source. On first load, it's written to DynamoDB. After that, DynamoDB is the runtime source of truth. Plan.jsx stays hardcoded/static and independent.
+- **Slot-based history (intentional):** Active Session history is read by slot position (array index) from recent sessions, not by exercise name. This is intentional — a slot represents a movement pattern (e.g. "bicep curl"), and different variations (DB Curl, EZ Bar Curl) should all show under the same slot history. Name-based lookup would fragment this. See known limitation below.
+- **Slot history known limitation:** If exercises are inserted, removed, or reordered in the program config, slot indices shift and historical sessions display under the wrong card. Mitigation: a slot migration tool in Manage Workout lets you re-map past session exercises after a program restructure. Long-term solution (not yet implemented): assign each program exercise a stable slot ID in the config so order changes don't affect history lookup — see V2 Roadmap.
 
 ---
 
@@ -106,9 +110,13 @@ Two sections:
 - Bodyweight logging
 - PWA with offline support
 - Manage Workout with exercise library and sub editing
+- Session notes (active session + session detail view/edit)
+- Supplemental exercises (ad hoc per-session additions, name-based history)
+- Slot migration tool (Manage Workout) — remaps slot indices in past sessions after program restructure
 
 ## V2 Roadmap
-- [ ] Auth (Cognito) + multiple users
+- [ ] Auth (Cognito) + multiple users with `USER#<id>` PK prefix; admin role gates Manage Workout
+- [ ] Stable slot IDs — assign each program exercise a stable `slotId` in program config; sessions reference by ID instead of array position; eliminates slot drift when program is restructured
 - [ ] Rest timer
 - [ ] Full workout creation/editing via Manage Workout UI
 - [ ] Progress charts per exercise

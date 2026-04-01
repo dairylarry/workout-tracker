@@ -74,6 +74,7 @@ SK: DATE#2026-03-22
   date: "2026-03-22",
   startedAt: "2026-03-22T18:45:00Z",
   deload: false,
+  notes: "Felt strong today, bumped weight on last set",   // optional free-text
   exercises: [
     {
       name: "Leg Press",
@@ -85,16 +86,26 @@ SK: DATE#2026-03-22
         { setNumber: 3, weight: 295, reps: 8, rir: 1 }
       ]
     },
+    {
+      name: "DB Preacher Curl",
+      supplemental: true,           // ad hoc addition, not in program config
+      weightUnit: "lbs",
+      sets: [
+        { setNumber: 1, weight: 30, reps: 12, rir: 2 }
+      ]
+    },
     ...
   ]
 }
 ```
 
 Key fields:
-- `name` — original exercise from program config (for slot tracking)
-- `swappedName` — actual exercise performed (if different)
+- `name` — original exercise from program config (for slot tracking). For supplemental exercises, the name chosen from the library.
+- `swappedName` — actual exercise performed (if different from program exercise)
+- `supplemental` — true for ad hoc exercises added during the session; not present on program exercises. History for supplemental exercises is tracked by name, not slot position.
 - `weightUnit` — lbs or kg, set per exercise
 - `deload` — marks the session as a deload week
+- `notes` — optional free-text session notes, shown in Session Detail
 - `startedAt` — timestamp for display
 
 For 5s PRO exercises:
@@ -243,8 +254,16 @@ Both writes hit the same DynamoDB table (different PK/SK). 8 operations for a 7-
 
 Two different history reads serve different purposes:
 
-1. **Active Session (slot history)** — queries recent sessions of the same type, reads by slot position. Shows all exercise variations used in that slot. Source: session instances.
+1. **Active Session (slot history)** — queries recent sessions of the same type, reads by slot position. Shows all exercise variations used in that slot (including swaps). Source: session instances. **Supplemental exercises** use name-based lookup instead.
 2. **Exercise Library (exercise history)** — reads from the exercise library item's `history` array. Shows all logged data for that exercise across all sessions. Source: exercise library items.
+
+### Slot-based history: design rationale and known limitation
+
+Slot position is intentional for program exercises. A slot represents a movement pattern (e.g. "bicep curl"), not a specific exercise. Using slot-based lookup means DB Curl and EZ Bar Curl logged in the same slot on different days will both appear in that slot's history — which is the desired behavior for tracking progression across variations.
+
+**Known limitation:** If exercises are inserted, removed, or reordered in the program config, slot indices shift and past sessions display under the wrong card. Mitigation in v1: a manual migration (run in Manage Workout or via admin script) that re-maps `name` fields in past session exercise arrays to realign with the new slot order.
+
+**Long-term solution (v2):** Assign each program exercise a stable `slotId` string in the program config (e.g. `"bicep-curl-slot"`). Session exercises store this ID alongside the name. History lookup uses `slotId` instead of array index, making insertions and reordering completely safe.
 
 ---
 
@@ -256,3 +275,5 @@ Two different history reads serve different purposes:
 - No `completedAt` — all sessions assumed complete
 - No user prefix in v1 — add `USER#<id>` prefix to PK in v2 for multi-user
 - programConfig.js and exerciseLibrarySeed.js are seed-only files. Not read at runtime after initial seed. Reseed manually when the plan changes.
+- `notes` field on session is optional; absent on sessions created before the field was introduced
+- `supplemental: true` on an exercise marks it as a per-session addition outside the program config; absent on program exercises (not `false`, just absent)
