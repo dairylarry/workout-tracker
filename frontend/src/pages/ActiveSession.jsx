@@ -662,7 +662,7 @@ export default function ActiveSession() {
                       ? <span className="history-none">None</span>
                       : h.sets.map(s => {
                           const base = `${s.weight}${h.weightUnit === 'kg' ? 'kg' : ''}×${s.reps}`
-                          return s.rir !== '' && s.rir !== undefined ? `${base} (${s.rir})` : base
+                          return s.rir !== '' && s.rir !== undefined ? `${base}(${s.rir})` : base
                         }).join(', ')
                     }
                   </div>
