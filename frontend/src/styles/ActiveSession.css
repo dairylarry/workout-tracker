@@ -338,6 +338,11 @@
   color: #666;
 }
 
+.history-none {
+  font-style: italic;
+  color: #bbb;
+}
+
 .show-more {
   background: none;
   border: none;

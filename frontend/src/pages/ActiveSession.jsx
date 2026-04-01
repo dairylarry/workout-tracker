@@ -658,10 +658,13 @@ export default function ActiveSession() {
                     <span className="history-date">{h.date}:</span>{' '}
                     <span className="history-variant">{h.displayName}</span>{' '}
                     {h.deload && <span className="deload-tag">deload</span>}{' '}
-                    {h.sets.map(s => {
-                      const base = `${s.weight}${h.weightUnit === 'kg' ? 'kg' : ''}×${s.reps}`
-                      return s.rir !== '' && s.rir !== undefined ? `${base} (${s.rir})` : base
-                    }).join(', ')}
+                    {h.sets.length === 0
+                      ? <span className="history-none">None</span>
+                      : h.sets.map(s => {
+                          const base = `${s.weight}${h.weightUnit === 'kg' ? 'kg' : ''}×${s.reps}`
+                          return s.rir !== '' && s.rir !== undefined ? `${base} (${s.rir})` : base
+                        }).join(', ')
+                    }
                   </div>
                 ))}
                 {history.length > expandLevel && (
