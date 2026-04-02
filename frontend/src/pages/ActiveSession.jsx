@@ -67,6 +67,7 @@ export default function ActiveSession() {
   const [exercises, setExercises] = useState(null)
   const [startedAt, setStartedAt] = useState(null)
   const [deload, setDeload] = useState(false)
+  const [simplify, setSimplify] = useState(true)
   const [recentSessions, setRecentSessions] = useState([])
   const [historyLevel, setHistoryLevel] = useState({})
   const [loading, setLoading] = useState(true)
@@ -500,6 +501,24 @@ export default function ActiveSession() {
       <label className="deload-toggle">
         <input
           type="checkbox"
+          checked={simplify}
+          onChange={e => {
+            setSimplify(e.target.checked)
+            if (e.target.checked) {
+              setSwapOpen(null)
+              setSetEditOpen(null)
+              setConfirmRemoveAddon(null)
+              setAddonFilter('')
+              setAddonFamilyFilter('')
+            }
+          }}
+        />
+        Simplify view
+      </label>
+
+      <label className="deload-toggle">
+        <input
+          type="checkbox"
           checked={deload}
           onChange={e => {
             const isDeload = e.target.checked
@@ -635,12 +654,14 @@ export default function ActiveSession() {
               <div className="exercise-top-row">
                 <h3 className="exercise-name">{displayName}</h3>
                 <div className="exercise-controls">
-                  <button
-                    className="swap-btn"
-                    onClick={() => { setSwapOpen(isSwapOpen ? null : exIndex); setSetEditOpen(null) }}
-                  >
-                    Swap
-                  </button>
+                  {!simplify && (
+                    <button
+                      className="swap-btn"
+                      onClick={() => { setSwapOpen(isSwapOpen ? null : exIndex); setSetEditOpen(null) }}
+                    >
+                      Swap
+                    </button>
+                  )}
                   <select
                     className="unit-toggle"
                     value={exercise.weightUnit || 'lbs'}
@@ -649,12 +670,14 @@ export default function ActiveSession() {
                     <option value="lbs">lbs</option>
                     <option value="kg">kg</option>
                   </select>
-                  <button
-                    className={`swap-btn set-count-btn${setEditOpen === exIndex ? ' swap-btn--active' : ''}`}
-                    onClick={() => { setSetEditOpen(setEditOpen === exIndex ? null : exIndex); setSwapOpen(null) }}
-                  >
-                    {setEditOpen === exIndex ? 'Done' : '±'}
-                  </button>
+                  {!simplify && (
+                    <button
+                      className={`swap-btn set-count-btn${setEditOpen === exIndex ? ' swap-btn--active' : ''}`}
+                      onClick={() => { setSetEditOpen(setEditOpen === exIndex ? null : exIndex); setSwapOpen(null) }}
+                    >
+                      {setEditOpen === exIndex ? 'Done' : '±'}
+                    </button>
+                  )}
                 </div>
               </div>
               {isSwapped && (
@@ -675,7 +698,7 @@ export default function ActiveSession() {
               )}
             </div>
 
-            {isSwapOpen && (
+            {!simplify && isSwapOpen && (
               <div className="swap-panel">
                 {exConfig.subs?.map(sub => {
                   const subName = typeof sub === 'object' ? sub.name : sub
@@ -755,7 +778,7 @@ export default function ActiveSession() {
                 </div>
               ))}
             </div>
-            {setEditOpen === exIndex && (
+            {!simplify && setEditOpen === exIndex && (
               <div className="set-edit-controls">
                 <button
                   className="set-edit-btn set-edit-btn--remove"
@@ -782,12 +805,14 @@ export default function ActiveSession() {
               <div className="exercise-top-row">
                 <h3 className="exercise-name">{displayName}</h3>
                 <div className="exercise-controls">
-                  <button
-                    className="swap-btn"
-                    onClick={() => { setSwapOpen(isSwapOpen ? null : exIndex); setSetEditOpen(null); setAddonFilter(''); setAddonFamilyFilter('') }}
-                  >
-                    Swap
-                  </button>
+                  {!simplify && (
+                    <button
+                      className="swap-btn"
+                      onClick={() => { setSwapOpen(isSwapOpen ? null : exIndex); setSetEditOpen(null); setAddonFilter(''); setAddonFamilyFilter('') }}
+                    >
+                      Swap
+                    </button>
+                  )}
                   <select
                     className="unit-toggle"
                     value={exercise.weightUnit || 'lbs'}
@@ -796,12 +821,14 @@ export default function ActiveSession() {
                     <option value="lbs">lbs</option>
                     <option value="kg">kg</option>
                   </select>
-                  <button
-                    className={`swap-btn set-count-btn${setEditOpen === exIndex ? ' swap-btn--active' : ''}`}
-                    onClick={() => { setSetEditOpen(setEditOpen === exIndex ? null : exIndex); setSwapOpen(null) }}
-                  >
-                    {setEditOpen === exIndex ? 'Done' : '±'}
-                  </button>
+                  {!simplify && (
+                    <button
+                      className={`swap-btn set-count-btn${setEditOpen === exIndex ? ' swap-btn--active' : ''}`}
+                      onClick={() => { setSetEditOpen(setEditOpen === exIndex ? null : exIndex); setSwapOpen(null) }}
+                    >
+                      {setEditOpen === exIndex ? 'Done' : '±'}
+                    </button>
+                  )}
                 </div>
               </div>
               {isSwapped && (
@@ -810,7 +837,7 @@ export default function ActiveSession() {
               <span className="addon-badge">Add-on</span>
             </div>
 
-            {isSwapOpen && (() => {
+            {!simplify && isSwapOpen && (() => {
               const filtered = exerciseLibrary
                 .filter(ex => {
                   if (addonFamilyFilter && ex.family !== addonFamilyFilter) return false
@@ -893,7 +920,7 @@ export default function ActiveSession() {
                 </div>
               ))}
             </div>
-            {setEditOpen === exIndex && (
+            {!simplify && setEditOpen === exIndex && (
               <div className="set-edit-controls">
                 <button
                   className="set-edit-btn set-edit-btn--remove"
@@ -903,27 +930,31 @@ export default function ActiveSession() {
                 <button className="set-edit-btn" onClick={() => handleAddSet(exIndex)}>+ Set</button>
               </div>
             )}
-            {confirmRemoveAddon === exIndex ? (
-              <div className="addon-remove-confirm">
-                <span>Remove?</span>
-                <button className="addon-remove-yes" onClick={() => handleRemoveSupplemental(exIndex)}>Yes</button>
-                <button className="addon-remove-no" onClick={() => setConfirmRemoveAddon(null)}>Cancel</button>
-              </div>
-            ) : (
-              <button className="addon-remove-btn" onClick={() => setConfirmRemoveAddon(exIndex)}>Remove</button>
+            {!simplify && (
+              confirmRemoveAddon === exIndex ? (
+                <div className="addon-remove-confirm">
+                  <span>Remove?</span>
+                  <button className="addon-remove-yes" onClick={() => handleRemoveSupplemental(exIndex)}>Yes</button>
+                  <button className="addon-remove-no" onClick={() => setConfirmRemoveAddon(null)}>Cancel</button>
+                </div>
+              ) : (
+                <button className="addon-remove-btn" onClick={() => setConfirmRemoveAddon(exIndex)}>Remove</button>
+              )
             )}
           </div>
         )
       })}
 
       {/* Add-on button */}
-      <button
-        className="addon-add-btn"
-        onClick={() => {
-          const cableCrunch = exerciseLibrary.find(ex => ex.name === 'Cable Crunch') || { name: 'Cable Crunch', defaultSets: 4 }
-          handleAddOnExercise(cableCrunch)
-        }}
-      >+ Add-on Exercise</button>
+      {!simplify && (
+        <button
+          className="addon-add-btn"
+          onClick={() => {
+            const cableCrunch = exerciseLibrary.find(ex => ex.name === 'Cable Crunch') || { name: 'Cable Crunch', defaultSets: 4 }
+            handleAddOnExercise(cableCrunch)
+          }}
+        >+ Add-on Exercise</button>
+      )}
 
       <div className="session-notes">
         <label className="session-notes-label" htmlFor="session-notes">Notes</label>
