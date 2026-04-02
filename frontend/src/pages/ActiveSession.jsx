@@ -498,61 +498,63 @@ export default function ActiveSession() {
         {startedAt && ` · started ${new Date(startedAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false })}`}
       </p>
 
-      <label className="deload-toggle">
-        <input
-          type="checkbox"
-          checked={simplify}
-          onChange={e => {
-            setSimplify(e.target.checked)
-            if (e.target.checked) {
-              setSwapOpen(null)
-              setSetEditOpen(null)
-              setConfirmRemoveAddon(null)
-              setAddonFilter('')
-              setAddonFamilyFilter('')
-            }
-          }}
-        />
-        Simplify view
-      </label>
+      <div className="toggle-menu">
+        <label className="deload-toggle">
+          <input
+            type="checkbox"
+            checked={simplify}
+            onChange={e => {
+              setSimplify(e.target.checked)
+              if (e.target.checked) {
+                setSwapOpen(null)
+                setSetEditOpen(null)
+                setConfirmRemoveAddon(null)
+                setAddonFilter('')
+                setAddonFamilyFilter('')
+              }
+            }}
+          />
+          Simplify view
+        </label>
 
-      <label className="deload-toggle">
-        <input
-          type="checkbox"
-          checked={deload}
-          onChange={e => {
-            const isDeload = e.target.checked
-            setDeload(isDeload)
-            updateSessionField(sessionType, date, 'deload', isDeload)
-            // Update 5/3/1 exercises to deload or normal sets
-            setExercises(prev => {
-              const updated = prev.map(ex => {
-                if (!ex.is531 || !ex.trainingMax) return ex
-                const newSets = isDeload
-                  ? getDeloadSets(ex.trainingMax)
-                  : getSetsForWeek(ex.week || 1, ex.trainingMax)
-                return {
-                  ...ex,
-                  sets: newSets.map((s, i) => ({
-                    setNumber: i + 1,
-                    target: s.target,
-                    label: s.label,
-                    isWarmup: s.isWarmup,
-                    weight: '',
-                    reps: '',
-                    rir: '',
-                  })),
-                }
+        <label className="deload-toggle">
+          <input
+            type="checkbox"
+            checked={deload}
+            onChange={e => {
+              const isDeload = e.target.checked
+              setDeload(isDeload)
+              updateSessionField(sessionType, date, 'deload', isDeload)
+              // Update 5/3/1 exercises to deload or normal sets
+              setExercises(prev => {
+                const updated = prev.map(ex => {
+                  if (!ex.is531 || !ex.trainingMax) return ex
+                  const newSets = isDeload
+                    ? getDeloadSets(ex.trainingMax)
+                    : getSetsForWeek(ex.week || 1, ex.trainingMax)
+                  return {
+                    ...ex,
+                    sets: newSets.map((s, i) => ({
+                      setNumber: i + 1,
+                      target: s.target,
+                      label: s.label,
+                      isWarmup: s.isWarmup,
+                      weight: '',
+                      reps: '',
+                      rir: '',
+                    })),
+                  }
+                })
+                updateSessionExercises(sessionType, date, updated).catch(e =>
+                  console.error('Failed to save deload change:', e)
+                )
+                return updated
               })
-              updateSessionExercises(sessionType, date, updated).catch(e =>
-                console.error('Failed to save deload change:', e)
-              )
-              return updated
-            })
-          }}
-        />
-        Deload week
-      </label>
+            }}
+          />
+          Deload week
+        </label>
+      </div>
 
       {config.exercises.map((exConfig) => {
         if (exConfig.is531) {

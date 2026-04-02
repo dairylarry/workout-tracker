@@ -15,6 +15,11 @@
   margin-bottom: 1.5rem;
 }
 
+.toggle-menu {
+  display: flex;
+  justify-content: space-around;
+}
+
 .deload-toggle {
   display: flex;
   align-items: center;
