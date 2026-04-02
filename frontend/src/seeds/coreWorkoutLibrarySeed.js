@@ -154,50 +154,60 @@ export const CORE_WORKOUT_SEED = [
     equipmentOptional: 'kettlebell or dumbbell',
     routine: [
       {
-        label: 'Hollow Hold',
+        label: 'Round 1',
         numberOfTimes: 1,
         exercises: [
-          { name: 'Hollow Body Hold', workSeconds: 150, restSeconds: 15, cue: 'long body, rib cage down, sustain tension' },
+          { name: 'Hollow Body Hold', workSeconds: 30, restSeconds: 0, cue: 'long body, rib cage down, sustain tension' },
+          { name: 'Leg Lower (slow 4-count)', workSeconds: 30, restSeconds: 0, cue: '4-count descent, lower back pinned throughout' },
+          { name: 'Plank Shoulder Tap', workSeconds: 30, restSeconds: 0, cue: 'hips square, feet wide if needed' },
+          { name: 'Left Side Plank Hold', workSeconds: 20, restSeconds: 0, cue: 'hips stacked, drive top hip to ceiling' },
+          { name: 'Right Side Plank Hold', workSeconds: 20, restSeconds: 0, cue: 'hips stacked, drive top hip to ceiling' },
+          { name: 'Dead Bug (arms overhead)', workSeconds: 30, restSeconds: 15, cue: 'arms fully extended overhead, ribs stay down' },
         ],
       },
       {
-        label: 'Leg Lower',
+        label: 'Round 2',
         numberOfTimes: 1,
         exercises: [
-          { name: 'Leg Lower (slow 4-count)', workSeconds: 120, restSeconds: 15, cue: '4-count descent, lower back pinned throughout' },
+          { name: 'Hollow Body Hold', workSeconds: 30, restSeconds: 0, cue: 'long body, rib cage down, sustain tension' },
+          { name: 'Leg Lower (slow 4-count)', workSeconds: 30, restSeconds: 0, cue: '4-count descent, lower back pinned throughout' },
+          { name: 'Plank Shoulder Tap', workSeconds: 30, restSeconds: 0, cue: 'hips square, feet wide if needed' },
+          { name: 'Left Side Plank Hold', workSeconds: 30, restSeconds: 15, cue: 'hips stacked, drive top hip to ceiling' },
         ],
       },
       {
-        label: 'Plank',
+        label: 'Round 3',
         numberOfTimes: 1,
         exercises: [
-          { name: 'Plank Shoulder Tap', workSeconds: 90, restSeconds: 15, cue: 'hips square, feet wide if needed' },
-        ],
-      },
-      {
-        label: 'Side Planks',
-        numberOfTimes: 1,
-        exercises: [
-          { name: 'Left Side Plank Hold', workSeconds: 30, restSeconds: 0, cue: 'hips stacked, drive top hip to ceiling' },
+          { name: 'Hollow Body Hold', workSeconds: 30, restSeconds: 0, cue: 'long body, rib cage down, sustain tension' },
+          { name: 'Leg Lower (slow 4-count)', workSeconds: 30, restSeconds: 0, cue: '4-count descent, lower back pinned throughout' },
           { name: 'Right Side Plank Hold', workSeconds: 30, restSeconds: 15, cue: 'hips stacked, drive top hip to ceiling' },
         ],
       },
       {
-        label: 'Dead Bug',
+        label: 'Round 4',
         numberOfTimes: 1,
         exercises: [
-          { name: 'Dead Bug (arms overhead)', workSeconds: 30, restSeconds: 15, cue: 'arms fully extended overhead, ribs stay down' },
+          { name: 'Hollow Body Hold', workSeconds: 30, restSeconds: 0, cue: 'long body, rib cage down, sustain tension' },
+          { name: 'Leg Lower (slow 4-count)', workSeconds: 30, restSeconds: 15, cue: '4-count descent, lower back pinned throughout' },
+        ],
+      },
+      {
+        label: 'Round 5',
+        numberOfTimes: 1,
+        exercises: [
+          { name: 'Hollow Body Hold', workSeconds: 30, restSeconds: 15, cue: 'long body, rib cage down, sustain tension' },
         ],
       },
       {
         label: 'Finisher',
         numberOfTimes: 1,
         exercises: [
-          { name: 'Hollow Body Hold', workSeconds: 20, restSeconds: 0, cue: 'long body, everything tight, finish strong' },
+          { name: 'Plank Hold', workSeconds: 30, restSeconds: 0, cue: 'full tension, squeeze everything' },
         ],
       },
     ],
-    notes: 'Descending ladder — 5 blocks (150s), 4 blocks (120s), 3 blocks (90s), 2 blocks split L/R side plank (30s each), 1 block dead bug (30s). Finishes with a 20s hollow hold.',
+    notes: 'Descending ladder. Finishes with a 45s plank.',
     progressions: [
       'Harder variation: hollow hold → hollow body rock; leg lower → straight-leg hover at the bottom.',
       'Ascending ladder: run the sequence in reverse (dead bug → side planks → plank → leg lower → hollow) for a different intensity arc.',
