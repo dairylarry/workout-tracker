@@ -1,5 +1,5 @@
 import { useParams, useNavigate } from 'react-router-dom'
-import { useState, useEffect, useRef, useMemo } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { useProgram } from '../context/ProgramContext'
 import { getSession, putSession, updateSessionExercises, updateSessionField, getRecentSessions, get531Config, updateExerciseHistory } from '../lib/dynamodb'
 import { getSetsForWeek, getDeloadSets, WEEK_LABELS } from '../lib/fiveThreeOne'
@@ -73,7 +73,6 @@ export default function ActiveSession() {
   const [swapOpen, setSwapOpen] = useState(null) // index of exercise with swap open
   const [setEditOpen, setSetEditOpen] = useState(null) // index of exercise with ± panel open
   const [notes, setNotes] = useState('')
-  const [addonPickerOpen, setAddonPickerOpen] = useState(false)
   const [addonFilter, setAddonFilter] = useState('')
   const [confirmRemoveAddon, setConfirmRemoveAddon] = useState(null) // exIndex pending confirm
 
@@ -358,14 +357,6 @@ export default function ActiveSession() {
     setSetEditOpen(null)
   }
 
-  const filteredLibrary = useMemo(() => {
-    if (!addonPickerOpen) return []
-    const q = addonFilter.toLowerCase()
-    return exerciseLibrary
-      .filter(ex => !q || ex.name.toLowerCase().includes(q))
-      .sort((a, b) => a.name.localeCompare(b.name))
-      .slice(0, 20)
-  }, [addonPickerOpen, addonFilter, exerciseLibrary])
 
   function handleAddSupplemental(libExercise) {
     setExercises(prev => {
@@ -904,30 +895,14 @@ export default function ActiveSession() {
         )
       })}
 
-      {/* Add-on picker */}
-      {addonPickerOpen ? (
-        <div className="addon-picker">
-          <input
-            type="text"
-            className="addon-search"
-            placeholder="Search exercises..."
-            value={addonFilter}
-            onChange={e => setAddonFilter(e.target.value)}
-            autoFocus
-          />
-          <div className="addon-picker-list">
-            {filteredLibrary.map(ex => (
-              <button key={ex.name} className="swap-option" onClick={() => handleAddSupplemental(ex)}>
-                {ex.name}
-              </button>
-            ))}
-            {filteredLibrary.length === 0 && <span className="addon-no-results">No matches</span>}
-          </div>
-          <button className="addon-cancel" onClick={() => { setAddonPickerOpen(false); setAddonFilter('') }}>Cancel</button>
-        </div>
-      ) : (
-        <button className="addon-add-btn" onClick={() => setAddonPickerOpen(true)}>+ Add-on</button>
-      )}
+      {/* Add-on button */}
+      <button
+        className="addon-add-btn"
+        onClick={() => {
+          const cableCrunch = exerciseLibrary.find(ex => ex.name === 'Cable Crunch') || { name: 'Cable Crunch', defaultSets: 4 }
+          handleAddSupplemental(cableCrunch)
+        }}
+      >+ Add-on</button>
 
       <div className="session-notes">
         <label className="session-notes-label" htmlFor="session-notes">Notes</label>

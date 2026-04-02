@@ -148,7 +148,7 @@ export default function SessionDetail() {
         return (
           <div key={exercise.name} className="detail-exercise">
             <div className="detail-exercise-header">
-              <h3>{displayName}</h3>
+              <h3>{displayName}{exercise.supplemental && <span className="deload-badge" style={{ marginLeft: '0.4rem' }}>Add-on</span>}</h3>
               {editing && exConfig && !exConfig.is531 && (
                 <button
                   className="swap-btn"
