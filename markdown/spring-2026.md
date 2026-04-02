@@ -22,7 +22,7 @@
 | Exercise                                          | Sets  | Reps             | Suggested Rest |
 | ------------------------------------------------- | ----- | ---------------- | -------------- |
 | Barbell Back Squat                                | 5s PRO | —               | 3–4 min        |
-| Leg Press                                         | 3     | 10–15 (RIR 2)    | 90 sec         |
+| Leg Press                                         | 3     | 10–12 (RIR 2)    | 90 sec         |
 | Romanian Deadlift (or DB/KB RDL)                  | 3     | 6–10 (RIR 2)     | 2 min          |
 | Barbell Hip Thrust (or DB/KB hip thrust)          | 2     | 8–12 (RIR 2)     | 90 sec         |
 | Standing Calf Raise (or single-leg DB calf raise) | 3     | 15–20 (RIR 1)    | 60 sec         |
@@ -38,10 +38,10 @@
 | ---------------------------------------------- | ----- | ------------- | -------------- |
 | Flat Barbell Bench Press                       | 5s PRO | —            | 3–4 min        |
 | Weighted Pull-Up                               | 4     | 6–10 (RIR 2)  | 90 sec         |
-| Seated Cable Row                               | 3     | 8–10 (RIR 2)  | 90 sec         |
+| Seated Cable Row                               | 3     | 8–12 (RIR 2)  | 90 sec         |
 | Seated DB Shoulder Press                       | 3     | 8–12 (RIR 2)  | 90 sec         |
-| Cable Lateral Raise (or DB lateral raise)      | 4     | 12–15 (RIR 1) | 60 sec         |
-| Incline Cable Fly (or incline pec deck)        | 2     | 12–15 (RIR 1) | 60 sec         |
+| Cable Lateral Raise (or DB lateral raise)      | 4     | 10–12 (RIR 1) | 60 sec         |
+| Incline Cable Fly (or incline pec deck)        | 2     | 10–12 (RIR 1) | 60 sec         |
 | Tricep Rope Pushdown                           | 4     | 10–12 (RIR 1) | 60 sec         |
 | EZ Bar Curl (or DB curl)                       | 4     | 10–12 (RIR 1) | 60 sec         |
 
@@ -57,9 +57,9 @@
 | Exercise                                            | Sets | Reps             | Suggested Rest |
 | --------------------------------------------------- | ---- | ---------------- | -------------- |
 | Pendulum Squat                                      | 3    | 8–12 (RIR 2)     | 2 min          |
-| Seated Leg Curl                                     | 3    | 10–12 (RIR 2)    | 90 sec         |
+| Seated Leg Curl                                     | 3    | 10–12 (RIR 1)    | 90 sec         |
 | Single-Leg Romanian Deadlift (DB or KB)             | 2    | 8–10/leg (RIR 2) | 90 sec         |
-| Leg Extension (or cable leg extension)              | 3    | 12–15 (RIR 1)    | 60 sec         |
+| Leg Extension (or cable leg extension)              | 3    | 10–12 (RIR 1)    | 60 sec         |
 | Seated Calf Raise (or seated DB calf raise)         | 3    | 15–20 (RIR 1)    | 60 sec         |
 
 
@@ -79,9 +79,9 @@
 | Incline DB Press                              | 4    | 8–12 (RIR 2)  | 90 sec         |
 | Pull-Up                                       | 3    | 8–12 (RIR 2)  | 90 sec         |
 | Chest-Supported DB Row (or single-arm DB row) | 3    | 10–12 (RIR 2) | 90 sec         |
-| Incline Cable Fly (or incline pec deck)       | 3    | 12–15 (RIR 1) | 60 sec         |
+| Incline Cable Fly (or incline pec deck)       | 3    | 10–12 (RIR 1) | 60 sec         |
 | Cable Face Pull                               | 3    | 12–15 (RIR 1) | 60 sec         |
-| Cable Lateral Raise (or DB lateral raise)     | 4    | 15–20 (RIR 1) | 60 sec         |
+| Cable Lateral Raise (or DB lateral raise)     | 4    | 12–15 (RIR 1) | 60 sec         |
 | Overhead Tricep Extension (DB or cable)       | 2    | 10–12 (RIR 1) | 60 sec         |
 | Hammer Curl                                   | 3    | 10–12 (RIR 1) | 60 sec         |
 
@@ -133,7 +133,7 @@
 **Current goal (slight deficit):** ~2,500 kcal/day (~350–400 kcal below TDEE → ~0.5–0.75 lb/week loss)
 
 - Protein: 170–190g/day.
-- Calories: ~150–300 kcal below maintenance. Eat near maintenance on Lower days; hold the deficit on Upper and rest days.
+- Calories: ~350–400 kcal below TDEE (~2,500 kcal/day). Eat near maintenance on Lower days; hold the deficit on Upper and rest days.
 - Pre-lift (60–90 min before): 30–50g carbs + 30g protein, low fat.
 - Post-lift (within 90 min): 40–60g carbs + 40g protein.
 - If weight drops faster than 0.5 lb/week for 2+ consecutive weeks, add 150–200 kcal on training days.
@@ -148,4 +148,3 @@
 
 - For double-progression lifts: if a weight stalls for 2+ weeks through a deload, drop load 10% and rebuild.
 - For 5s PRO lifts: if bench or squat top sets feel consistently above RPE 8 (< RIR 2) for 2+ weeks after a deload, reset training max by 10% and rebuild.
-
