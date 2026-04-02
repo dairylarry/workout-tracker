@@ -1,5 +1,5 @@
 import { useParams, useNavigate } from 'react-router-dom'
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef, useMemo } from 'react'
 import { useProgram } from '../context/ProgramContext'
 import { getSession, putSession, updateSessionExercises, updateSessionField, getRecentSessions, get531Config, updateExerciseHistory } from '../lib/dynamodb'
 import { getSetsForWeek, getDeloadSets, WEEK_LABELS } from '../lib/fiveThreeOne'
@@ -61,7 +61,7 @@ function checkProgression(exercise, config) {
 export default function ActiveSession() {
   const { sessionType, date } = useParams()
   const navigate = useNavigate()
-  const { program } = useProgram()
+  const { program, exerciseLibrary } = useProgram()
   const config = program?.sessionTypes[sessionType]
   const [exercises, setExercises] = useState(null)
   const [startedAt, setStartedAt] = useState(null)
@@ -73,6 +73,9 @@ export default function ActiveSession() {
   const [swapOpen, setSwapOpen] = useState(null) // index of exercise with swap open
   const [setEditOpen, setSetEditOpen] = useState(null) // index of exercise with ± panel open
   const [notes, setNotes] = useState('')
+  const [addonPickerOpen, setAddonPickerOpen] = useState(false)
+  const [addonFilter, setAddonFilter] = useState('')
+  const [confirmRemoveAddon, setConfirmRemoveAddon] = useState(null) // exIndex pending confirm
 
   const [ftoConfigs, setFtoConfigs] = useState({})
   const saveTimeout = useRef(null)
@@ -91,7 +94,7 @@ export default function ActiveSession() {
       return updateExerciseHistory(exerciseName, {
         date,
         sessionType,
-        slotIndex,
+        ...(ex.supplemental ? { supplemental: true } : { slotIndex }),
         sets: ex.sets.map(s => ({ weight: s.weight, reps: s.reps, rir: s.rir })),
         weightUnit: ex.weightUnit || 'lbs',
         ...(deload && { deload: true }),
@@ -351,6 +354,54 @@ export default function ActiveSession() {
       )
       return updated
     })
+    setSwapOpen(null)
+    setSetEditOpen(null)
+  }
+
+  const filteredLibrary = useMemo(() => {
+    if (!addonPickerOpen) return []
+    const q = addonFilter.toLowerCase()
+    return exerciseLibrary
+      .filter(ex => !q || ex.name.toLowerCase().includes(q))
+      .sort((a, b) => a.name.localeCompare(b.name))
+      .slice(0, 20)
+  }, [addonPickerOpen, addonFilter, exerciseLibrary])
+
+  function handleAddSupplemental(libExercise) {
+    setExercises(prev => {
+      const sets = Array.from({ length: libExercise.defaultSets || 3 }, (_, i) => ({
+        setNumber: i + 1,
+        weight: '',
+        reps: '',
+        rir: '',
+      }))
+      const newEx = {
+        name: libExercise.name,
+        weightUnit: 'lbs',
+        supplemental: true,
+        sets,
+      }
+      const updated = [...prev, newEx]
+      updateSessionExercises(sessionType, date, updated).catch(e =>
+        console.error('Failed to save supplemental add:', e)
+      )
+      return updated
+    })
+    setAddonPickerOpen(false)
+    setAddonFilter('')
+  }
+
+  function handleRemoveSupplemental(exIndex) {
+    setExercises(prev => {
+      const ex = prev[exIndex]
+      if (!ex?.supplemental) return prev
+      const updated = prev.filter((_, i) => i !== exIndex)
+      updateSessionExercises(sessionType, date, updated).catch(e =>
+        console.error('Failed to save supplemental remove:', e)
+      )
+      return updated
+    })
+    setConfirmRemoveAddon(null)
     setSwapOpen(null)
     setSetEditOpen(null)
   }
@@ -723,6 +774,160 @@ export default function ActiveSession() {
           </div>
         )
       })}
+
+      {/* Supplemental exercises */}
+      {exercises.filter(ex => ex.supplemental).map(exercise => {
+        const exIndex = exercises.indexOf(exercise)
+        const displayName = exercise.swappedName || exercise.name
+        const isSwapped = !!exercise.swappedName
+        const isSwapOpen = swapOpen === exIndex
+
+        return (
+          <div key={`addon-${exIndex}`} className="exercise-block exercise-addon">
+            <div className="exercise-header">
+              <div className="exercise-top-row">
+                <h3 className="exercise-name">{displayName}</h3>
+                <div className="exercise-controls">
+                  <button
+                    className="swap-btn"
+                    onClick={() => { setSwapOpen(isSwapOpen ? null : exIndex); setSetEditOpen(null) }}
+                  >
+                    Swap
+                  </button>
+                  <select
+                    className="unit-toggle"
+                    value={exercise.weightUnit || 'lbs'}
+                    onChange={e => handleUnitChange(exIndex, e.target.value)}
+                  >
+                    <option value="lbs">lbs</option>
+                    <option value="kg">kg</option>
+                  </select>
+                  <button
+                    className={`swap-btn set-count-btn${setEditOpen === exIndex ? ' swap-btn--active' : ''}`}
+                    onClick={() => { setSetEditOpen(setEditOpen === exIndex ? null : exIndex); setSwapOpen(null) }}
+                  >
+                    {setEditOpen === exIndex ? 'Done' : '±'}
+                  </button>
+                </div>
+              </div>
+              {isSwapped && (
+                <span className="swapped-from">Originally: {exercise.name}</span>
+              )}
+              <span className="addon-badge">Add-on</span>
+            </div>
+
+            {isSwapOpen && (
+              <div className="swap-panel">
+                <input
+                  type="text"
+                  className="addon-search"
+                  placeholder="Search exercises..."
+                  value={addonFilter}
+                  onChange={e => setAddonFilter(e.target.value)}
+                  autoFocus
+                />
+                {exerciseLibrary
+                  .filter(ex => {
+                    const q = addonFilter.toLowerCase()
+                    return !q || ex.name.toLowerCase().includes(q)
+                  })
+                  .sort((a, b) => a.name.localeCompare(b.name))
+                  .slice(0, 20)
+                  .map(ex => (
+                    <button key={ex.name} className="swap-option" onClick={() => handleSwap(exIndex, ex.name)}>
+                      {ex.name}
+                    </button>
+                  ))
+                }
+                {isSwapped && (
+                  <button className="swap-reset" onClick={() => handleResetSwap(exIndex)}>
+                    Reset to {exercise.name}
+                  </button>
+                )}
+              </div>
+            )}
+
+            <div className="sets-grid">
+              <div className="set-row set-header">
+                <span>Set</span>
+                <span>Weight</span>
+                <span>Reps</span>
+                <span>RIR</span>
+              </div>
+              {exercise.sets.map((set, setIndex) => (
+                <div key={set.setNumber} className="set-row">
+                  <span className="set-number">{set.setNumber}</span>
+                  <input
+                    type="number"
+                    inputMode="decimal"
+                    value={set.weight}
+                    placeholder="—"
+                    onChange={e => handleSetChange(exIndex, setIndex, 'weight', e.target.value)}
+                  />
+                  <input
+                    type="number"
+                    inputMode="numeric"
+                    value={set.reps}
+                    placeholder="—"
+                    onChange={e => handleSetChange(exIndex, setIndex, 'reps', e.target.value)}
+                  />
+                  <input
+                    type="number"
+                    inputMode="numeric"
+                    value={set.rir}
+                    placeholder="—"
+                    onChange={e => handleSetChange(exIndex, setIndex, 'rir', e.target.value)}
+                  />
+                </div>
+              ))}
+            </div>
+            {setEditOpen === exIndex && (
+              <div className="set-edit-controls">
+                <button
+                  className="set-edit-btn set-edit-btn--remove"
+                  onClick={() => handleRemoveSet(exIndex)}
+                  disabled={exercise.sets.length <= 1}
+                >− Set</button>
+                <button className="set-edit-btn" onClick={() => handleAddSet(exIndex)}>+ Set</button>
+              </div>
+            )}
+            {confirmRemoveAddon === exIndex ? (
+              <div className="addon-remove-confirm">
+                <span>Remove?</span>
+                <button className="addon-remove-yes" onClick={() => handleRemoveSupplemental(exIndex)}>Yes</button>
+                <button className="addon-remove-no" onClick={() => setConfirmRemoveAddon(null)}>Cancel</button>
+              </div>
+            ) : (
+              <button className="addon-remove-btn" onClick={() => setConfirmRemoveAddon(exIndex)}>Remove</button>
+            )}
+          </div>
+        )
+      })}
+
+      {/* Add-on picker */}
+      {addonPickerOpen ? (
+        <div className="addon-picker">
+          <input
+            type="text"
+            className="addon-search"
+            placeholder="Search exercises..."
+            value={addonFilter}
+            onChange={e => setAddonFilter(e.target.value)}
+            autoFocus
+          />
+          <div className="addon-picker-list">
+            {filteredLibrary.map(ex => (
+              <button key={ex.name} className="swap-option" onClick={() => handleAddSupplemental(ex)}>
+                {ex.name}
+              </button>
+            ))}
+            {filteredLibrary.length === 0 && <span className="addon-no-results">No matches</span>}
+          </div>
+          <button className="addon-cancel" onClick={() => { setAddonPickerOpen(false); setAddonFilter('') }}>Cancel</button>
+        </div>
+      ) : (
+        <button className="addon-add-btn" onClick={() => setAddonPickerOpen(true)}>+ Add-on</button>
+      )}
 
       <div className="session-notes">
         <label className="session-notes-label" htmlFor="session-notes">Notes</label>
