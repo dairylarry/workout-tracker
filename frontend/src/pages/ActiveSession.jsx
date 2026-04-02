@@ -813,7 +813,7 @@ export default function ActiveSession() {
               {isSwapped && (
                 <span className="swapped-from">Originally: {exercise.name}</span>
               )}
-              <span className="addon-badge">Add-on</span>
+              <span className="addon-badge">Add Supplemental Exercise</span>
             </div>
 
             {isSwapOpen && (
