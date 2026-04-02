@@ -86,6 +86,7 @@ export default function ActiveSession() {
 
   // Shared function to write exercise history to DynamoDB
   function writeExerciseHistory(currentExercises) {
+    if (!currentExercises) return Promise.resolve()
     const promises = currentExercises.map((ex, slotIndex) => {
       const exerciseName = ex.swappedName || ex.name
       const hasSets = ex.sets?.some(s => s.weight || s.reps)
@@ -804,7 +805,7 @@ export default function ActiveSession() {
               {isSwapped && (
                 <span className="swapped-from">Originally: {exercise.name}</span>
               )}
-              <span className="addon-badge">Add Supplemental Exercise</span>
+              <span className="addon-badge">Supplemental</span>
             </div>
 
             {isSwapOpen && (
@@ -902,7 +903,7 @@ export default function ActiveSession() {
           const cableCrunch = exerciseLibrary.find(ex => ex.name === 'Cable Crunch') || { name: 'Cable Crunch', defaultSets: 4 }
           handleAddSupplemental(cableCrunch)
         }}
-      >+ Add-on</button>
+      >+ Add Supplemental Exercise</button>
 
       <div className="session-notes">
         <label className="session-notes-label" htmlFor="session-notes">Notes</label>
