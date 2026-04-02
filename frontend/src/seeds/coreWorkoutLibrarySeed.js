@@ -203,7 +203,7 @@ export const CORE_WORKOUT_SEED = [
         label: 'Finisher',
         numberOfTimes: 1,
         exercises: [
-          { name: 'Plank Hold', workSeconds: 30, restSeconds: 0, cue: 'full tension, squeeze everything' },
+          { name: 'Plank Hold', workSeconds: 45, restSeconds: 0, cue: 'full tension, squeeze everything' },
         ],
       },
     ],
