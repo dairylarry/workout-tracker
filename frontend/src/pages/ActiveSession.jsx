@@ -805,7 +805,7 @@ export default function ActiveSession() {
               {isSwapped && (
                 <span className="swapped-from">Originally: {exercise.name}</span>
               )}
-              <span className="addon-badge">Supplemental</span>
+              <span className="addon-badge">Add-on</span>
             </div>
 
             {isSwapOpen && (
@@ -903,7 +903,7 @@ export default function ActiveSession() {
           const cableCrunch = exerciseLibrary.find(ex => ex.name === 'Cable Crunch') || { name: 'Cable Crunch', defaultSets: 4 }
           handleAddSupplemental(cableCrunch)
         }}
-      >+ Add Supplemental Exercise</button>
+      >+ Add-on Exercise</button>
 
       <div className="session-notes">
         <label className="session-notes-label" htmlFor="session-notes">Notes</label>
