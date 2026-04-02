@@ -93,5 +93,5 @@ export const EXERCISE_SEED = [
   { name: 'Cross-Body Hammer Curl', muscleGroups: [MG.BICEPS], family: FAM.CURL, defaultRepRange: [10, 12], defaultSets: 3 },
 
   // Abs
-  { name: 'Cable Crunch', muscleGroups: [MG.CORE], family: FAM.ABS, defaultRepRange: [15-20], defaultSets: 4 },
+  { name: 'Cable Crunch', muscleGroups: [MG.CORE], family: FAM.ABS, defaultRepRange: [15, 20], defaultSets: 4 },
 ]
