@@ -2,9 +2,8 @@ import { useState, useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useProgram } from '../context/ProgramContext'
 import { putExercise, deleteExercise, getExerciseLibrary } from '../lib/dynamodb'
+import { MUSCLE_GROUPS, EXERCISE_FAMILIES } from '../constants/exerciseEnums'
 import '../styles/ManageWorkout.css'
-
-const MUSCLE_GROUPS = ['quads', 'hamstrings', 'glutes', 'calves', 'chest', 'back', 'shoulders', 'biceps', 'triceps', 'core']
 const EXERCISES_531 = ['Barbell Back Squat', 'Flat Barbell Bench Press']
 
 export default function ExerciseLibrary() {
@@ -29,7 +28,7 @@ export default function ExerciseLibrary() {
     const exercise = {
       name: newName.trim(),
       muscleGroups: newMuscleGroups,
-      family: newFamily.trim() || null,
+      family: newFamily || null,
       defaultRepRange: newRepRange[0] && newRepRange[1] ? [Number(newRepRange[0]), Number(newRepRange[1])] : null,
       defaultSets: newSets ? Number(newSets) : null,
       createdAt: new Date().toISOString().split('T')[0],
@@ -190,13 +189,16 @@ export default function ExerciseLibrary() {
               </button>
             ))}
           </div>
-          <input
-            type="text"
-            placeholder="Family (e.g. curl, press, row)"
+          <select
             value={newFamily}
             onChange={e => setNewFamily(e.target.value)}
             className="mw-input"
-          />
+          >
+            <option value="">Family (optional)</option>
+            {EXERCISE_FAMILIES.map(f => (
+              <option key={f} value={f}>{f}</option>
+            ))}
+          </select>
           <div className="mw-rep-range-row">
             <input
               type="number"
