@@ -3,6 +3,7 @@ import { useState, useEffect, useRef } from 'react'
 import { useProgram } from '../context/ProgramContext'
 import { getSession, putSession, updateSessionExercises, updateSessionField, getRecentSessions, get531Config, updateExerciseHistory } from '../lib/dynamodb'
 import { getSetsForWeek, getDeloadSets, WEEK_LABELS } from '../lib/fiveThreeOne'
+import { EXERCISE_FAMILIES } from '../constants/exerciseEnums'
 import '../styles/ActiveSession.css'
 
 const EXERCISE_TO_531_KEY = {
@@ -74,6 +75,7 @@ export default function ActiveSession() {
   const [setEditOpen, setSetEditOpen] = useState(null) // index of exercise with ± panel open
   const [notes, setNotes] = useState('')
   const [addonFilter, setAddonFilter] = useState('')
+  const [addonFamilyFilter, setAddonFamilyFilter] = useState('')
   const [confirmRemoveAddon, setConfirmRemoveAddon] = useState(null) // exIndex pending confirm
 
   const [ftoConfigs, setFtoConfigs] = useState({})
@@ -359,7 +361,7 @@ export default function ActiveSession() {
   }
 
 
-  function handleAddSupplemental(libExercise) {
+  function handleAddOnExercise(libExercise) {
     setExercises(prev => {
       const sets = Array.from({ length: libExercise.defaultSets || 3 }, (_, i) => ({
         setNumber: i + 1,
@@ -379,8 +381,8 @@ export default function ActiveSession() {
       )
       return updated
     })
-    setAddonPickerOpen(false)
     setAddonFilter('')
+    setAddonFamilyFilter('')
   }
 
   function handleRemoveSupplemental(exIndex) {
@@ -782,7 +784,7 @@ export default function ActiveSession() {
                 <div className="exercise-controls">
                   <button
                     className="swap-btn"
-                    onClick={() => { setSwapOpen(isSwapOpen ? null : exIndex); setSetEditOpen(null) }}
+                    onClick={() => { setSwapOpen(isSwapOpen ? null : exIndex); setSetEditOpen(null); setAddonFilter(''); setAddonFamilyFilter('') }}
                   >
                     Swap
                   </button>
@@ -808,36 +810,54 @@ export default function ActiveSession() {
               <span className="addon-badge">Add-on</span>
             </div>
 
-            {isSwapOpen && (
-              <div className="swap-panel">
-                <input
-                  type="text"
-                  className="addon-search"
-                  placeholder="Search exercises..."
-                  value={addonFilter}
-                  onChange={e => setAddonFilter(e.target.value)}
-                  autoFocus
-                />
-                {exerciseLibrary
-                  .filter(ex => {
-                    const q = addonFilter.toLowerCase()
-                    return !q || ex.name.toLowerCase().includes(q)
-                  })
-                  .sort((a, b) => a.name.localeCompare(b.name))
-                  .slice(0, 20)
-                  .map(ex => (
+            {isSwapOpen && (() => {
+              const filtered = exerciseLibrary
+                .filter(ex => {
+                  if (addonFamilyFilter && ex.family !== addonFamilyFilter) return false
+                  const q = addonFilter.toLowerCase()
+                  return !q || ex.name.toLowerCase().includes(q)
+                })
+                .sort((a, b) => a.name.localeCompare(b.name))
+              const limit = addonFilter ? 20 : 3
+              const shown = filtered.slice(0, limit)
+              const remaining = filtered.length - limit
+              return (
+                <div className="swap-panel">
+                  <select
+                    className="addon-search"
+                    value={addonFamilyFilter}
+                    onChange={e => setAddonFamilyFilter(e.target.value)}
+                  >
+                    <option value="">All families</option>
+                    {EXERCISE_FAMILIES.map(f => (
+                      <option key={f} value={f}>{f}</option>
+                    ))}
+                  </select>
+                  <input
+                    type="text"
+                    className="addon-search"
+                    placeholder="Search exercises..."
+                    value={addonFilter}
+                    onChange={e => setAddonFilter(e.target.value)}
+                    autoFocus
+                  />
+                  {shown.map(ex => (
                     <button key={ex.name} className="swap-option" onClick={() => handleSwap(exIndex, ex.name)}>
                       {ex.name}
                     </button>
-                  ))
-                }
-                {isSwapped && (
-                  <button className="swap-reset" onClick={() => handleResetSwap(exIndex)}>
-                    Reset to {exercise.name}
-                  </button>
-                )}
-              </div>
-            )}
+                  ))}
+                  {remaining > 0 && !addonFilter && (
+                    <span className="addon-no-results">{remaining} more — type to search</span>
+                  )}
+                  {filtered.length === 0 && <span className="addon-no-results">No matches</span>}
+                  {isSwapped && (
+                    <button className="swap-reset" onClick={() => handleResetSwap(exIndex)}>
+                      Reset to {exercise.name}
+                    </button>
+                  )}
+                </div>
+              )
+            })()}
 
             <div className="sets-grid">
               <div className="set-row set-header">
@@ -901,7 +921,7 @@ export default function ActiveSession() {
         className="addon-add-btn"
         onClick={() => {
           const cableCrunch = exerciseLibrary.find(ex => ex.name === 'Cable Crunch') || { name: 'Cable Crunch', defaultSets: 4 }
-          handleAddSupplemental(cableCrunch)
+          handleAddOnExercise(cableCrunch)
         }}
       >+ Add-on Exercise</button>
 
