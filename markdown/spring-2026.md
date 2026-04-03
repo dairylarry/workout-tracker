@@ -82,12 +82,13 @@
 | Incline Cable Fly (or incline pec deck)       | 3    | 10–12 (RIR 1) | 60 sec         |
 | Cable Face Pull                               | 3    | 12–15 (RIR 1) | 60 sec         |
 | Cable Lateral Raise (or DB lateral raise)     | 4    | 12–15 (RIR 1) | 60 sec         |
-| Overhead Tricep Extension (DB or cable)       | 2    | 10–12 (RIR 1) | 60 sec         |
+| Cable Overhead Tricep Extension (or DB)        | 2    | 10–12 (RIR 1) | 60 sec         |
 | Hammer Curl                                   | 3    | 10–12 (RIR 1) | 60 sec         |
 
 
 *Monitor total pressing fatigue across the week — if anterior shoulder discomfort develops, reduce Incline DB Press volume first.*
 *Incline Cable Fly: use the low pulley, cables set at the bottom, pulling upward and inward toward your upper chest. If using a pec deck, set the seat low so arms angle upward.*
+*If you want to do Dips, slot them after Incline DB Press or swap with Incline Cable Fly.*
 *Superset A: Cable Face Pull + Cable Lateral Raise — do back to back, rest after the lateral raise.*
 *Superset B: Overhead Tricep Extension + Hammer Curl — do back to back, rest after the curl.*
 

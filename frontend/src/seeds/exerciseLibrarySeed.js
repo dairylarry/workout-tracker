@@ -7,15 +7,15 @@ import { MG, FAM } from '../constants/exerciseEnums'
 export const EXERCISE_SEED = [
   // Lower body — quads
   { name: 'Barbell Back Squat', muscleGroups: [MG.QUADS, MG.GLUTES], family: FAM.SQUAT, defaultRepRange: [5, 5], defaultSets: 3 },
-  { name: 'Leg Press', muscleGroups: [MG.QUADS, MG.GLUTES], family: FAM.SQUAT, defaultRepRange: [10, 15], defaultSets: 3 },
+  { name: 'Leg Press', muscleGroups: [MG.QUADS, MG.GLUTES], family: FAM.SQUAT, defaultRepRange: [10, 12], defaultSets: 3 },
   { name: 'Bulgarian Split Squat', muscleGroups: [MG.QUADS, MG.GLUTES], family: FAM.SQUAT, defaultRepRange: [8, 12], defaultSets: 3, unilateral: true },
   { name: 'Goblet Squat', muscleGroups: [MG.QUADS, MG.GLUTES], family: FAM.SQUAT, defaultRepRange: [8, 12], defaultSets: 3 },
   { name: 'Pendulum Squat', muscleGroups: [MG.QUADS], family: FAM.SQUAT, defaultRepRange: [8, 12], defaultSets: 3 },
   { name: 'V-Squat', muscleGroups: [MG.QUADS, MG.GLUTES], family: FAM.SQUAT, defaultRepRange: [8, 12], defaultSets: 3 },
   { name: 'Hack Squat', muscleGroups: [MG.QUADS], family: FAM.SQUAT, defaultRepRange: [8, 12], defaultSets: 3 },
   { name: 'Front Squat', muscleGroups: [MG.QUADS, MG.GLUTES], family: FAM.SQUAT, defaultRepRange: [6, 10], defaultSets: 3 },
-  { name: 'Leg Extension', muscleGroups: [MG.QUADS], family: FAM.LEG_EXTENSION, defaultRepRange: [12, 15], defaultSets: 3 },
-  { name: 'Cable Leg Extension', muscleGroups: [MG.QUADS], family: FAM.LEG_EXTENSION, defaultRepRange: [12, 15], defaultSets: 3 },
+  { name: 'Leg Extension', muscleGroups: [MG.QUADS], family: FAM.LEG_EXTENSION, defaultRepRange: [10, 12], defaultSets: 3 },
+  { name: 'Cable Leg Extension', muscleGroups: [MG.QUADS], family: FAM.LEG_EXTENSION, defaultRepRange: [10, 12], defaultSets: 3 },
 
   // Lower body — hamstrings
   { name: 'Deadlift', muscleGroups: [MG.HAMSTRINGS, MG.GLUTES, MG.BACK], family: FAM.HINGE, defaultRepRange: [3, 5], defaultSets: 3 },
@@ -47,7 +47,7 @@ export const EXERCISE_SEED = [
   { name: 'Incline DB Press', muscleGroups: [MG.CHEST, MG.SHOULDERS], family: FAM.PRESS, defaultRepRange: [8, 12], defaultSets: 4 },
   { name: 'Incline Barbell Press', muscleGroups: [MG.CHEST, MG.SHOULDERS], family: FAM.PRESS, defaultRepRange: [8, 12], defaultSets: 4 },
   { name: 'Machine Incline Press', muscleGroups: [MG.CHEST, MG.SHOULDERS], family: FAM.PRESS, defaultRepRange: [8, 12], defaultSets: 4 },
-  { name: 'Incline Cable Fly', muscleGroups: [MG.CHEST], family: FAM.FLY, defaultRepRange: [12, 15], defaultSets: 3 },
+  { name: 'Incline Cable Fly', muscleGroups: [MG.CHEST], family: FAM.FLY, defaultRepRange: [10, 12], defaultSets: 3 },
   { name: 'Incline DB Fly', muscleGroups: [MG.CHEST], family: FAM.FLY, defaultRepRange: [12, 15], defaultSets: 3 },
   { name: 'Pec Deck', muscleGroups: [MG.CHEST], family: FAM.FLY, defaultRepRange: [12, 15], defaultSets: 3 },
   { name: 'Flat Cable Fly', muscleGroups: [MG.CHEST], family: FAM.FLY, defaultRepRange: [12, 15], defaultSets: 3 },
@@ -58,7 +58,7 @@ export const EXERCISE_SEED = [
   { name: 'Pull-Up', muscleGroups: [MG.BACK, MG.BICEPS], family: FAM.PULL, defaultRepRange: [8, 12], defaultSets: 3 },
   { name: 'Lat Pulldown', muscleGroups: [MG.BACK, MG.BICEPS], family: FAM.PULL, defaultRepRange: [8, 12], defaultSets: 3 },
   { name: 'Band-Assisted Pull-Up', muscleGroups: [MG.BACK, MG.BICEPS], family: FAM.PULL, defaultRepRange: [8, 12], defaultSets: 3 },
-  { name: 'Seated Cable Row', muscleGroups: [MG.BACK], family: FAM.ROW, defaultRepRange: [8, 10], defaultSets: 3 },
+  { name: 'Seated Cable Row', muscleGroups: [MG.BACK], family: FAM.ROW, defaultRepRange: [8, 12], defaultSets: 3 },
   { name: 'Barbell Bent-Over Row', muscleGroups: [MG.BACK], family: FAM.ROW, defaultRepRange: [8, 10], defaultSets: 3 },
   { name: 'DB Bent-Over Row', muscleGroups: [MG.BACK], family: FAM.ROW, defaultRepRange: [8, 10], defaultSets: 3 },
   { name: 'Chest-Supported DB Row', muscleGroups: [MG.BACK], family: FAM.ROW, defaultRepRange: [10, 12], defaultSets: 3 },
@@ -73,7 +73,7 @@ export const EXERCISE_SEED = [
   { name: 'Seated DB Shoulder Press', muscleGroups: [MG.SHOULDERS, MG.TRICEPS], family: FAM.PRESS, defaultRepRange: [8, 12], defaultSets: 3 },
   { name: 'Standing DB Shoulder Press', muscleGroups: [MG.SHOULDERS, MG.TRICEPS], family: FAM.PRESS, defaultRepRange: [8, 12], defaultSets: 3 },
   { name: 'Machine Shoulder Press', muscleGroups: [MG.SHOULDERS, MG.TRICEPS], family: FAM.PRESS, defaultRepRange: [8, 12], defaultSets: 3 },
-  { name: 'Cable Lateral Raise', muscleGroups: [MG.SHOULDERS], family: FAM.LATERAL_RAISE, defaultRepRange: [12, 15], defaultSets: 4 },
+  { name: 'Cable Lateral Raise', muscleGroups: [MG.SHOULDERS], family: FAM.LATERAL_RAISE, defaultRepRange: [10, 12], defaultSets: 4 },
   { name: 'DB Lateral Raise', muscleGroups: [MG.SHOULDERS], family: FAM.LATERAL_RAISE, defaultRepRange: [12, 15], defaultSets: 4 },
 
   // Upper body — triceps
