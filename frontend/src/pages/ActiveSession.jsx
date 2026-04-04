@@ -888,6 +888,33 @@ export default function ActiveSession() {
               )
             })()}
 
+            {(() => {
+              const libEntry = exerciseLibrary.find(ex => ex.name === displayName)
+              const addonHistory = (libEntry?.history || []).filter(h => h.sets?.some(s => s.weight || s.reps))
+              const expandLevel = historyLevel[displayName] || 1
+              if (addonHistory.length === 0) return null
+              return (
+                <div className="history-section">
+                  {addonHistory.slice(0, expandLevel).map(h => (
+                    <div key={`${h.date}-${h.sessionType}`} className="last-session">
+                      <span className="history-date">{h.date}:</span>{' '}
+                      {h.deload && <span className="deload-tag">deload</span>}{' '}
+                      {h.sets.map(s => {
+                        const base = `${s.weight}${h.weightUnit === 'kg' ? 'kg' : ''}×${s.reps}`
+                        return s.rir !== '' && s.rir !== undefined ? `${base}(${s.rir})` : base
+                      }).join(', ')}
+                    </div>
+                  ))}
+                  {addonHistory.length > expandLevel && (
+                    <button className="show-more" onClick={() => cycleHistory(displayName)}>+</button>
+                  )}
+                  {expandLevel > 1 && expandLevel >= addonHistory.length && (
+                    <button className="show-more" onClick={() => cycleHistory(displayName)}>−</button>
+                  )}
+                </div>
+              )
+            })()}
+
             <div className="sets-grid">
               <div className="set-row set-header">
                 <span>Set</span>
