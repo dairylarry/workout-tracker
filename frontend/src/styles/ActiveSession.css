@@ -355,6 +355,8 @@
   color: #1a56db;
   cursor: pointer;
   padding: 0.2rem 0.5rem;
+  display: block;
+  margin-left: auto;
   -webkit-tap-highlight-color: transparent;
 }
 

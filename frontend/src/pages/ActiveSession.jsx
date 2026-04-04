@@ -890,7 +890,7 @@ export default function ActiveSession() {
 
             {(() => {
               const libEntry = exerciseLibrary.find(ex => ex.name === displayName)
-              const addonHistory = (libEntry?.history || []).filter(h => h.sets?.some(s => s.weight || s.reps))
+              const addonHistory = (libEntry?.history || []).filter(h => h.date !== date && h.sets?.some(s => s.weight || s.reps))
               const expandLevel = historyLevel[displayName] || 1
               if (addonHistory.length === 0) return null
               return (

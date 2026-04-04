@@ -344,9 +344,10 @@ export async function updateExerciseHistory(exerciseName, historyEntry) {
     const exercise = response.Item
     if (!exercise) return
 
-    // Remove existing entry for same date+sessionType+slotIndex
+    // Remove existing entry for same date+sessionType+(slotIndex or supplemental)
     let history = (exercise.history || []).filter(h =>
-      !(h.date === historyEntry.date && h.sessionType === historyEntry.sessionType && h.slotIndex === historyEntry.slotIndex)
+      !(h.date === historyEntry.date && h.sessionType === historyEntry.sessionType &&
+        (historyEntry.supplemental ? h.supplemental : h.slotIndex === historyEntry.slotIndex))
     )
 
     // Prepend new entry, cap at 20
