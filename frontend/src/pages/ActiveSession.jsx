@@ -49,14 +49,44 @@ function emptyExerciseData(config, ftoConfigs) {
     })
 }
 
-function checkProgression(exercise, config) {
-  const exConfig = config.exercises.find(e => e.name === exercise.name)
-  if (!exConfig || !exConfig.repRange) return false
-  const topReps = exConfig.repRange[1]
-  const targetRir = exConfig.rir
-  return exercise.sets.every(
-    s => s.reps !== '' && Number(s.reps) >= topReps && s.rir !== '' && Number(s.rir) <= targetRir
+// Progression criteria (for bump tag):
+// (1) all sets reach top of rep range
+// (2) all sets have RIR >= target (you have more in the tank than required)
+// (3) all sets use the same weight
+// Skips 5/3/1 exercises (handled separately by 5/3/1 waves).
+function checkProgression(sets, repRange, targetRir) {
+  if (!sets || sets.length === 0) return false
+  if (!repRange || targetRir == null || targetRir === undefined) return false
+  const topReps = repRange[1]
+  const firstWeight = sets[0].weight
+  if (firstWeight === '' || firstWeight == null) return false
+  return sets.every(
+    s => s.reps !== '' && s.reps != null && Number(s.reps) >= topReps &&
+         s.rir !== '' && s.rir != null && Number(s.rir) >= targetRir &&
+         String(s.weight) === String(firstWeight)
   )
+}
+
+// Look up {repRange, rir} for an exercise name within a program slot context.
+// Priority:
+//   1. Base exercise matches program slot → program config
+//   2. Object sub with embedded range → sub's own range/rir
+//   3. Plain string sub → library defaultRepRange, rir inherited from parent slot
+//   4. Fallback → null (skip bump tag)
+function getRangeRir(name, exConfig, library) {
+  if (!name) return { repRange: null, rir: null }
+  if (exConfig && name === exConfig.name) {
+    return { repRange: exConfig.repRange, rir: exConfig.rir }
+  }
+  const objSub = exConfig?.subs?.find(s => typeof s === 'object' && s.name === name)
+  if (objSub) {
+    return { repRange: objSub.repRange, rir: objSub.rir }
+  }
+  const libEntry = library?.find(e => e.name === name)
+  if (libEntry?.defaultRepRange) {
+    return { repRange: libEntry.defaultRepRange, rir: exConfig?.rir ?? null }
+  }
+  return { repRange: null, rir: null }
 }
 
 export default function ActiveSession() {
@@ -637,7 +667,6 @@ export default function ActiveSession() {
         const exIndex = exercises.indexOf(exercise)
         const history = getExerciseHistory(exIndex)
         const expandLevel = historyLevel[exercise.name] || 1
-        const progReady = checkProgression(exercise, config)
         const displayName = exercise.swappedName || exercise.name
         const isSwapped = !!exercise.swappedName
         const isSwapOpen = swapOpen === exIndex
@@ -647,8 +676,9 @@ export default function ActiveSession() {
           s => typeof s === 'object' && s.name === exercise.swappedName
         )
         const displaySets = activeSub?.sets || exConfig.sets
-        const displayRange = activeSub?.repRange || exConfig.repRange
-        const displayRir = activeSub?.rir ?? exConfig.rir
+        // Use getRangeRir so plain string subs resolve via exercise library
+        const { repRange: displayRange, rir: displayRir } = getRangeRir(displayName, exConfig, exerciseLibrary)
+        const progReady = !exConfig.is531 && checkProgression(exercise.sets, displayRange, displayRir)
 
         return (
           <div key={exercise.name} className="exercise-block">
@@ -723,7 +753,10 @@ export default function ActiveSession() {
 
             {history.length > 0 && (
               <div className="history-section">
-                {history.slice(0, expandLevel).map(h => (
+                {history.slice(0, expandLevel).map(h => {
+                  const nameMatches = h.displayName === displayName
+                  const showBump = nameMatches && !exConfig.is531 && checkProgression(h.sets, displayRange, displayRir)
+                  return (
                   <div key={h.date} className="last-session">
                     <span className="history-date">{h.date}:</span>{' '}
                     <span className="history-variant">{h.displayName}</span>{' '}
@@ -735,8 +768,9 @@ export default function ActiveSession() {
                           return s.rir !== '' && s.rir !== undefined ? `${base}(${s.rir})` : base
                         }).join(', ')
                     }
+                    {showBump && <span className="bump-tag"> ↑ bump</span>}
                   </div>
-                ))}
+                )})}
                 {history.length > expandLevel && (
                   <button className="show-more" onClick={() => cycleHistory(exercise.name)}>+</button>
                 )}

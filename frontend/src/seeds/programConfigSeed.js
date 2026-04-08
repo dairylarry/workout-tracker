@@ -25,7 +25,7 @@ export const PROGRAM = {
         { name: 'Cable Lateral Raise', sets: 4, repRange: [10, 12], rir: 1, rest: '60 sec', subs: ['DB Lateral Raise'] },
         { name: 'Incline Cable Fly', sets: 2, repRange: [10, 12], rir: 1, rest: '60 sec', subs: ['Incline DB Fly', 'Pec Deck', 'Flat Cable Fly', 'Decline Cable Fly'] },
         { name: 'Tricep Rope Pushdown', sets: 4, repRange: [10, 12], rir: 1, rest: '60 sec', superset: 'A', subs: ['Tricep Bar Pushdown', 'Band Tricep Pushdown'] },
-        { name: 'EZ Bar Curl', sets: 4, repRange: [10, 12], rir: 1, rest: '60 sec', superset: 'A', subs: ['DB Curl', 'Barbell Curl', 'Bicep Curl Machine', 'DB Preacher Curl'] },
+        { name: 'EZ Bar Curl', sets: 4, repRange: [10, 12], rir: 1, rest: '60 sec', superset: 'A', subs: ['DB Curl', 'Barbell Curl', 'Bicep Curl Machine', 'DB Preacher Curl', 'EZ Preacher Curl'] },
       ],
     },
     'lower-b': {

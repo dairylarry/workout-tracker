@@ -89,6 +89,7 @@ export const EXERCISE_SEED = [
   { name: 'Barbell Curl', muscleGroups: [MG.BICEPS], family: FAM.CURL, defaultRepRange: [10, 12], defaultSets: 4 },
   { name: 'Bicep Curl Machine', muscleGroups: [MG.BICEPS], family: FAM.CURL, defaultRepRange: [10, 12], defaultSets: 4 },
   { name: 'DB Preacher Curl', muscleGroups: [MG.BICEPS], family: FAM.CURL, defaultRepRange: [10, 12], defaultSets: 4 },
+  { name: 'EZ Preacher Curl', muscleGroups: [MG.BICEPS], family: FAM.CURL, defaultRepRange: [10, 12], defaultSets: 4 },
   { name: 'Hammer Curl', muscleGroups: [MG.BICEPS], family: FAM.CURL, defaultRepRange: [10, 12], defaultSets: 3 },
   { name: 'Cross-Body Hammer Curl', muscleGroups: [MG.BICEPS], family: FAM.CURL, defaultRepRange: [10, 12], defaultSets: 3 },
 
