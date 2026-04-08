@@ -5,11 +5,41 @@ import { getSession } from '../lib/dynamodb'
 import { useProgram } from '../context/ProgramContext'
 import '../styles/Home.css'
 
+const RESUME_CACHE_KEY = 'resume-session-cache'
+
+function readResumeCache() {
+  try {
+    const raw = localStorage.getItem(RESUME_CACHE_KEY)
+    if (!raw) return null
+    const cached = JSON.parse(raw)
+    // Only use cache if it's for today (4am rollover)
+    if (cached?.date !== getToday()) {
+      localStorage.removeItem(RESUME_CACHE_KEY)
+      return null
+    }
+    return cached
+  } catch {
+    return null
+  }
+}
+
+function writeResumeCache(session) {
+  try {
+    if (session) {
+      localStorage.setItem(RESUME_CACHE_KEY, JSON.stringify(session))
+    } else {
+      localStorage.removeItem(RESUME_CACHE_KEY)
+    }
+  } catch {
+    // ignore storage errors
+  }
+}
+
 export default function Home() {
   const navigate = useNavigate()
   const { program, loading: programLoading } = useProgram()
-  const [todaySession, setTodaySession] = useState(null)
-  const [loading, setLoading] = useState(true)
+  // Show cached resume-session immediately (for today only) to avoid flash
+  const [todaySession, setTodaySession] = useState(() => readResumeCache())
 
   useEffect(() => {
     if (programLoading || !program) return
@@ -20,14 +50,17 @@ export default function Home() {
         for (const type of sessionTypes) {
           const session = await getSession(type, today)
           if (session) {
-            setTodaySession({ type, date: today, name: program.sessionTypes[type].name })
-            break
+            const next = { type, date: today, name: program.sessionTypes[type].name }
+            setTodaySession(next)
+            writeResumeCache(next)
+            return
           }
         }
+        // No in-progress session today — clear cache + state
+        setTodaySession(null)
+        writeResumeCache(null)
       } catch (e) {
         console.warn('Failed to check today sessions:', e.message)
-      } finally {
-        setLoading(false)
       }
     }
     findToday()
@@ -37,7 +70,7 @@ export default function Home() {
     <div className="home">
       <h1>Workout Tracker</h1>
       <nav className="home-nav">
-        {!loading && todaySession && (
+        {todaySession && (
           <button
             className="resume-btn"
             onClick={() => navigate(`/session/${todaySession.type}/${todaySession.date}`)}
