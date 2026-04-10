@@ -33,7 +33,7 @@ export const PROGRAM = {
       day: 'Thursday',
       focus: 'Hypertrophy',
       exercises: [
-        { name: 'Pendulum Squat', sets: 3, repRange: [8, 12], rir: 2, rest: '2 min', subs: ['Hack Squat', 'Front Squat', 'Goblet Squat'] },
+        { name: 'Pendulum Squat', sets: 3, repRange: [8, 12], rir: 2, rest: '2 min', subs: ['Hack Squat', 'Front Squat', 'Goblet Squat', 'V-Squat'] },
         { name: 'Seated Leg Curl', sets: 3, repRange: [10, 12], rir: 1, rest: '90 sec', subs: [{ name: 'Nordic Curl', sets: 2, repRange: [5, 8], rir: 2 }, { name: 'Glute Ham Raise', sets: 2, repRange: [5, 8], rir: 2 }, 'Lying Leg Curl'] },
         { name: 'Single-Leg Romanian Deadlift', sets: 2, repRange: [8, 10], rir: 2, rest: '90 sec', perSide: true, subs: ['DB Single-Leg RDL', 'KB Single-Leg RDL'] },
         { name: 'Leg Extension', sets: 3, repRange: [10, 12], rir: 1, rest: '60 sec', superset: 'A', subs: ['Cable Leg Extension'] },
