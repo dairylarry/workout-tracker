@@ -65,6 +65,7 @@ export const EXERCISE_SEED = [
   { name: 'Chest-Supported DB Row', muscleGroups: [MG.BACK], family: FAM.ROW, defaultRepRange: [10, 12], defaultSets: 3 },
   { name: 'Single-Arm DB Row', muscleGroups: [MG.BACK], family: FAM.ROW, defaultRepRange: [10, 12], defaultSets: 3, unilateral: true },
   { name: 'Machine Row', muscleGroups: [MG.BACK], family: FAM.ROW, defaultRepRange: [10, 12], defaultSets: 3 },
+  { name: 'Machine Chest-Supported Row', muscleGroups: [MG.BACK], family: FAM.ROW, defaultRepRange: [10, 12], defaultSets: 3 },
   { name: 'Cable Face Pull', muscleGroups: [MG.BACK, MG.SHOULDERS], family: FAM.REAR_DELT, defaultRepRange: [12, 15], defaultSets: 3 },
   { name: 'Band Face Pull', muscleGroups: [MG.BACK, MG.SHOULDERS], family: FAM.REAR_DELT, defaultRepRange: [12, 15], defaultSets: 3 },
   { name: 'Rear Delt Fly', muscleGroups: [MG.SHOULDERS, MG.BACK], family: FAM.REAR_DELT, defaultRepRange: [12, 15], defaultSets: 3 },
