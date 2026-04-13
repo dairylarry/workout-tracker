@@ -703,7 +703,7 @@ export default function ActiveSession() {
         const exercise = exercises.find(e => e.name === exConfig.name)
         if (!exercise) return null
         const exIndex = exercises.indexOf(exercise)
-        const history = getExerciseHistory(exIndex)
+        const slotHistory = getExerciseHistory(exIndex)
         const expandLevel = historyLevel[exercise.name] || 1
         const displayName = exercise.swappedName || exercise.name
         const isSwapped = !!exercise.swappedName
@@ -717,6 +717,32 @@ export default function ActiveSession() {
         // Use getRangeRir so plain string subs resolve via exercise library
         const { repRange: displayRange, rir: displayRir } = getRangeRir(displayName, exConfig, exerciseLibrary)
         const progReady = !exConfig.is531 && checkProgression(exercise.sets, displayRange, displayRir)
+
+        // Build union of slot-based history + library history for this exercise
+        // This surfaces appearances across other session types (e.g. Incline Cable Fly in both Upper A and Upper B)
+        const libEntry = exerciseLibrary.find(e => e.name === displayName)
+        const libHistory = (libEntry?.history || [])
+          .filter(h => h.date !== date && h.sets?.some(s => s.weight || s.reps))
+          .map(h => ({
+            date: h.date,
+            sets: h.sets,
+            weightUnit: h.weightUnit || 'lbs',
+            displayName,
+            deload: h.deload || false,
+            sessionType: h.sessionType,
+            crossSession: h.sessionType !== sessionType,
+          }))
+        // Slot-based takes precedence for same date+sessionType (has accurate displayName/deload)
+        const historySeen = new Map()
+        for (const h of slotHistory) {
+          historySeen.set(`${h.date}#${sessionType}`, { ...h, crossSession: false, sessionType })
+        }
+        for (const h of libHistory) {
+          const key = `${h.date}#${h.sessionType}`
+          if (!historySeen.has(key)) historySeen.set(key, h)
+        }
+        const history = Array.from(historySeen.values())
+          .sort((a, b) => b.date.localeCompare(a.date))
 
         return (
           <div key={exercise.name} className="exercise-block">
@@ -795,8 +821,11 @@ export default function ActiveSession() {
                   const nameMatches = h.displayName === displayName
                   const showBump = nameMatches && !exConfig.is531 && checkProgression(h.sets, displayRange, displayRir)
                   return (
-                  <div key={h.date} className="last-session">
+                  <div key={`${h.date}#${h.sessionType}`} className="last-session">
                     <span className="history-date">{h.date}:</span>{' '}
+                    {h.crossSession && program?.sessionTypes[h.sessionType] && (
+                      <span className="history-session-tag">[{program.sessionTypes[h.sessionType].name}]</span>
+                    )}{' '}
                     <span className="history-variant">{h.displayName}</span>{' '}
                     {h.deload && <span className="deload-tag">deload</span>}{' '}
                     {h.sets.length === 0

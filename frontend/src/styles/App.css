@@ -19,3 +19,9 @@ button {
   color: #999;
   font-style: italic;
 }
+
+.history-session-tag {
+  font-size: 0.68rem;
+  color: #6b7280;
+  font-style: italic;
+}

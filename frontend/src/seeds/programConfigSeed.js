@@ -10,7 +10,7 @@ export const PROGRAM = {
         { name: 'Leg Press', sets: 3, repRange: [10, 12], rir: 2, rest: '90 sec', subs: [{ name: 'Bulgarian Split Squat', sets: 2, repRange: [8, 8], rir: 2, perSide: true }, 'Goblet Squat'] },
         { name: 'Romanian Deadlift', sets: 3, repRange: [6, 10], rir: 2, rest: '2 min', subs: ['DB Romanian Deadlift', 'KB Romanian Deadlift'] },
         { name: 'Barbell Hip Thrust', sets: 2, repRange: [8, 12], rir: 2, rest: '90 sec', subs: ['DB Hip Thrust', 'KB Hip Thrust'] },
-        { name: 'Standing Calf Raise', sets: 3, repRange: [15, 20], rir: 1, rest: '60 sec', subs: ['Single-Leg DB Calf Raise'] },
+        { name: 'Standing Calf Raise', sets: 3, repRange: [15, 20], rir: 1, rest: '60 sec', subs: ['Single-Leg DB Calf Raise', 'Standing Calf Raise'] },
       ],
     },
     'upper-a': {

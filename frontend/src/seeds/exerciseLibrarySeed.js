@@ -38,6 +38,7 @@ export const EXERCISE_SEED = [
 
   // Lower body — calves
   { name: 'Standing Calf Raise', muscleGroups: [MG.CALVES], family: FAM.CALF_RAISE, defaultRepRange: [15, 20], defaultSets: 3 },
+  { name: 'Standing Calf Raise Machine', muscleGroups: [MG.CALVES], family: FAM.CALF_RAISE, defaultRepRange: [15, 20], defaultSets: 3 },
   { name: 'Single-Leg DB Calf Raise', muscleGroups: [MG.CALVES], family: FAM.CALF_RAISE, defaultRepRange: [15, 20], defaultSets: 3, unilateral: true },
   { name: 'Seated Calf Raise', muscleGroups: [MG.CALVES], family: FAM.CALF_RAISE, defaultRepRange: [15, 20], defaultSets: 3 },
   { name: 'Seated DB Calf Raise', muscleGroups: [MG.CALVES], family: FAM.CALF_RAISE, defaultRepRange: [15, 20], defaultSets: 3 },
