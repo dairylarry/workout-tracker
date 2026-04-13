@@ -334,6 +334,36 @@ export async function deleteExercise(exerciseName) {
 
 // --- Exercise History ---
 
+// Remove a specific history entry from an exercise's history array.
+// For plan exercises: match by date + sessionType + slotIndex.
+// For supplemental exercises: match by date + sessionType + supplemental flag.
+export async function removeExerciseHistoryEntry(exerciseName, { date, sessionType, slotIndex, supplemental }) {
+  const sk = `EXERCISE#${exerciseName.toLowerCase().replace(/\s+/g, '-')}`
+  try {
+    const response = await docClient.send(new GetCommand({
+      TableName: TABLE,
+      Key: { PK: 'EXERCISE_LIB', SK: sk },
+    }))
+    const exercise = response.Item
+    if (!exercise?.history?.length) return
+
+    const filtered = exercise.history.filter(h =>
+      !(h.date === date && h.sessionType === sessionType &&
+        (supplemental ? h.supplemental : h.slotIndex === slotIndex))
+    )
+    if (filtered.length === exercise.history.length) return // nothing to remove
+
+    await docClient.send(new UpdateCommand({
+      TableName: TABLE,
+      Key: { PK: 'EXERCISE_LIB', SK: sk },
+      UpdateExpression: 'SET history = :history',
+      ExpressionAttributeValues: { ':history': filtered },
+    }))
+  } catch (e) {
+    console.warn('Failed to remove exercise history entry:', e.message)
+  }
+}
+
 export async function updateExerciseHistory(exerciseName, historyEntry) {
   const sk = `EXERCISE#${exerciseName.toLowerCase().replace(/\s+/g, '-')}`
   try {

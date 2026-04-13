@@ -1,7 +1,7 @@
 import { useParams, useNavigate } from 'react-router-dom'
 import { useState, useEffect, useRef } from 'react'
 import { useProgram } from '../context/ProgramContext'
-import { getSession, putSession, updateSessionExercises, updateSessionField, getRecentSessions, get531Config, updateExerciseHistory } from '../lib/dynamodb'
+import { getSession, putSession, updateSessionExercises, updateSessionField, getRecentSessions, get531Config, updateExerciseHistory, removeExerciseHistoryEntry } from '../lib/dynamodb'
 import { getSetsForWeek, getDeloadSets, WEEK_LABELS } from '../lib/fiveThreeOne'
 import { EXERCISE_FAMILIES } from '../constants/exerciseEnums'
 import '../styles/ActiveSession.css'
@@ -113,6 +113,8 @@ export default function ActiveSession() {
   const saveTimeout = useRef(null)
   const notesTimeout = useRef(null)
   const exercisesRef = useRef(exercises)
+  // Tracks the exercise name last written to history per slot, to detect swaps/resets
+  const lastHistoryNameRef = useRef({})
   exercisesRef.current = exercises
   const notesRef = useRef(notes)
   notesRef.current = notes
@@ -120,19 +122,51 @@ export default function ActiveSession() {
   // Shared function to write exercise history to DynamoDB
   function writeExerciseHistory(currentExercises) {
     if (!currentExercises) return Promise.resolve()
-    const promises = currentExercises.map((ex, slotIndex) => {
-      const exerciseName = ex.swappedName || ex.name
+    const promises = currentExercises.flatMap((ex, slotIndex) => {
+      const currentName = ex.swappedName || ex.name
+      const originalName = ex.name
+      const isSupplemental = !!ex.supplemental
       const hasSets = ex.sets?.some(s => s.weight || s.reps)
-      if (!hasSets) return null
-      return updateExerciseHistory(exerciseName, {
+      if (!hasSets) return []
+
+      const ops = []
+      const dedupeKey = isSupplemental ? { supplemental: true } : { slotIndex }
+
+      if (!isSupplemental) {
+        // If swapped: always clean up the original exercise's entry for this slot/date
+        if (currentName !== originalName) {
+          ops.push(removeExerciseHistoryEntry(originalName, { date, sessionType, slotIndex }))
+        }
+        // If reset (or re-swapped): clean up whatever was last written if it differs
+        const prevName = lastHistoryNameRef.current[slotIndex]
+        if (prevName && prevName !== currentName && prevName !== originalName) {
+          ops.push(removeExerciseHistoryEntry(prevName, { date, sessionType, slotIndex }))
+        }
+      } else {
+        // Supplemental: clean up original name if swapped
+        if (currentName !== originalName) {
+          ops.push(removeExerciseHistoryEntry(originalName, { date, sessionType, supplemental: true }))
+        }
+        const prevName = lastHistoryNameRef.current[slotIndex]
+        if (prevName && prevName !== currentName && prevName !== originalName) {
+          ops.push(removeExerciseHistoryEntry(prevName, { date, sessionType, supplemental: true }))
+        }
+      }
+
+      // Update ref to track what we're about to write
+      lastHistoryNameRef.current[slotIndex] = currentName
+
+      ops.push(updateExerciseHistory(currentName, {
         date,
         sessionType,
-        ...(ex.supplemental ? { supplemental: true } : { slotIndex }),
+        ...dedupeKey,
         sets: ex.sets.map(s => ({ weight: s.weight, reps: s.reps, rir: s.rir })),
         weightUnit: ex.weightUnit || 'lbs',
         ...(deload && { deload: true }),
-      })
-    }).filter(Boolean)
+      }))
+
+      return ops
+    })
     return Promise.all(promises)
   }
 
@@ -207,6 +241,10 @@ export default function ActiveSession() {
           setDeload(existing.deload || false)
           setStartedAt(existing.startedAt || null)
           setNotes(existing.notes || '')
+          // Initialize ref from loaded exercises so cross-session stale entries are detected
+          existing.exercises.forEach((ex, i) => {
+            lastHistoryNameRef.current[i] = ex.swappedName || ex.name
+          })
         } else {
           // Infer week from last session's 5/3/1 exercises
           let inferredWeek = 1
