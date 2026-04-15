@@ -45,6 +45,19 @@ export default function History() {
     load()
   }, [program])
 
+  // Auto-select current week (or previous week) after data loads
+  useEffect(() => {
+    if (loading) return
+    const todayStr = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`
+    const currentWeekIdx = weeks.findIndex(row => row.includes(todayStr))
+    if (currentWeekIdx === -1) return
+    if (weeks[currentWeekIdx].some(d => d && completedDates.has(d))) {
+      setSelectedWeek(currentWeekIdx)
+    } else if (currentWeekIdx > 0 && weeks[currentWeekIdx - 1].some(d => d && completedDates.has(d))) {
+      setSelectedWeek(currentWeekIdx - 1)
+    }
+  }, [loading])
+
   const sessionsByDate = useMemo(() => {
     const map = {}
     for (const s of sessions) {
