@@ -18,6 +18,9 @@
   border: none;
   cursor: pointer;
   font-size: 0.9rem;
+  color: #111;
+  -webkit-text-fill-color: #111;
+  -webkit-appearance: none;
   padding: 0;
   margin-bottom: 1rem;
   display: block;
@@ -39,6 +42,8 @@
   font-size: 1.2rem;
   cursor: pointer;
   color: #111;
+  -webkit-text-fill-color: #111;
+  -webkit-appearance: none;
   padding: 0.25rem 0.5rem;
   -webkit-tap-highlight-color: transparent;
 }
@@ -56,6 +61,9 @@
   border: 1px solid #ccc;
   border-radius: 6px;
   padding: 0.3rem 0.7rem;
+  color: #111;
+  -webkit-text-fill-color: #111;
+  -webkit-appearance: none;
   cursor: pointer;
   -webkit-tap-highlight-color: transparent;
 }
@@ -94,11 +102,14 @@
   cursor: pointer;
   padding: 0.25rem 0.5rem;
   color: #111;
+  -webkit-text-fill-color: #111;
+  -webkit-appearance: none;
   -webkit-tap-highlight-color: transparent;
 }
 
 .month-picker-year-arrow:disabled {
   color: #ccc;
+  -webkit-text-fill-color: #ccc;
   cursor: default;
 }
 
@@ -149,6 +160,7 @@
 .month-picker-cell-active {
   background: #1a1a1a !important;
   color: #fff;
+  -webkit-text-fill-color: #fff;
 }
 
 /* Calendar grid */
