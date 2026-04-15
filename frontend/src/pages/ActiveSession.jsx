@@ -19,6 +19,7 @@ function emptyExerciseData(config, ftoConfigs) {
         const key = EXERCISE_TO_531_KEY[ex.name]
         const tm = ftoConfigs[key]?.trainingMax
         return {
+          slotId: ex.slotId,
           name: ex.name,
           is531: true,
           week: 1,
@@ -37,6 +38,7 @@ function emptyExerciseData(config, ftoConfigs) {
         }
       }
       return {
+        slotId: ex.slotId,
         name: ex.name,
         weightUnit: 'lbs',
         sets: Array.from({ length: ex.sets }, (_, i) => ({
@@ -47,6 +49,21 @@ function emptyExerciseData(config, ftoConfigs) {
         })),
       }
     })
+}
+
+// Derive { slotId: [sessionTypeId, ...] } from the full program.
+// Used to find all session types that share a slot (e.g. 'ua-bench' → ['upper-a', 'upper-a-5']).
+function buildSlotIdIndex(program) {
+  const index = {}
+  if (!program?.sessionTypes) return index
+  for (const [stId, st] of Object.entries(program.sessionTypes)) {
+    for (const ex of st.exercises || []) {
+      if (!ex.slotId) continue
+      if (!index[ex.slotId]) index[ex.slotId] = []
+      if (!index[ex.slotId].includes(stId)) index[ex.slotId].push(stId)
+    }
+  }
+  return index
 }
 
 // Progression criteria (for bump tag):
@@ -228,21 +245,41 @@ export default function ActiveSession() {
         }
         setFtoConfigs(ftoResults)
 
-        const [existing, recent] = await Promise.all([
-          getSession(sessionType, date),
-          getRecentSessions(sessionType, 6),
-        ])
+        // Collect all session types that share any slotId with the current session.
+        // E.g. for 'upper-a', union includes 'upper-a' + 'upper-a-5' (they share ua-* slotIds).
+        const slotIdIndex = buildSlotIdIndex(program)
+        const analogousTypes = new Set([sessionType])
+        for (const ex of config.exercises) {
+          if (!ex.slotId) continue
+          for (const stId of slotIdIndex[ex.slotId] || []) analogousTypes.add(stId)
+        }
 
-        const pastSessions = recent.filter(s => s.SK !== `DATE#${date}`)
+        const [existing, ...recentArrays] = await Promise.all([
+          getSession(sessionType, date),
+          ...Array.from(analogousTypes).map(st => getRecentSessions(st, 6)),
+        ])
+        const recent = recentArrays.flat()
+
+        // Sort by date desc, exclude the current session, cap at 5
+        const pastSessions = recent
+          .filter(s => !(s.sessionType === sessionType && s.SK === `DATE#${date}`))
+          .sort((a, b) => (b.date || '').localeCompare(a.date || ''))
         setRecentSessions(pastSessions.slice(0, 5))
 
         if (existing) {
-          setExercises(existing.exercises)
+          // Backfill slotId onto loaded exercises if missing (older sessions predate slotIds).
+          // Match by array index against the program config — the historical invariant.
+          const backfilled = existing.exercises.map((ex, i) => {
+            if (ex.slotId || ex.supplemental) return ex
+            const cfg = config.exercises[i]
+            return cfg?.slotId ? { ...ex, slotId: cfg.slotId } : ex
+          })
+          setExercises(backfilled)
           setDeload(existing.deload || false)
           setStartedAt(existing.startedAt || null)
           setNotes(existing.notes || '')
           // Initialize ref from loaded exercises so cross-session stale entries are detected
-          existing.exercises.forEach((ex, i) => {
+          backfilled.forEach((ex, i) => {
             lastHistoryNameRef.current[i] = ex.swappedName || ex.name
           })
         } else {
@@ -295,7 +332,7 @@ export default function ActiveSession() {
       }
     }
     load()
-  }, [sessionType, date, config])
+  }, [sessionType, date, config, program])
 
   function handleSetChange(exIndex, setIndex, field, value) {
     setExercises(prev => {
@@ -527,11 +564,17 @@ export default function ActiveSession() {
     }
   }
 
-  function getExerciseHistory(slotIndex) {
+  // Build slot history by matching slotId across all sessions (including analogous session types).
+  // Falls back to array-index match for legacy sessions that predate slotIds.
+  function getExerciseHistory(slotId, slotIndex) {
     return recentSessions
       .map(s => {
-        // Match by slot position first (shows all variations for this block)
-        const ex = s.exercises?.[slotIndex]
+        if (!s.exercises) return null
+        let ex = slotId ? s.exercises.find(e => e.slotId === slotId) : null
+        if (!ex && s.sessionType === sessionType) {
+          // Legacy fallback: within the same session type, array index was the contract.
+          ex = s.exercises[slotIndex]
+        }
         if (!ex) return null
         return {
           date: s.date,
@@ -539,6 +582,8 @@ export default function ActiveSession() {
           weightUnit: ex.weightUnit || 'lbs',
           displayName: ex.swappedName || ex.name,
           deload: s.deload || false,
+          sessionType: s.sessionType,
+          crossSession: s.sessionType !== sessionType,
         }
       })
       .filter(Boolean)
@@ -703,7 +748,7 @@ export default function ActiveSession() {
         const exercise = exercises.find(e => e.name === exConfig.name)
         if (!exercise) return null
         const exIndex = exercises.indexOf(exercise)
-        const slotHistory = getExerciseHistory(exIndex)
+        const slotHistory = getExerciseHistory(exConfig.slotId, exIndex)
         const expandLevel = historyLevel[exercise.name] || 1
         const displayName = exercise.swappedName || exercise.name
         const isSwapped = !!exercise.swappedName
@@ -735,7 +780,7 @@ export default function ActiveSession() {
         // Slot-based takes precedence for same date+sessionType (has accurate displayName/deload)
         const historySeen = new Map()
         for (const h of slotHistory) {
-          historySeen.set(`${h.date}#${sessionType}`, { ...h, crossSession: false, sessionType })
+          historySeen.set(`${h.date}#${h.sessionType}`, h)
         }
         for (const h of libHistory) {
           const key = `${h.date}#${h.sessionType}`
