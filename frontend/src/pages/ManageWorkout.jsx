@@ -5,7 +5,13 @@ import { putSessionType } from '../lib/dynamodb'
 import { reseedExerciseLibraryMetaOnly } from '../seeds/reseed'
 import '../styles/ManageWorkout.css'
 
-const SESSION_ORDER = ['lower-a', 'upper-a', 'lower-b', 'upper-b']
+const SESSION_ORDER = ['lower-a', 'upper-a', 'lower-b', 'upper-b', 'upper-c']
+
+// Exercises with reduced sets on 5-day weeks. Value = sets to subtract.
+const FIVE_DAY_REDUCTIONS = {
+  'upper-a': { 'Tricep Bar Pushdown': 1, 'EZ Bar Curl': 1 },
+  'upper-b': { 'Cable Lateral Raise': 1, 'Hammer Curl': 1 },
+}
 const MUSCLE_GROUPS = ['quads', 'hamstrings', 'glutes', 'calves', 'chest', 'back', 'shoulders', 'biceps', 'triceps', 'core']
 
 export default function ManageWorkout() {
@@ -151,8 +157,11 @@ export default function ManageWorkout() {
                       <span className="mw-badge-531">5s PRO</span>
                     ) : (
                       <span className="mw-exercise-meta">
-                        {ex.sets} × {ex.repRange[0] === ex.repRange[1] ? ex.repRange[0] : `${ex.repRange[0]}–${ex.repRange[1]}`}
-                        {ex.perSide ? '/side' : ''} · RIR {ex.rir} · {ex.rest}
+                        {(() => {
+                          const reduction = FIVE_DAY_REDUCTIONS[sessionId]?.[ex.name]
+                          const setsDisplay = reduction ? `${ex.sets} / ${ex.sets - reduction}` : ex.sets
+                          return `${setsDisplay} × ${ex.repRange[0] === ex.repRange[1] ? ex.repRange[0] : `${ex.repRange[0]}–${ex.repRange[1]}`}${ex.perSide ? '/side' : ''} · RIR ${ex.rir} · ${ex.rest}`
+                        })()}
                       </span>
                     )}
                   </div>
