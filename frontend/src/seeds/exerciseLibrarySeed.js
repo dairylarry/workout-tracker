@@ -75,7 +75,7 @@ export const EXERCISE_SEED = [
   { name: 'Seated DB Shoulder Press', muscleGroups: [MG.SHOULDERS, MG.TRICEPS], family: FAM.PRESS, defaultRepRange: [8, 12], defaultSets: 3 },
   { name: 'Standing DB Shoulder Press', muscleGroups: [MG.SHOULDERS, MG.TRICEPS], family: FAM.PRESS, defaultRepRange: [8, 12], defaultSets: 3 },
   { name: 'Machine Shoulder Press', muscleGroups: [MG.SHOULDERS, MG.TRICEPS], family: FAM.PRESS, defaultRepRange: [8, 12], defaultSets: 3 },
-  { name: 'Cable Lateral Raise', muscleGroups: [MG.SHOULDERS], family: FAM.LATERAL_RAISE, defaultRepRange: [10, 12], defaultSets: 4 },
+  { name: 'Cable Lateral Raise', muscleGroups: [MG.SHOULDERS], family: FAM.LATERAL_RAISE, defaultRepRange: [12, 15], defaultSets: 4 },
   { name: 'DB Lateral Raise', muscleGroups: [MG.SHOULDERS], family: FAM.LATERAL_RAISE, defaultRepRange: [12, 15], defaultSets: 4 },
 
   // Upper body — triceps
@@ -86,6 +86,7 @@ export const EXERCISE_SEED = [
   { name: 'DB Overhead Tricep Extension', muscleGroups: [MG.TRICEPS], family: FAM.EXTENSION, defaultRepRange: [10, 12], defaultSets: 2 },
 
   // Upper body — biceps
+  { name: 'Incline DB Curl', muscleGroups: [MG.BICEPS], family: FAM.CURL, defaultRepRange: [10, 12], defaultSets: 3 },
   { name: 'EZ Bar Curl', muscleGroups: [MG.BICEPS], family: FAM.CURL, defaultRepRange: [10, 12], defaultSets: 4 },
   { name: 'DB Curl', muscleGroups: [MG.BICEPS], family: FAM.CURL, defaultRepRange: [10, 12], defaultSets: 4 },
   { name: 'Barbell Curl', muscleGroups: [MG.BICEPS], family: FAM.CURL, defaultRepRange: [10, 12], defaultSets: 4 },

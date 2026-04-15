@@ -1,7 +1,8 @@
 # Spring 2026 Program
 
-**Split:** Upper/Lower A/B · 4 days/week
-**Schedule:** Mon Lower A · Tue Upper A · Thu Lower B · Fri Upper B
+**Split:** Upper/Lower A/B/C · 4–5 days/week
+**Schedule (4-day):** Mon Lower A · Tue Upper A · Thu Lower B · Fri Upper B
+**Schedule (5-day):** Sun Upper C · Mon Lower A · Tue Upper A · Thu Lower B · Fri Upper B
 **Core:** 10 min after each session (handstands, ab wheel, hollow body)
 
 **Intensity:** RIR = reps in reserve. Compounds: RIR 2. Isolations: RIR 1.
@@ -40,7 +41,7 @@
 | Weighted Pull-Up                               | 4     | 6–10 (RIR 2)  | 90 sec         |
 | Seated Cable Row                               | 3     | 8–12 (RIR 2)  | 90 sec         |
 | Seated DB Shoulder Press                       | 3     | 8–12 (RIR 2)  | 90 sec         |
-| Cable Lateral Raise (or DB lateral raise)      | 4     | 10–12 (RIR 1) | 60 sec         |
+| Cable Lateral Raise (or DB lateral raise)      | 4     | 12–15 (RIR 1) | 60 sec         |
 | Incline Cable Fly (or incline pec deck)        | 2     | 10–12 (RIR 1) | 60 sec         |
 | Tricep Rope Pushdown                           | 4     | 10–12 (RIR 1) | 60 sec         |
 | EZ Bar Curl (or DB curl)                       | 4     | 10–12 (RIR 1) | 60 sec         |
@@ -82,35 +83,88 @@
 | Incline Cable Fly (or incline pec deck)       | 3    | 10–12 (RIR 1) | 60 sec         |
 | Cable Face Pull                               | 3    | 12–15 (RIR 1) | 60 sec         |
 | Cable Lateral Raise (or DB lateral raise)     | 4    | 12–15 (RIR 1) | 60 sec         |
-| Cable Overhead Tricep Extension (or DB)        | 2    | 10–12 (RIR 1) | 60 sec         |
+| Overhead Tricep Extension (DB or cable)       | 2    | 10–12 (RIR 1) | 60 sec         |
 | Hammer Curl                                   | 3    | 10–12 (RIR 1) | 60 sec         |
 
 
 *Monitor total pressing fatigue across the week — if anterior shoulder discomfort develops, reduce Incline DB Press volume first.*
 *Incline Cable Fly: use the low pulley, cables set at the bottom, pulling upward and inward toward your upper chest. If using a pec deck, set the seat low so arms angle upward.*
-*If you want to do Dips, slot them after Incline DB Press or swap with Incline Cable Fly.*
 *Superset A: Cable Face Pull + Cable Lateral Raise — do back to back, rest after the lateral raise.*
 *Superset B: Overhead Tricep Extension + Hammer Curl — do back to back, rest after the curl.*
 
 
 ---
 
+## Upper C — Arms + Delts (5-day weeks only, Sunday)
+
+
+| Exercise                                  | Sets | Reps           | Suggested Rest |
+| ----------------------------------------- | ---- | -------------- | -------------- |
+| Lat Pulldown                              | 3    | 8–12 (RIR 2)  | 90 sec         |
+| Cable Lateral Raise (or DB lateral raise) | 3    | 12–15 (RIR 1) | 60 sec         |
+| Cable Face Pull                           | 3    | 12–15 (RIR 1) | 60 sec         |
+| Tricep Rope Pushdown                      | 3    | 10–12 (RIR 1) | 60 sec         |
+| Incline DB Curl                           | 3    | 10–12 (RIR 1) | 60 sec         |
+| Overhead Tricep Extension (DB or cable)   | 2    | 10–12 (RIR 1) | 60 sec         |
+
+
+*Superset A: Cable Lateral Raise + Cable Face Pull — do back to back, rest after the face pull.*
+*Superset B: Tricep Pushdown + Incline DB Curl — do back to back, rest after the curl.*
+*Incline DB Curl: set bench to 30–45°, let arms hang straight down at the bottom for a full stretch on the bicep long head.*
+*Optional: Hammer Curl 2×10–12 (RIR 1) after the last superset if biceps feel fresh.*
+
+### 5-Day Week Adjustments
+
+On weeks that include Upper C, reduce isolation volume on Upper A and Upper B to avoid overshooting recovery. Compound work stays the same.
+
+**Upper A reductions:**
+
+| Exercise            | 4-day | 5-day |
+| ------------------- | ----- | ----- |
+| Cable Lateral Raise | 4     | 3     |
+| Tricep Pushdown     | 4     | 3     |
+| EZ Bar Curl         | 4     | 3     |
+
+**Upper B reductions:**
+
+| Exercise            | 4-day | 5-day |
+| ------------------- | ----- | ----- |
+| Cable Lateral Raise | 4     | 3     |
+| Cable Face Pull     | 3     | 2     |
+| Hammer Curl         | 3     | 2     |
+| OHT Extension       | 2     | 1     |
+
+---
+
 ## Weekly Schedule
 
 
-| Day | Activity                                  |
-| --- | ----------------------------------------- |
-| Mon | Lower A                                   |
-| Tue | Upper A                                   |
-| Wed | Easy run, 30–50 min                       |
-| Thu | Lower B                                   |
-| Fri | Upper B                                   |
-| Sat | Long run — moderate effort max, 60–90 min |
-| Sun | Rest or yoga                              |
+### 4-Day Week
 
+| Day | Activity                              |
+| --- | ------------------------------------- |
+| Mon | Lower A                               |
+| Tue | Upper A                               |
+| Wed | Yoga                                  |
+| Thu | Lower B                               |
+| Fri | Upper B                               |
+| Sat | Long run (6–8 miles, moderate effort)  |
+| Sun | Rest or yoga                          |
 
-*On deload weeks: one run only (Wed), easy, 30 min max.*
-*If lower-body progress stalls 2+ weeks, reduce Wednesday run intensity before cutting lifting volume.*
+### 5-Day Week
+
+| Day | Activity                              |
+| --- | ------------------------------------- |
+| Sun | Upper C                               |
+| Mon | Lower A                               |
+| Tue | Upper A                               |
+| Wed | Yoga                                  |
+| Thu | Lower B                               |
+| Fri | Upper B                               |
+| Sat | Long run (6–8 miles, moderate effort)  |
+
+*Default to 4-day weeks. Add Upper C on Sunday when schedule and recovery allow.*
+*On deload weeks: skip Upper C, run 4-day schedule only.*
 
 ---
 
@@ -128,7 +182,7 @@
 | Sedentary (desk job, no exercise) | 1.20 | ~2,100 |
 | Lightly active (1–3x/week) | 1.375 | ~2,410 |
 | Moderately active (3–5x/week) | 1.55 | ~2,715 |
-| **Active (current — 4x lift + 2x run + 2x yoga)** | **1.65** | **~2,890** |
+| **Active (current — 4x lift + 1x run + 1–2x yoga + 10–12k steps/day)** | **1.65** | **~2,890** |
 | Very active (hard training 6–7x/week) | 1.725 | ~3,020 |
 
 **Current goal (slight deficit):** ~2,500 kcal/day (~350–400 kcal below TDEE → ~0.5–0.75 lb/week loss)
@@ -141,9 +195,10 @@
 
 **Running and yoga**
 
+- Running 1x/week (Saturday, 6–8 miles). Daily step target: 10–12k.
 - Lower B on Thursday gives legs one full rest day (Friday) before the Saturday long run.
-- Yoga fits best Sunday. Avoid intense hot yoga the night before Lower A or Lower B.
-- On deload weeks, drop to one easy run.
+- Yoga on Wednesday. Avoid intense hot yoga the night before Lower A or Lower B.
+- On deload weeks, keep the Saturday run easy and short (30–40 min).
 
 **Plateau management**
 

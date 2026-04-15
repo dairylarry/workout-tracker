@@ -22,7 +22,7 @@ export const PROGRAM = {
         { name: 'Weighted Pull-Up', sets: 4, repRange: [6, 10], rir: 2, rest: '90 sec', subs: ['Lat Pulldown', 'Band-Assisted Pull-Up', 'Pull-Up'] },
         { name: 'Seated Cable Row', sets: 3, repRange: [8, 12], rir: 2, rest: '90 sec', subs: ['Barbell Bent-Over Row', 'DB Bent-Over Row'] },
         { name: 'Seated DB Shoulder Press', sets: 3, repRange: [8, 12], rir: 2, rest: '90 sec', subs: ['Standing DB Shoulder Press', 'Machine Shoulder Press'] },
-        { name: 'Cable Lateral Raise', sets: 4, repRange: [10, 12], rir: 1, rest: '60 sec', subs: ['DB Lateral Raise'] },
+        { name: 'Cable Lateral Raise', sets: 4, repRange: [12, 15], rir: 1, rest: '60 sec', subs: ['DB Lateral Raise'] },
         { name: 'Incline Cable Fly', sets: 2, repRange: [10, 12], rir: 1, rest: '60 sec', subs: ['Incline DB Fly', 'Pec Deck', 'Flat Cable Fly', 'Decline Cable Fly'] },
         { name: 'Tricep Rope Pushdown', sets: 4, repRange: [10, 12], rir: 1, rest: '60 sec', superset: 'A', subs: ['Tricep Bar Pushdown', 'Band Tricep Pushdown'] },
         { name: 'EZ Bar Curl', sets: 4, repRange: [10, 12], rir: 1, rest: '60 sec', superset: 'A', subs: ['DB Curl', 'Barbell Curl', 'Bicep Curl Machine', 'DB Preacher Curl', 'EZ Preacher Curl'] },

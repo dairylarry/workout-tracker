@@ -20,7 +20,7 @@ const SESSIONS = [
       { name: 'Weighted Pull-Up', sets: '4', reps: '6–10 (RIR 2)', rest: '90 sec', subs: ['Lat Pulldown', 'Band-Assisted Pull-Up'] },
       { name: 'Seated Cable Row', sets: '3', reps: '8–12 (RIR 2)', rest: '90 sec', subs: ['Barbell Bent-Over Row', 'DB Bent-Over Row'] },
       { name: 'Seated DB Shoulder Press', sets: '3', reps: '8–12 (RIR 2)', rest: '90 sec', subs: ['Standing DB Shoulder Press', 'Machine Shoulder Press'] },
-      { name: 'Cable Lateral Raise (or DB lateral raise)', sets: '4', reps: '10–12 (RIR 1)', rest: '60 sec', subs: ['DB Lateral Raise'] },
+      { name: 'Cable Lateral Raise (or DB lateral raise)', sets: '4', reps: '12–15 (RIR 1)', rest: '60 sec', subs: ['DB Lateral Raise'] },
       { name: 'Incline Cable Fly (or incline pec deck)', sets: '2', reps: '10–12 (RIR 1)', rest: '60 sec', subs: ['Incline DB Fly', 'Pec Deck', 'Flat Cable Fly', 'Decline Cable Fly'] },
       { name: 'Tricep Rope Pushdown', sets: '4', reps: '10–12 (RIR 1)', rest: '60 sec', subs: ['Tricep Bar Pushdown', 'Band Tricep Pushdown'] },
       { name: 'EZ Bar Curl (or DB curl)', sets: '4', reps: '10–12 (RIR 1)', rest: '60 sec', subs: ['DB Curl', 'Barbell Curl'] },
@@ -67,16 +67,64 @@ const SESSIONS = [
       'Superset B: Overhead Tricep Extension + Hammer Curl — do back to back, rest after the curl.',
     ],
   },
+  {
+    title: 'Upper C — Arms + Delts (5-day weeks only, Sunday)',
+    exercises: [
+      { name: 'Lat Pulldown', sets: '3', reps: '8–12 (RIR 2)', rest: '90 sec' },
+      { name: 'Cable Lateral Raise (or DB lateral raise)', sets: '3', reps: '12–15 (RIR 1)', rest: '60 sec', subs: ['DB Lateral Raise'] },
+      { name: 'Cable Face Pull', sets: '3', reps: '12–15 (RIR 1)', rest: '60 sec', subs: ['Band Face Pull', 'Rear Delt Fly'] },
+      { name: 'Tricep Rope Pushdown', sets: '3', reps: '10–12 (RIR 1)', rest: '60 sec', subs: ['Tricep Bar Pushdown', 'Band Tricep Pushdown'] },
+      { name: 'Incline DB Curl', sets: '3', reps: '10–12 (RIR 1)', rest: '60 sec' },
+      { name: 'Cable Overhead Tricep Extension (or DB)', sets: '2', reps: '10–12 (RIR 1)', rest: '60 sec', subs: ['DB Overhead Tricep Extension'] },
+    ],
+    notes: [
+      'Superset A: Cable Lateral Raise + Cable Face Pull — do back to back, rest after the face pull.',
+      'Superset B: Tricep Pushdown + Incline DB Curl — do back to back, rest after the curl.',
+      'Incline DB Curl: set bench to 30–45°, let arms hang straight down at the bottom for a full stretch on the bicep long head.',
+      'Optional: Hammer Curl 2×10–12 (RIR 1) after the last superset if biceps feel fresh.',
+      'On deload weeks: skip Upper C, run 4-day schedule only.',
+    ],
+  },
 ]
 
-const SCHEDULE = [
+const SCHEDULE_4DAY = [
   { day: 'Mon', activity: 'Lower A' },
   { day: 'Tue', activity: 'Upper A' },
-  { day: 'Wed', activity: 'Easy run, 30–50 min' },
+  { day: 'Wed', activity: 'Yoga' },
   { day: 'Thu', activity: 'Lower B' },
   { day: 'Fri', activity: 'Upper B' },
-  { day: 'Sat', activity: 'Long run, 60–90 min (moderate effort max)' },
+  { day: 'Sat', activity: 'Long run (6–8 miles, moderate effort)' },
   { day: 'Sun', activity: 'Rest or yoga' },
+]
+
+const SCHEDULE_5DAY = [
+  { day: 'Sun', activity: 'Upper C' },
+  { day: 'Mon', activity: 'Lower A' },
+  { day: 'Tue', activity: 'Upper A' },
+  { day: 'Wed', activity: 'Yoga' },
+  { day: 'Thu', activity: 'Lower B' },
+  { day: 'Fri', activity: 'Upper B' },
+  { day: 'Sat', activity: 'Long run (6–8 miles, moderate effort)' },
+]
+
+const FIVE_DAY_ADJUSTMENTS = [
+  {
+    session: 'Upper A',
+    reductions: [
+      { exercise: 'Cable Lateral Raise', from: '4', to: '3' },
+      { exercise: 'Tricep Pushdown', from: '4', to: '3' },
+      { exercise: 'EZ Bar Curl', from: '4', to: '3' },
+    ],
+  },
+  {
+    session: 'Upper B',
+    reductions: [
+      { exercise: 'Cable Lateral Raise', from: '4', to: '3' },
+      { exercise: 'Cable Face Pull', from: '3', to: '2' },
+      { exercise: 'Hammer Curl', from: '3', to: '2' },
+      { exercise: 'OHT Extension', from: '2', to: '1' },
+    ],
+  },
 ]
 
 export default function Plan() {
@@ -88,7 +136,7 @@ export default function Plan() {
       <h2>Spring 2026 Program</h2>
 
       <div className="plan-meta">
-        <p><strong>Split:</strong> Upper/Lower A/B · 4 days/week</p>
+        <p><strong>Split:</strong> Upper/Lower A/B/C · 4–5 days/week</p>
         <p><strong>Intensity:</strong> Compounds RIR 2 · Isolations RIR 1</p>
         <p><strong>5s PRO:</strong> Bench + Squat only. Run 2 cycles of the 3-week wave (all sets 5 reps, no AMRAP), then deload.</p>
         <p><strong>Progression:</strong> Double progression on all other lifts.</p>
@@ -134,21 +182,49 @@ export default function Plan() {
 
       <div className="plan-section">
         <h3>Weekly Schedule</h3>
+        <h4>4-Day Week</h4>
         <div className="table-wrap">
           <table>
-            <thead>
-              <tr><th>Day</th><th>Activity</th></tr>
-            </thead>
+            <thead><tr><th>Day</th><th>Activity</th></tr></thead>
             <tbody>
-              {SCHEDULE.map(row => (
-                <tr key={row.day}>
-                  <td>{row.day}</td>
-                  <td>{row.activity}</td>
-                </tr>
+              {SCHEDULE_4DAY.map(row => (
+                <tr key={row.day + row.activity}><td>{row.day}</td><td>{row.activity}</td></tr>
               ))}
             </tbody>
           </table>
         </div>
+        <h4>5-Day Week</h4>
+        <div className="table-wrap">
+          <table>
+            <thead><tr><th>Day</th><th>Activity</th></tr></thead>
+            <tbody>
+              {SCHEDULE_5DAY.map(row => (
+                <tr key={row.day + row.activity}><td>{row.day}</td><td>{row.activity}</td></tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+        <p className="plan-note">Default to 4-day weeks. Add Upper C on Sunday when schedule and recovery allow. On deload weeks: skip Upper C, run 4-day schedule only.</p>
+      </div>
+
+      <div className="plan-section">
+        <h3>5-Day Week Volume Adjustments</h3>
+        <p className="plan-note">On weeks that include Upper C, reduce isolation volume on Upper A and Upper B to avoid overshooting recovery. Compound work stays the same.</p>
+        {FIVE_DAY_ADJUSTMENTS.map(({ session, reductions }) => (
+          <div key={session}>
+            <h4>{session} reductions</h4>
+            <div className="table-wrap">
+              <table>
+                <thead><tr><th>Exercise</th><th>4-day sets</th><th>5-day sets</th></tr></thead>
+                <tbody>
+                  {reductions.map(r => (
+                    <tr key={r.exercise}><td>{r.exercise}</td><td>{r.from}</td><td>{r.to}</td></tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        ))}
       </div>
 
       <div className="plan-section">

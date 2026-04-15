@@ -23,6 +23,18 @@ export function ProgramProvider({ children }) {
             const { PK, SK, ...data } = item
             sessionTypes[id] = data
           }
+
+          // Seed any session types present in the seed but missing from DynamoDB
+          const existingIds = new Set(Object.keys(sessionTypes))
+          const missingIds = Object.keys(PROGRAM.sessionTypes).filter(id => !existingIds.has(id))
+          if (missingIds.length > 0) {
+            console.log('Seeding missing session types:', missingIds)
+            for (const id of missingIds) {
+              await putSessionType(id, PROGRAM.sessionTypes[id])
+              sessionTypes[id] = PROGRAM.sessionTypes[id]
+            }
+          }
+
           setProgram({ name: 'Spring 2026', sessionTypes })
         } else {
           // First load — seed from programConfig.js
