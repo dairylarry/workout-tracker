@@ -114,6 +114,34 @@ Two sections:
 - Supplemental exercises (ad hoc per-session additions, name-based history)
 - Slot migration tool (Manage Workout) — remaps slot indices in past sessions after program restructure
 
+## Scaling Considerations
+
+### When scale starts to matter
+- **Cost:** DynamoDB is priced per request, not per user. A few hundred users doing 4 sessions/week sits well within free tier or costs cents/month. Cost becomes meaningful around 2,000–5,000 MAU with heavy usage. The exercise history denormalization pattern (updating an array on every save) is write-heavy and will become expensive before user count would suggest.
+- **Latency:** Already the main concern today. DynamoDB in `us-east-1` adds 150–200ms round-trip for users far from that region, before the query runs. This is a user #1 problem if they're international. API layer placement (edge vs. single region) matters more than user count.
+- **Practical threshold:** A few hundred users with a proper API layer — cost negligible, latency fine if same region. Start caring about cost at ~2,000–5,000 MAU. Latency becomes a concern only when targeting international users without edge deployment.
+
+### Issues to resolve before scaling (assuming auth is implemented)
+
+1. **Credentials in the bundle (critical)** — IAM credentials are baked into the JS bundle. Anyone can extract them and make raw DynamoDB calls. Requires an API layer (Lambda, Cloudflare Worker, etc.) to gate access server-side.
+2. **No user isolation in the data model** — PKs like `SESSION#lower-a` and `EXERCISE_LIB` are global. All users' data would collide. Needs `USER#<id>` prefix on all user-owned PKs. Existing data would require migration.
+3. **Shared program config** — `PROGRAM#spring2026` is global. Updating it changes the program for all users mid-cycle. Needs per-user program assignment or versioned configs.
+4. **Shared exercise library** — `EXERCISE_LIB` is a single shared catalog. Requires a decision on ownership: global canonical library, per-user additions, or both.
+5. **No rate limiting or input validation** — without an API layer, any client can spam writes or corrupt data. One bad client can generate unexpected DynamoDB costs.
+
+### DB alternatives worth considering
+
+| Option | Pros | Cons |
+|---|---|---|
+| **Supabase** | PostgreSQL + built-in auth (RLS per user), ~10kb client vs ~200kb AWS SDK, easier to query than DynamoDB, solves auth + isolation in one move | Requires schema design, hosted service dependency |
+| **Turso** (LibSQL/SQLite) | Tiny client, fast, generous free tier | Less mature auth story |
+| **Cloudflare D1 + Workers** | SQLite at edge, near-zero latency globally, very cheap at scale | Requires a Worker as the API layer; more ops overhead |
+| **DynamoDB (current)** | Scales to massive load, no ops, what big apps use | Large SDK bundle, single-region latency, credential exposure, complex query model |
+
+**Recommendation for app store path:** Supabase is the cleanest migration — smaller bundle, built-in auth with row-level security, and SQL is simpler than DynamoDB's single-table model. The API layer and data model would need rethinking for multi-user regardless of DB choice.
+
+---
+
 ## V2 Roadmap
 - [ ] Auth (Cognito) + multiple users with `USER#<id>` PK prefix; admin role gates Manage Workout
 - [ ] Stable slot IDs — assign each program exercise a stable `slotId` in program config; sessions reference by ID instead of array position; eliminates slot drift when program is restructured
