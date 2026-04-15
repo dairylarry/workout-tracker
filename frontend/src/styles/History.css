@@ -13,6 +13,120 @@
   font-size: 0.9rem;
 }
 
+.back {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 0.9rem;
+  padding: 0;
+  margin-bottom: 1rem;
+  display: block;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Month navigation */
+.history-nav {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.history-arrow {
+  background: none;
+  border: none;
+  font-size: 1.2rem;
+  cursor: pointer;
+  color: #111;
+  padding: 0.25rem 0.5rem;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.history-arrow-hidden {
+  visibility: hidden;
+}
+
+.history-month-label {
+  font-size: 1.05rem;
+  font-weight: 600;
+  min-width: 9rem;
+  text-align: center;
+}
+
+/* Calendar grid */
+.month-grid-container {
+  width: 100%;
+  background: #fff;
+  border-radius: 12px;
+  padding: 0.75rem;
+  border: 1px solid #e5e7eb;
+  margin-bottom: 1rem;
+}
+
+.month-day-labels {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 4px;
+  margin-bottom: 4px;
+}
+
+.month-day-label {
+  text-align: center;
+  font-size: 0.75rem;
+  color: #9ca3af;
+  padding: 4px 0;
+}
+
+.month-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.month-week {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 4px;
+  padding: 2px;
+  border-radius: 8px;
+  border: 2px solid transparent;
+}
+
+.month-week-clickable {
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.month-week-selected {
+  border-color: #2d4a3e;
+}
+
+.month-cell {
+  aspect-ratio: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  font-size: 0.85rem;
+}
+
+.month-cell-empty {
+  background: none;
+}
+
+.month-cell-missed {
+  background: #f3f4f6;
+  color: #9ca3af;
+}
+
+.month-cell-completed {
+  background: #2d4a3e;
+  color: #fff;
+  font-weight: 600;
+}
+
+/* Session cards */
 .history-list {
   display: flex;
   flex-direction: column;
@@ -21,15 +135,14 @@
 
 .history-card {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
+  flex-direction: column;
   padding: 0.9rem 1rem;
-  min-height: 52px;
   border: 1px solid #ddd;
   background: #fff;
-  border-radius: 4px;
+  border-radius: 6px;
   cursor: pointer;
   width: 100%;
+  text-align: left;
   -webkit-tap-highlight-color: transparent;
 }
 
@@ -41,6 +154,25 @@
   .history-card:hover {
     background: #f5f5f5;
   }
+}
+
+.history-card-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.history-card-divider {
+  border: none;
+  border-top: 1px solid #e5e7eb;
+  margin: 0.7rem 0;
+}
+
+.history-card-note {
+  font-size: 0.85rem;
+  color: #444;
+  white-space: pre-wrap;
+  line-height: 1.4;
 }
 
 .history-date {
@@ -62,15 +194,4 @@
   background: #fef3c7;
   color: #92400e;
   border-radius: 3px;
-}
-
-.back {
-  background: none;
-  border: none;
-  cursor: pointer;
-  font-size: 0.9rem;
-  padding: 0;
-  margin-bottom: 1rem;
-  display: block;
-  -webkit-tap-highlight-color: transparent;
 }

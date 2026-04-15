@@ -47,7 +47,7 @@ Core logging UI. Route: `/session/:sessionType/:date`
 - Supplemental exercises: ad hoc additions per session, appended below program exercises, marked with a badge, history tracked by name
 
 ### View Sessions
-List of all past sessions, newest first. Each entry shows date, session type, and deload badge if applicable. Tapping opens read-only Session Detail. Edit mode allows modifying weight/reps/RIR, swapping exercises, and editing session notes. Delete with confirmation.
+Calendar view of session history. Month grid (Sunday-start) with completed days shaded. Left/right arrows navigate months; left arrow hidden at/before earliest logged month, right arrow hidden at current month. Clicking anywhere in a week row selects that week and shows its session cards below the calendar. Each card shows date + session type (+ deload badge) on top; if the session has notes, a horizontal divider separates the top from the notes text below. Clicking a card opens read-only Session Detail (edit/delete unchanged there).
 
 ### Manage Workout
 Two sections:
