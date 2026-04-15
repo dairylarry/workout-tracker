@@ -10,8 +10,6 @@ const SESSION_TYPES = [
   { id: 'lower-b',   label: 'Lower B',   day: 'Thursday', focus: 'Hypertrophy' },
   { id: 'upper-b',   label: 'Upper B',   day: 'Friday',   focus: 'Hypertrophy' },
   { id: 'upper-c',   label: 'Upper C',   day: 'Sunday',   focus: 'Arms + Delts' },
-  { id: 'upper-a-5', label: 'Upper A-5', day: 'Tuesday',  focus: 'Strength + Hypertrophy (5-day)' },
-  { id: 'upper-b-5', label: 'Upper B-5', day: 'Friday',   focus: 'Hypertrophy (5-day)' },
 ]
 
 export default function StartSession() {

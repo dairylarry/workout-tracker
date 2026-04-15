@@ -111,9 +111,18 @@ export default function ActiveSession() {
   const navigate = useNavigate()
   const { program, exerciseLibrary } = useProgram()
   const config = program?.sessionTypes[sessionType]
+  // Exercises reduced on 5-day weeks (Upper A and Upper B only).
+  // Keyed by session type; values are { exerciseName: setsToRemove }.
+  const FIVE_DAY_REDUCTIONS = {
+    'upper-a': { 'Tricep Bar Pushdown': 1, 'EZ Bar Curl': 1 },
+    'upper-b': { 'Cable Lateral Raise': 1, 'Hammer Curl': 1 },
+  }
+  const fiveDayReductions = FIVE_DAY_REDUCTIONS[sessionType] || null
+
   const [exercises, setExercises] = useState(null)
   const [startedAt, setStartedAt] = useState(null)
   const [deload, setDeload] = useState(false)
+  const [fiveDay, setFiveDay] = useState(false)
   const [simplify, setSimplify] = useState(true)
   const [recentSessions, setRecentSessions] = useState([])
   const [historyLevel, setHistoryLevel] = useState({})
@@ -276,6 +285,7 @@ export default function ActiveSession() {
           })
           setExercises(backfilled)
           setDeload(existing.deload || false)
+          setFiveDay(existing.fiveDay || false)
           setStartedAt(existing.startedAt || null)
           setNotes(existing.notes || '')
           // Initialize ref from loaded exercises so cross-session stale entries are detected
@@ -667,6 +677,45 @@ export default function ActiveSession() {
           />
           Deload week
         </label>
+
+        {fiveDayReductions && (
+          <label className="deload-toggle">
+            <input
+              type="checkbox"
+              checked={fiveDay}
+              onChange={e => {
+                const isFiveDay = e.target.checked
+                setFiveDay(isFiveDay)
+                updateSessionField(sessionType, date, 'fiveDay', isFiveDay)
+                setExercises(prev => {
+                  const updated = prev.map(ex => {
+                    const reduction = fiveDayReductions[ex.name]
+                    if (!reduction) return ex
+                    if (isFiveDay) {
+                      // Remove last N sets
+                      return { ...ex, sets: ex.sets.slice(0, -reduction) }
+                    } else {
+                      // Restore N blank sets
+                      const lastNum = ex.sets.length
+                      const restored = Array.from({ length: reduction }, (_, i) => ({
+                        setNumber: lastNum + i + 1,
+                        weight: '',
+                        reps: '',
+                        rir: '',
+                      }))
+                      return { ...ex, sets: [...ex.sets, ...restored] }
+                    }
+                  })
+                  updateSessionExercises(sessionType, date, updated).catch(e =>
+                    console.error('Failed to save 5-day change:', e)
+                  )
+                  return updated
+                })
+              }}
+            />
+            5-day week
+          </label>
+        )}
       </div>
 
       {config.exercises.map((exConfig) => {

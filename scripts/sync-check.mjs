@@ -14,10 +14,11 @@
  *
  * What it checks:
  *   1. Exercise library: names, family, defaultRepRange, defaultSets
- *   2. Program config: per-exercise sets, repRange, rir, subs
+ *   2. Program config: per-exercise sets, repRange, rir, subs (per session type)
  *
  * It does NOT auto-update the seeds — update them manually based on the report.
- * (Seeds use ES module enum refs like MG.QUADS which can't be auto-generated cleanly.)
+ * (exerciseLibrarySeed.js uses enum refs like MG.QUADS which can't be auto-generated cleanly.
+ *  programConfigSeed.js is plain JS and is imported directly for accurate comparison.)
  */
 
 import { readFileSync } from 'fs'
@@ -50,9 +51,8 @@ const db = DynamoDBDocumentClient.from(client)
 const TABLE = 'workout-tracker-db'
 const PROGRAM_PK = 'PROGRAM#spring2026'
 
-// --- Seed data (inline, no ES module import needed) ---
-// Keep this in sync manually when seeds change structure.
-// Run the script to find content diffs — not structural ones.
+// Import program config directly — no enum deps, plain JS objects.
+const { PROGRAM } = await import(resolve(__dirname, '../frontend/src/seeds/programConfigSeed.js'))
 
 async function queryAll(pk, skPrefix) {
   const params = {
@@ -72,17 +72,12 @@ function rrStr(arr) {
   return arr ? `[${arr.join(',')}]` : 'null'
 }
 
-function subsStr(subs) {
-  if (!subs) return '[]'
-  return '[' + subs.map(s => typeof s === 'object' ? `${s.name}(obj)` : s).join(', ') + ']'
-}
-
 async function checkExerciseLibrary() {
   console.log('\n═══════════════════════════════════════')
   console.log('EXERCISE LIBRARY DIFF (DynamoDB vs Seed)')
   console.log('═══════════════════════════════════════')
 
-  // Read seed file as text and extract exercise names + basic fields
+  // exerciseLibrarySeed uses MG/FAM enums — parse as text for name/field extraction.
   const seedText = readFileSync(resolve(__dirname, '../frontend/src/seeds/exerciseLibrarySeed.js'), 'utf8')
   const seedNames = new Set([...seedText.matchAll(/name:\s*'([^']+)'/g)].map(m => m[1]))
 
@@ -105,7 +100,6 @@ async function checkExerciseLibrary() {
     onlyInSeed.forEach(n => console.log(`  - ${n}`))
   }
 
-  // Check field diffs for matching exercises
   // Parse defaultRepRange + defaultSets from seed text per exercise
   const seedExercises = {}
   const exerciseBlocks = [...seedText.matchAll(/\{[^}]+name:\s*'([^']+)'[^}]+\}/g)]
@@ -163,61 +157,86 @@ async function checkProgramConfig() {
   console.log('PROGRAM CONFIG DIFF (DynamoDB vs Seed)')
   console.log('═══════════════════════════════════════')
 
-  const seedText = readFileSync(resolve(__dirname, '../frontend/src/seeds/programConfigSeed.js'), 'utf8')
   const dbItems = await queryAll(PROGRAM_PK, 'SESSION_TYPE#')
-
-  let anyDiff = false
-
+  const dbByType = {}
   for (const item of dbItems) {
     const stId = item.SK.replace('SESSION_TYPE#', '')
-    const dbExercises = item.exercises || []
+    dbByType[stId] = item
+  }
 
-    // Extract seed exercises for this session type from text
-    // (crude but avoids ES module import complexity)
-    const sessionMatch = seedText.match(new RegExp(`'${stId}':\\s*\\{[\\s\\S]*?(?='[a-z]+-[a-b]':|\\}\\s*\\}\\s*$)`))
+  const seedTypes = PROGRAM.sessionTypes
+  let anyDiff = false
+
+  // Check for session types only in DB or only in seed
+  const dbTypeIds = new Set(Object.keys(dbByType))
+  const seedTypeIds = new Set(Object.keys(seedTypes))
+
+  const onlyInDB = [...dbTypeIds].filter(id => !seedTypeIds.has(id))
+  const onlyInSeed = [...seedTypeIds].filter(id => !dbTypeIds.has(id))
+
+  if (onlyInDB.length) {
+    anyDiff = true
+    console.log('\n🔴 In DynamoDB but NOT in seed:')
+    onlyInDB.forEach(id => console.log(`  - ${id}`))
+  }
+  if (onlyInSeed.length) {
+    anyDiff = true
+    console.log('\n🟡 In seed but NOT in DynamoDB (will auto-seed on next app load):')
+    onlyInSeed.forEach(id => console.log(`  - ${id}`))
+  }
+
+  // Compare each session type present in both
+  for (const stId of [...seedTypeIds].filter(id => dbTypeIds.has(id))) {
+    const dbExercises = dbByType[stId].exercises || []
+    const seedExercises = seedTypes[stId].exercises || []
+
+    // Index seed exercises by name for O(1) lookup
+    const seedByName = {}
+    for (const ex of seedExercises) seedByName[ex.name] = ex
 
     for (const dbEx of dbExercises) {
-      const dbSubs = (dbEx.subs || []).map(s => typeof s === 'object' ? s.name : s)
-      const seedSubsMatch = seedText.match(new RegExp(`name:\\s*'${dbEx.name}'[^}]*subs:\\s*\\[([^\\]]+)\\]`))
-      if (!seedSubsMatch) continue
+      if (dbEx.supplemental) continue
+      const seedEx = seedByName[dbEx.name]
+      if (!seedEx) {
+        anyDiff = true
+        console.log(`\n  ${stId} / ${dbEx.name}:`)
+        console.log(`    🔴 In DB but not in seed`)
+        continue
+      }
 
-      const seedSubNames = [...seedSubsMatch[1].matchAll(/'([^']+)'/g)]
-        .map(m => m[1])
-        .filter(n => !['name','repRange','sets','rir','perSide','rest'].includes(n))
+      // Compare subs (extract names from both, handling object subs)
+      const dbSubNames = (dbEx.subs || []).map(s => typeof s === 'object' ? s.name : s)
+      const seedSubNames = (seedEx.subs || []).map(s => typeof s === 'object' ? s.name : s)
+      const extraInDB = dbSubNames.filter(s => !seedSubNames.includes(s))
+      const extraInSeed = seedSubNames.filter(s => !dbSubNames.includes(s))
 
-      const extraInDB = dbSubs.filter(s => !seedSubNames.includes(s))
-      const extraInSeed = seedSubNames.filter(s => !dbSubs.includes(s))
+      const diffs = []
+      if (dbEx.sets != null && seedEx.sets != null && Number(dbEx.sets) !== Number(seedEx.sets))
+        diffs.push(`sets: DB=${dbEx.sets} seed=${seedEx.sets}`)
+      if (dbEx.repRange && seedEx.repRange &&
+          JSON.stringify(dbEx.repRange.map(Number)) !== JSON.stringify(seedEx.repRange))
+        diffs.push(`repRange: DB=${rrStr(dbEx.repRange.map(Number))} seed=${rrStr(seedEx.repRange)}`)
+      if (dbEx.rir != null && seedEx.rir != null && Number(dbEx.rir) !== Number(seedEx.rir))
+        diffs.push(`rir: DB=${dbEx.rir} seed=${seedEx.rir}`)
 
-      if (extraInDB.length || extraInSeed.length) {
+      if (extraInDB.length || extraInSeed.length || diffs.length) {
         anyDiff = true
         console.log(`\n  ${stId} / ${dbEx.name}:`)
         if (extraInDB.length)
           console.log(`    🔴 In DB not in seed (add to seed): ${extraInDB.join(', ')}`)
         if (extraInSeed.length)
           console.log(`    🟡 In seed not in DB (remove from seed or re-add to DB): ${extraInSeed.join(', ')}`)
-      }
-
-      // Check sets/range/rir
-      const setsMatch = seedText.match(new RegExp(`name:\\s*'${dbEx.name}'[^}]*sets:\\s*(\\d+)`))
-      const rrMatch = seedText.match(new RegExp(`name:\\s*'${dbEx.name}'[^}]*repRange:\\s*\\[(\\d+),\\s*(\\d+)\\]`))
-      const rirMatch = seedText.match(new RegExp(`name:\\s*'${dbEx.name}'[^}]*rir:\\s*(\\d+)`))
-
-      const seedSets = setsMatch ? parseInt(setsMatch[1]) : null
-      const seedRR = rrMatch ? [parseInt(rrMatch[1]), parseInt(rrMatch[2])] : null
-      const seedRir = rirMatch ? parseInt(rirMatch[1]) : null
-
-      const diffs = []
-      if (dbEx.sets != null && seedSets != null && Number(dbEx.sets) !== seedSets)
-        diffs.push(`sets: DB=${dbEx.sets} seed=${seedSets}`)
-      if (dbEx.repRange && seedRR && JSON.stringify(dbEx.repRange.map(Number)) !== JSON.stringify(seedRR))
-        diffs.push(`repRange: DB=${rrStr(dbEx.repRange.map(Number))} seed=${rrStr(seedRR)}`)
-      if (dbEx.rir != null && seedRir != null && Number(dbEx.rir) !== seedRir)
-        diffs.push(`rir: DB=${dbEx.rir} seed=${seedRir}`)
-
-      if (diffs.length) {
-        anyDiff = true
-        console.log(`\n  ${stId} / ${dbEx.name}:`)
         diffs.forEach(d => console.log(`    🟠 ${d}`))
+      }
+    }
+
+    // Check for exercises in seed but not in DB
+    const dbExNames = new Set(dbExercises.map(e => e.name))
+    for (const seedEx of seedExercises) {
+      if (!dbExNames.has(seedEx.name)) {
+        anyDiff = true
+        console.log(`\n  ${stId} / ${seedEx.name}:`)
+        console.log(`    🟡 In seed but not in DB`)
       }
     }
   }
