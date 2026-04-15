@@ -144,6 +144,7 @@
   width: 100%;
   text-align: left;
   -webkit-tap-highlight-color: transparent;
+  user-select: none;
 }
 
 .history-card:active {

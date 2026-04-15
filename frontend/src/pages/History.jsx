@@ -1,6 +1,7 @@
 import { useState, useEffect, useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
 import ReactMarkdown from 'react-markdown'
+import remarkGfm from 'remark-gfm'
 import { getAllSessionsForType } from '../lib/dynamodb'
 import { useProgram } from '../context/ProgramContext'
 import '../styles/History.css'
@@ -208,10 +209,13 @@ export default function History() {
                 const config = program?.sessionTypes[session.sessionType]
                 const hasNotes = session.notes && session.notes.trim().length > 0
                 return (
-                  <button
+                  <div
                     key={`${session.sessionType}-${session.date}`}
+                    role="button"
+                    tabIndex={0}
                     className="history-card"
                     onClick={() => navigate(`/history/${session.sessionType}/${session.date}`)}
+                    onKeyDown={e => { if (e.key === 'Enter' || e.key === ' ') navigate(`/history/${session.sessionType}/${session.date}`) }}
                   >
                     <div className="history-card-top">
                       <span className="history-date">{formatDate(session.date)}</span>
@@ -223,10 +227,28 @@ export default function History() {
                     {hasNotes && (
                       <>
                         <hr className="history-card-divider" />
-                        <div className="history-card-note"><ReactMarkdown>{session.notes}</ReactMarkdown></div>
+                        <div className="history-card-note">
+                          <ReactMarkdown
+                            remarkPlugins={[remarkGfm]}
+                            components={{
+                              a: ({ href, children }) => (
+                                <a
+                                  href={href}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  onClick={e => e.stopPropagation()}
+                                >
+                                  {children}
+                                </a>
+                              ),
+                            }}
+                          >
+                            {session.notes}
+                          </ReactMarkdown>
+                        </div>
                       </>
                     )}
-                  </button>
+                  </div>
                 )
               })}
             </div>
