@@ -122,6 +122,8 @@
   padding: 0.45rem 0;
   font-size: 0.85rem;
   color: #111;
+  -webkit-text-fill-color: #111;
+  -webkit-appearance: none;
   cursor: pointer;
   text-align: center;
   -webkit-tap-highlight-color: transparent;
@@ -129,6 +131,7 @@
 
 .month-picker-cell:disabled {
   color: #ccc;
+  -webkit-text-fill-color: #ccc;
   cursor: default;
   background: none;
 }
