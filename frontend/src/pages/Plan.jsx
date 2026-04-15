@@ -9,7 +9,7 @@ const SESSIONS = [
       { name: 'Leg Press', sets: '3', reps: '10–12 (RIR 2)', rest: '90 sec', subs: ['Bulgarian Split Squat 2×8/leg', 'Goblet Squat'] },
       { name: 'Romanian Deadlift (or DB/KB RDL)', sets: '3', reps: '6–10 (RIR 2)', rest: '2 min', subs: ['DB Romanian Deadlift', 'KB Romanian Deadlift'] },
       { name: 'Barbell Hip Thrust (or DB/KB hip thrust)', sets: '2', reps: '8–12 (RIR 2)', rest: '90 sec', subs: ['DB Hip Thrust', 'KB Hip Thrust', 'Cable Hip Thrust'] },
-      { name: 'Standing Calf Raise (or single-leg DB calf raise)', sets: '3', reps: '15–20 (RIR 1)', rest: '60 sec', subs: ['Single-Leg DB Calf Raise'] },
+      { name: 'Standing Calf Raise (or single-leg DB calf raise)', sets: '3', reps: '15–20 (RIR 1)', rest: '60 sec', subs: ['Single-Leg DB Calf Raise', 'Standing Calf Raise Machine'] },
     ],
     notes: ['On lighter running weeks (long run under 60 min or no long run), substitute Leg Press with Bulgarian Split Squat 2 × 8/leg (RIR 2).'],
   },
@@ -17,13 +17,13 @@ const SESSIONS = [
     title: 'Upper A — Strength + Hypertrophy',
     exercises: [
       { name: 'Flat Barbell Bench Press', sets: '5s PRO', reps: '—', rest: '3–4 min' },
-      { name: 'Weighted Pull-Up', sets: '4', reps: '6–10 (RIR 2)', rest: '90 sec', subs: ['Lat Pulldown', 'Band-Assisted Pull-Up'] },
+      { name: 'Weighted Pull-Up', sets: '4', reps: '6–10 (RIR 2)', rest: '90 sec', subs: ['Lat Pulldown', 'Band-Assisted Pull-Up', 'Pull-Up'] },
       { name: 'Seated Cable Row', sets: '3', reps: '8–12 (RIR 2)', rest: '90 sec', subs: ['Barbell Bent-Over Row', 'DB Bent-Over Row'] },
       { name: 'Seated DB Shoulder Press', sets: '3', reps: '8–12 (RIR 2)', rest: '90 sec', subs: ['Standing DB Shoulder Press', 'Machine Shoulder Press'] },
       { name: 'Cable Lateral Raise (or DB lateral raise)', sets: '4', reps: '12–15 (RIR 1)', rest: '60 sec', subs: ['DB Lateral Raise', 'Incline Dumbbell Y Raise', 'Machine Lateral Raise'] },
       { name: 'Incline Cable Fly (or incline pec deck)', sets: '2', reps: '10–12 (RIR 1)', rest: '60 sec', subs: ['Incline DB Fly', 'Pec Deck', 'Flat Cable Fly', 'Decline Cable Fly'] },
       { name: 'Tricep Bar Pushdown', sets: '4', reps: '10–12 (RIR 1)', rest: '60 sec', subs: ['Tricep Rope Pushdown', 'Band Tricep Pushdown'] },
-      { name: 'EZ Bar Curl (or DB curl)', sets: '4', reps: '10–12 (RIR 1)', rest: '60 sec', subs: ['DB Curl', 'Barbell Curl'] },
+      { name: 'EZ Bar Curl (or DB curl)', sets: '4', reps: '10–12 (RIR 1)', rest: '60 sec', subs: ['DB Curl', 'Barbell Curl', 'Bicep Curl Machine', 'DB Preacher Curl', 'EZ Preacher Curl'] },
     ],
     notes: [
       'Superset: Tricep Bar Pushdown + EZ Bar Curl — do back to back, rest after the curl.',
@@ -33,7 +33,7 @@ const SESSIONS = [
   {
     title: 'Lower B — Hypertrophy',
     exercises: [
-      { name: 'Pendulum Squat', sets: '3', reps: '8–12 (RIR 2)', rest: '2 min', subs: ['Hack Squat', 'Front Squat', 'Goblet Squat'] },
+      { name: 'Pendulum Squat', sets: '3', reps: '8–12 (RIR 2)', rest: '2 min', subs: ['Hack Squat', 'Front Squat', 'Goblet Squat', 'V-Squat'] },
       { name: 'Seated Leg Curl', sets: '3', reps: '10–12 (RIR 1)', rest: '90 sec', subs: ['Nordic Curl 2×5–8', 'Glute Ham Raise 2×5–8', 'Lying Leg Curl'] },
       { name: 'Single-Leg Romanian Deadlift (DB or KB)', sets: '2', reps: '8–10/leg (RIR 2)', rest: '90 sec', subs: ['DB Single-Leg RDL', 'KB Single-Leg RDL'] },
       { name: 'Leg Extension (or cable leg extension)', sets: '3', reps: '10–12 (RIR 1)', rest: '60 sec', subs: ['Cable Leg Extension'] },
@@ -52,7 +52,7 @@ const SESSIONS = [
     exercises: [
       { name: 'Incline DB Press', sets: '4', reps: '8–12 (RIR 2)', rest: '90 sec', subs: ['Incline Barbell Press', 'Machine Incline Press'] },
       { name: 'Pull-Up', sets: '3', reps: '8–12 (RIR 2)', rest: '90 sec', subs: ['Lat Pulldown', 'Band-Assisted Pull-Up'] },
-      { name: 'Chest-Supported DB Row (or single-arm DB row)', sets: '3', reps: '10–12 (RIR 2)', rest: '90 sec', subs: ['Single-Arm DB Row', 'Machine Row'] },
+      { name: 'Chest-Supported DB Row (or single-arm DB row)', sets: '3', reps: '10–12 (RIR 2)', rest: '90 sec', subs: ['Single-Arm DB Row', 'Machine Row', 'Machine Chest-Supported Row'] },
       { name: 'Incline Cable Fly (or incline pec deck)', sets: '3', reps: '10–12 (RIR 1)', rest: '60 sec', subs: ['Incline DB Fly', 'Pec Deck', 'Flat Cable Fly', 'Decline Cable Fly'] },
       { name: 'Cable Face Pull', sets: '3', reps: '12–15 (RIR 1)', rest: '60 sec', subs: ['Rear Delt Fly', 'Reverse Cable Crossover', 'Lying DB Reverse Fly'] },
       { name: 'Cable Lateral Raise (or DB lateral raise)', sets: '4', reps: '12–15 (RIR 1)', rest: '60 sec', subs: ['DB Lateral Raise', 'Incline Dumbbell Y Raise', 'Machine Lateral Raise'] },
