@@ -67,6 +67,7 @@ Before adding new session types, introduce stable `slotId` fields on every exerc
 | `uc-tri` | Tricep Rope Pushdown |
 | `uc-curl` | Incline DB Curl |
 | `uc-oht` | Cable Overhead Tricep Extension |
+| `uc-hammer` | Hammer Curl |
 
 ### Migration
 Existing session records in DynamoDB do not have `slotId`. A one-time migration script (`scripts/migrate-slot-ids.mjs`) should:
@@ -91,11 +92,12 @@ Add `slotId` to all exercises. Configs below include IDs.
   focus: 'Arms + Delts',
   exercises: [
     { slotId: 'uc-pulldown', name: 'Lat Pulldown', sets: 3, repRange: [8, 12], rir: 2, rest: '90 sec' },
-    { slotId: 'uc-lateral',  name: 'Cable Lateral Raise', sets: 3, repRange: [12, 15], rir: 1, rest: '60 sec', superset: 'A', subs: ['DB Lateral Raise'] },
-    { slotId: 'uc-facepull', name: 'Cable Face Pull', sets: 3, repRange: [12, 15], rir: 1, rest: '60 sec', superset: 'A', subs: ['Band Face Pull', 'Rear Delt Fly'] },
-    { slotId: 'uc-tri',      name: 'Tricep Rope Pushdown', sets: 3, repRange: [10, 12], rir: 1, rest: '60 sec', superset: 'B', subs: ['Tricep Bar Pushdown', 'Band Tricep Pushdown'] },
+    { slotId: 'uc-lateral',  name: 'Cable Lateral Raise', sets: 3, repRange: [12, 15], rir: 1, rest: '60 sec', superset: 'A', subs: ['DB Lateral Raise', 'Incline Dumbbell Y Raise', 'Machine Lateral Raise'] },
+    { slotId: 'uc-facepull', name: 'Cable Face Pull', sets: 3, repRange: [12, 15], rir: 1, rest: '60 sec', superset: 'A', subs: ['Rear Delt Fly', 'Reverse Cable Crossover', 'Lying DB Reverse Fly'] },
+    { slotId: 'uc-tri',      name: 'Tricep Bar Pushdown', sets: 3, repRange: [10, 12], rir: 1, rest: '60 sec', superset: 'B', subs: ['Tricep Rope Pushdown', 'Band Tricep Pushdown'] },
     { slotId: 'uc-curl',     name: 'Incline DB Curl', sets: 3, repRange: [10, 12], rir: 1, rest: '60 sec', superset: 'B' },
-    { slotId: 'uc-oht',      name: 'Cable Overhead Tricep Extension', sets: 2, repRange: [10, 12], rir: 1, rest: '60 sec', subs: ['DB Overhead Tricep Extension'] },
+    { slotId: 'uc-oht',      name: 'Cable Overhead Tricep Extension', sets: 2, repRange: [10, 12], rir: 1, rest: '60 sec', superset: 'C', subs: ['DB Overhead Tricep Extension'] },
+    { slotId: 'uc-hammer',   name: 'Hammer Curl', sets: 2, repRange: [10, 12], rir: 1, rest: '60 sec', superset: 'C', subs: ['Cross-Body Hammer Curl'] },
   ],
 }
 ```
@@ -112,9 +114,9 @@ Same `slotId`s as `upper-a` — shared IDs enable unified history lookup.
     { slotId: 'ua-pullup',  name: 'Weighted Pull-Up', sets: 4, repRange: [6, 10], rir: 2, rest: '90 sec', subs: ['Lat Pulldown', 'Band-Assisted Pull-Up', 'Pull-Up'] },
     { slotId: 'ua-row',     name: 'Seated Cable Row', sets: 3, repRange: [8, 12], rir: 2, rest: '90 sec', subs: ['Barbell Bent-Over Row', 'DB Bent-Over Row'] },
     { slotId: 'ua-press',   name: 'Seated DB Shoulder Press', sets: 3, repRange: [8, 12], rir: 2, rest: '90 sec', subs: ['Standing DB Shoulder Press', 'Machine Shoulder Press'] },
-    { slotId: 'ua-lateral', name: 'Cable Lateral Raise', sets: 3, repRange: [12, 15], rir: 1, rest: '60 sec', subs: ['DB Lateral Raise'] },
+    { slotId: 'ua-lateral', name: 'Cable Lateral Raise', sets: 4, repRange: [12, 15], rir: 1, rest: '60 sec', subs: ['DB Lateral Raise', 'Incline Dumbbell Y Raise', 'Machine Lateral Raise'] },
     { slotId: 'ua-fly',     name: 'Incline Cable Fly', sets: 2, repRange: [10, 12], rir: 1, rest: '60 sec', subs: ['Incline DB Fly', 'Pec Deck', 'Flat Cable Fly', 'Decline Cable Fly'] },
-    { slotId: 'ua-tri',     name: 'Tricep Rope Pushdown', sets: 3, repRange: [10, 12], rir: 1, rest: '60 sec', superset: 'A', subs: ['Tricep Bar Pushdown', 'Band Tricep Pushdown'] },
+    { slotId: 'ua-tri',     name: 'Tricep Bar Pushdown', sets: 3, repRange: [10, 12], rir: 1, rest: '60 sec', superset: 'A', subs: ['Tricep Rope Pushdown', 'Band Tricep Pushdown'] },
     { slotId: 'ua-curl',    name: 'EZ Bar Curl', sets: 3, repRange: [10, 12], rir: 1, rest: '60 sec', superset: 'A', subs: ['DB Curl', 'Barbell Curl', 'Bicep Curl Machine', 'DB Preacher Curl', 'EZ Preacher Curl'] },
   ],
 }
@@ -132,9 +134,9 @@ Same `slotId`s as `upper-b`.
     { slotId: 'ub-pullup',   name: 'Pull-Up', sets: 3, repRange: [8, 12], rir: 2, rest: '90 sec', subs: ['Lat Pulldown', 'Band-Assisted Pull-Up'] },
     { slotId: 'ub-row',      name: 'Chest-Supported DB Row', sets: 3, repRange: [10, 12], rir: 2, rest: '90 sec', subs: ['Single-Arm DB Row', 'Machine Row', 'Machine Chest-Supported Row'] },
     { slotId: 'ub-fly',      name: 'Incline Cable Fly', sets: 3, repRange: [10, 12], rir: 1, rest: '60 sec', subs: ['Incline DB Fly', 'Pec Deck', 'Flat Cable Fly', 'Decline Cable Fly'] },
-    { slotId: 'ub-facepull', name: 'Cable Face Pull', sets: 2, repRange: [12, 15], rir: 1, rest: '60 sec', superset: 'A', subs: ['Band Face Pull', 'Rear Delt Fly'] },
-    { slotId: 'ub-lateral',  name: 'Cable Lateral Raise', sets: 3, repRange: [12, 15], rir: 1, rest: '60 sec', superset: 'A', subs: ['DB Lateral Raise'] },
-    { slotId: 'ub-tri',      name: 'Cable Overhead Tricep Extension', sets: 1, repRange: [10, 12], rir: 1, rest: '60 sec', superset: 'B', subs: ['DB Overhead Tricep Extension'] },
+    { slotId: 'ub-facepull', name: 'Cable Face Pull', sets: 3, repRange: [12, 15], rir: 1, rest: '60 sec', superset: 'A', subs: ['Rear Delt Fly', 'Reverse Cable Crossover', 'Lying DB Reverse Fly'] },
+    { slotId: 'ub-lateral',  name: 'Cable Lateral Raise', sets: 3, repRange: [12, 15], rir: 1, rest: '60 sec', superset: 'A', subs: ['DB Lateral Raise', 'Incline Dumbbell Y Raise', 'Machine Lateral Raise'] },
+    { slotId: 'ub-tri',      name: 'Cable Overhead Tricep Extension', sets: 2, repRange: [10, 12], rir: 1, rest: '60 sec', superset: 'B', subs: ['DB Overhead Tricep Extension'] },
     { slotId: 'ub-curl',     name: 'Hammer Curl', sets: 2, repRange: [10, 12], rir: 1, rest: '60 sec', superset: 'B', subs: ['Cross-Body Hammer Curl'] },
   ],
 }
@@ -192,3 +194,23 @@ Run after deploying seed changes, before relying on `slotId`-based history.
 
 ## Exercise Library
 `Incline DB Curl` already added to `exerciseLibrarySeed.js`. Will be seeded automatically on next app load if missing.
+
+---
+
+## 5-Day Volume Adjustments
+
+On weeks that include Upper C, reduce isolation volume on Upper A and Upper B.
+
+**Upper A reductions (5-day):**
+
+| Exercise        | 4-day | 5-day |
+| --------------- | ----- | ----- |
+| Tricep Pushdown | 4     | 3     |
+| EZ Bar Curl     | 4     | 3     |
+
+**Upper B reductions (5-day):**
+
+| Exercise            | 4-day | 5-day |
+| ------------------- | ----- | ----- |
+| Cable Lateral Raise | 4     | 3     |
+| Hammer Curl         | 3     | 2     |

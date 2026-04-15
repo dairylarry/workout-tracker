@@ -43,11 +43,11 @@
 | Seated DB Shoulder Press                       | 3     | 8–12 (RIR 2)  | 90 sec         |
 | Cable Lateral Raise (or DB lateral raise)      | 4     | 12–15 (RIR 1) | 60 sec         |
 | Incline Cable Fly (or incline pec deck)        | 2     | 10–12 (RIR 1) | 60 sec         |
-| Tricep Rope Pushdown                           | 4     | 10–12 (RIR 1) | 60 sec         |
+| Tricep Bar Pushdown                           | 4     | 10–12 (RIR 1) | 60 sec         |
 | EZ Bar Curl (or DB curl)                       | 4     | 10–12 (RIR 1) | 60 sec         |
 
 
-*Superset: Tricep Rope Pushdown + EZ Bar Curl — do back to back, rest after the curl.*
+*Superset: Tricep Bar Pushdown + EZ Bar Curl — do back to back, rest after the curl.*
 *Seated Cable Row: use a close or neutral grip, pull to lower abdomen with elbows tucked close to your sides — think "elbow to hip" to shift emphasis toward the lats.*
 
 ---
@@ -88,6 +88,7 @@
 
 
 *Monitor total pressing fatigue across the week — if anterior shoulder discomfort develops, reduce Incline DB Press volume first.*
+*If you want to do Dips, slot them after Incline DB Press or swap with Incline Cable Fly.*
 *Incline Cable Fly: use the low pulley, cables set at the bottom, pulling upward and inward toward your upper chest. If using a pec deck, set the seat low so arms angle upward.*
 *Superset A: Cable Face Pull + Cable Lateral Raise — do back to back, rest after the lateral raise.*
 *Superset B: Overhead Tricep Extension + Hammer Curl — do back to back, rest after the curl.*
@@ -103,15 +104,16 @@
 | Lat Pulldown                              | 3    | 8–12 (RIR 2)  | 90 sec         |
 | Cable Lateral Raise (or DB lateral raise) | 3    | 12–15 (RIR 1) | 60 sec         |
 | Cable Face Pull                           | 3    | 12–15 (RIR 1) | 60 sec         |
-| Tricep Rope Pushdown                      | 3    | 10–12 (RIR 1) | 60 sec         |
+| Tricep Bar Pushdown                       | 3    | 10–12 (RIR 1) | 60 sec         |
 | Incline DB Curl                           | 3    | 10–12 (RIR 1) | 60 sec         |
 | Overhead Tricep Extension (DB or cable)   | 2    | 10–12 (RIR 1) | 60 sec         |
+| Hammer Curl                               | 2    | 10–12 (RIR 1) | 60 sec         |
 
 
 *Superset A: Cable Lateral Raise + Cable Face Pull — do back to back, rest after the face pull.*
 *Superset B: Tricep Pushdown + Incline DB Curl — do back to back, rest after the curl.*
+*Superset C: OHT Extension + Hammer Curl — do back to back, rest after the curl.*
 *Incline DB Curl: set bench to 30–45°, let arms hang straight down at the bottom for a full stretch on the bicep long head.*
-*Optional: Hammer Curl 2×10–12 (RIR 1) after the last superset if biceps feel fresh.*
 
 ### 5-Day Week Adjustments
 
@@ -121,7 +123,6 @@ On weeks that include Upper C, reduce isolation volume on Upper A and Upper B to
 
 | Exercise            | 4-day | 5-day |
 | ------------------- | ----- | ----- |
-| Cable Lateral Raise | 4     | 3     |
 | Tricep Pushdown     | 4     | 3     |
 | EZ Bar Curl         | 4     | 3     |
 
@@ -130,9 +131,7 @@ On weeks that include Upper C, reduce isolation volume on Upper A and Upper B to
 | Exercise            | 4-day | 5-day |
 | ------------------- | ----- | ----- |
 | Cable Lateral Raise | 4     | 3     |
-| Cable Face Pull     | 3     | 2     |
 | Hammer Curl         | 3     | 2     |
-| OHT Extension       | 2     | 1     |
 
 ---
 

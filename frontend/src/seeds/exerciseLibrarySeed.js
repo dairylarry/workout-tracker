@@ -69,6 +69,8 @@ export const EXERCISE_SEED = [
   { name: 'Cable Face Pull', muscleGroups: [MG.BACK, MG.SHOULDERS], family: FAM.REAR_DELT, defaultRepRange: [12, 15], defaultSets: 3 },
   { name: 'Band Face Pull', muscleGroups: [MG.BACK, MG.SHOULDERS], family: FAM.REAR_DELT, defaultRepRange: [12, 15], defaultSets: 3 },
   { name: 'Rear Delt Fly', muscleGroups: [MG.SHOULDERS, MG.BACK], family: FAM.REAR_DELT, defaultRepRange: [12, 15], defaultSets: 3 },
+  { name: 'Reverse Cable Crossover', muscleGroups: [MG.SHOULDERS, MG.BACK], family: FAM.REAR_DELT, defaultRepRange: [12, 15], defaultSets: 3 },
+  { name: 'Lying DB Reverse Fly', muscleGroups: [MG.SHOULDERS, MG.BACK], family: FAM.REAR_DELT, defaultRepRange: [12, 15], defaultSets: 3 },
 
   // Upper body — shoulders
   { name: 'Barbell Overhead Press', muscleGroups: [MG.SHOULDERS, MG.TRICEPS], family: FAM.PRESS, defaultRepRange: [5, 8], defaultSets: 3 },
@@ -77,6 +79,8 @@ export const EXERCISE_SEED = [
   { name: 'Machine Shoulder Press', muscleGroups: [MG.SHOULDERS, MG.TRICEPS], family: FAM.PRESS, defaultRepRange: [8, 12], defaultSets: 3 },
   { name: 'Cable Lateral Raise', muscleGroups: [MG.SHOULDERS], family: FAM.LATERAL_RAISE, defaultRepRange: [12, 15], defaultSets: 4 },
   { name: 'DB Lateral Raise', muscleGroups: [MG.SHOULDERS], family: FAM.LATERAL_RAISE, defaultRepRange: [12, 15], defaultSets: 4 },
+  { name: 'Incline Dumbbell Y Raise', muscleGroups: [MG.SHOULDERS], family: FAM.LATERAL_RAISE, defaultRepRange: [12, 15], defaultSets: 3 },
+  { name: 'Machine Lateral Raise', muscleGroups: [MG.SHOULDERS], family: FAM.LATERAL_RAISE, defaultRepRange: [12, 15], defaultSets: 4 },
 
   // Upper body — triceps
   { name: 'Tricep Rope Pushdown', muscleGroups: [MG.TRICEPS], family: FAM.PUSHDOWN, defaultRepRange: [10, 12], defaultSets: 4 },
