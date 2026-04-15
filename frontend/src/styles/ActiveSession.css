@@ -17,6 +17,12 @@
 
 .toggle-menu {
   display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.toggle-row {
+  display: flex;
   justify-content: space-around;
 }
 
