@@ -171,8 +171,29 @@
 .history-card-note {
   font-size: 0.85rem;
   color: #444;
-  white-space: pre-wrap;
   line-height: 1.4;
+}
+
+.history-card-note > * + * {
+  margin-top: 0.4rem;
+}
+
+.history-card-note p {
+  margin: 0;
+}
+
+.history-card-note ul,
+.history-card-note ol {
+  padding-left: 1.25rem;
+  margin: 0;
+}
+
+.history-card-note strong {
+  font-weight: 600;
+}
+
+.history-card-note em {
+  font-style: italic;
 }
 
 .history-date {

@@ -1,5 +1,6 @@
 import { useState, useEffect, useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
+import ReactMarkdown from 'react-markdown'
 import { getAllSessionsForType } from '../lib/dynamodb'
 import { useProgram } from '../context/ProgramContext'
 import '../styles/History.css'
@@ -209,7 +210,7 @@ export default function History() {
                     {hasNotes && (
                       <>
                         <hr className="history-card-divider" />
-                        <div className="history-card-note">{session.notes}</div>
+                        <div className="history-card-note"><ReactMarkdown>{session.notes}</ReactMarkdown></div>
                       </>
                     )}
                   </button>
