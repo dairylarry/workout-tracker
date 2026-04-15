@@ -52,6 +52,99 @@
   font-weight: 600;
   min-width: 9rem;
   text-align: center;
+  background: none;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  padding: 0.3rem 0.7rem;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.history-month-label:active {
+  background: #f5f5f5;
+}
+
+@media (hover: hover) {
+  .history-month-label:hover {
+    background: #f5f5f5;
+  }
+}
+
+/* Month picker */
+.month-picker {
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  padding: 0.75rem;
+  margin-bottom: 0.75rem;
+}
+
+.month-picker-year-nav {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  margin-bottom: 0.75rem;
+}
+
+.month-picker-year-arrow {
+  background: none;
+  border: none;
+  font-size: 1rem;
+  cursor: pointer;
+  padding: 0.25rem 0.5rem;
+  color: #111;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.month-picker-year-arrow:disabled {
+  color: #ccc;
+  cursor: default;
+}
+
+.month-picker-year-label {
+  font-size: 0.95rem;
+  font-weight: 600;
+  min-width: 3rem;
+  text-align: center;
+}
+
+.month-picker-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 6px;
+}
+
+.month-picker-cell {
+  background: #f5f5f5;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  padding: 0.45rem 0;
+  font-size: 0.85rem;
+  cursor: pointer;
+  text-align: center;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.month-picker-cell:disabled {
+  color: #ccc;
+  cursor: default;
+  background: none;
+}
+
+.month-picker-cell:not(:disabled):active {
+  background: #e5e5e5;
+}
+
+@media (hover: hover) {
+  .month-picker-cell:not(:disabled):hover {
+    background: #e5e5e5;
+  }
+}
+
+.month-picker-cell-active {
+  background: #1a1a1a !important;
+  color: #fff;
 }
 
 /* Calendar grid */

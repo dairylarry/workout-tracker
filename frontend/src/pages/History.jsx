@@ -10,7 +10,18 @@ const MONTH_NAMES = [
   'January', 'February', 'March', 'April', 'May', 'June',
   'July', 'August', 'September', 'October', 'November', 'December',
 ]
+const MONTH_ABBR = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
 const DAY_LABELS = ['S', 'M', 'T', 'W', 'T', 'F', 'S']
+const RESTORE_KEY = 'history-restore-state'
+
+function readRestoreState() {
+  try {
+    const raw = sessionStorage.getItem(RESTORE_KEY)
+    if (!raw) return null
+    sessionStorage.removeItem(RESTORE_KEY)
+    return JSON.parse(raw)
+  } catch { return null }
+}
 
 function formatDate(dateStr) {
   const [y, m, d] = dateStr.split('-').map(Number)
@@ -24,9 +35,17 @@ export default function History() {
   const [loading, setLoading] = useState(true)
 
   const now = new Date()
-  const [year, setYear] = useState(now.getFullYear())
-  const [month, setMonth] = useState(now.getMonth())
-  const [selectedWeek, setSelectedWeek] = useState(null)
+
+  // Restore from back-navigation if available (cleared immediately so refresh doesn't restore)
+  const [restored] = useState(() => readRestoreState())
+
+  const [year, setYear] = useState(restored?.year ?? now.getFullYear())
+  const [month, setMonth] = useState(restored?.month ?? now.getMonth())
+  const [selectedWeek, setSelectedWeek] = useState(restored?.selectedWeek ?? null)
+
+  // Month picker state
+  const [pickerOpen, setPickerOpen] = useState(false)
+  const [pickerYear, setPickerYear] = useState(year)
 
   useEffect(() => {
     if (!program) return
@@ -45,19 +64,6 @@ export default function History() {
     }
     load()
   }, [program])
-
-  // Auto-select current week (or previous week) after data loads
-  useEffect(() => {
-    if (loading) return
-    const todayStr = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`
-    const currentWeekIdx = weeks.findIndex(row => row.includes(todayStr))
-    if (currentWeekIdx === -1) return
-    if (weeks[currentWeekIdx].some(d => d && completedDates.has(d))) {
-      setSelectedWeek(currentWeekIdx)
-    } else if (currentWeekIdx > 0 && weeks[currentWeekIdx - 1].some(d => d && completedDates.has(d))) {
-      setSelectedWeek(currentWeekIdx - 1)
-    }
-  }, [loading])
 
   const sessionsByDate = useMemo(() => {
     const map = {}
@@ -109,8 +115,24 @@ export default function History() {
     return rows
   }, [year, month])
 
+  // Auto-select current week (or previous week) after data loads — skipped if restoring from back-nav
+  useEffect(() => {
+    if (loading) return
+    if (restored) return
+    if (completedDates.size === 0) return
+    const todayStr = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`
+    const currentWeekIdx = weeks.findIndex(row => row.includes(todayStr))
+    if (currentWeekIdx === -1) return
+    if (weeks[currentWeekIdx].some(d => d && completedDates.has(d))) {
+      setSelectedWeek(currentWeekIdx)
+    } else if (currentWeekIdx > 0 && weeks[currentWeekIdx - 1].some(d => d && completedDates.has(d))) {
+      setSelectedWeek(currentWeekIdx - 1)
+    }
+  }, [loading])
+
   function goBack() {
     setSelectedWeek(null)
+    setPickerOpen(false)
     if (month === 0) {
       setMonth(11)
       setYear(y => y - 1)
@@ -122,12 +144,20 @@ export default function History() {
   function goForward() {
     if (isCurrentMonth) return
     setSelectedWeek(null)
+    setPickerOpen(false)
     if (month === 11) {
       setMonth(0)
       setYear(y => y + 1)
     } else {
       setMonth(m => m + 1)
     }
+  }
+
+  function selectMonth(y, m) {
+    setYear(y)
+    setMonth(m)
+    setSelectedWeek(null)
+    setPickerOpen(false)
   }
 
   const selectedWeekSessions = useMemo(() => {
@@ -141,6 +171,11 @@ export default function History() {
     }
     return out.sort((a, b) => a.date.localeCompare(b.date))
   }, [selectedWeek, weeks, sessionsByDate])
+
+  function handleCardClick(session) {
+    sessionStorage.setItem(RESTORE_KEY, JSON.stringify({ year, month, selectedWeek }))
+    navigate(`/history/${session.sessionType}/${session.date}`)
+  }
 
   return (
     <div className="history">
@@ -157,13 +192,58 @@ export default function History() {
             ) : (
               <span className="history-arrow history-arrow-hidden">←</span>
             )}
-            <span className="history-month-label">{MONTH_NAMES[month]} {year}</span>
+            <button
+              className="history-month-label"
+              onClick={() => {
+                setPickerYear(year)
+                setPickerOpen(o => !o)
+              }}
+            >
+              {MONTH_NAMES[month]} {year} ▾
+            </button>
             {!isCurrentMonth ? (
               <button className="history-arrow" onClick={goForward}>→</button>
             ) : (
               <span className="history-arrow history-arrow-hidden">→</span>
             )}
           </div>
+
+          {pickerOpen && (
+            <div className="month-picker">
+              <div className="month-picker-year-nav">
+                <button
+                  className="month-picker-year-arrow"
+                  onClick={() => setPickerYear(y => y - 1)}
+                  disabled={earliest && pickerYear <= earliest.year}
+                >←</button>
+                <span className="month-picker-year-label">{pickerYear}</span>
+                <button
+                  className="month-picker-year-arrow"
+                  onClick={() => setPickerYear(y => y + 1)}
+                  disabled={pickerYear >= now.getFullYear()}
+                >→</button>
+              </div>
+              <div className="month-picker-grid">
+                {MONTH_ABBR.map((abbr, i) => {
+                  const isFuture = pickerYear > now.getFullYear() ||
+                    (pickerYear === now.getFullYear() && i > now.getMonth())
+                  const isTooEarly = earliest &&
+                    (pickerYear < earliest.year || (pickerYear === earliest.year && i < earliest.month))
+                  const isActive = pickerYear === year && i === month
+                  return (
+                    <button
+                      key={i}
+                      className={`month-picker-cell${isActive ? ' month-picker-cell-active' : ''}`}
+                      disabled={isFuture || isTooEarly}
+                      onClick={() => selectMonth(pickerYear, i)}
+                    >
+                      {abbr}
+                    </button>
+                  )
+                })}
+              </div>
+            </div>
+          )}
 
           <div className="month-grid-container">
             <div className="month-day-labels">
@@ -214,8 +294,8 @@ export default function History() {
                     role="button"
                     tabIndex={0}
                     className="history-card"
-                    onClick={() => navigate(`/history/${session.sessionType}/${session.date}`)}
-                    onKeyDown={e => { if (e.key === 'Enter' || e.key === ' ') navigate(`/history/${session.sessionType}/${session.date}`) }}
+                    onClick={() => handleCardClick(session)}
+                    onKeyDown={e => { if (e.key === 'Enter' || e.key === ' ') handleCardClick(session) }}
                   >
                     <div className="history-card-top">
                       <span className="history-date">{formatDate(session.date)}</span>
@@ -254,7 +334,7 @@ export default function History() {
             </div>
           )}
 
-          {!loading && sessions.length === 0 && (
+          {sessions.length === 0 && (
             <p className="empty">No sessions logged yet.</p>
           )}
         </>
