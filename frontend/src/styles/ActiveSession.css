@@ -16,14 +16,19 @@
 }
 
 .toggle-menu {
-  display: flex;
-  flex-direction: column;
-  gap: 0;
+  display: grid;
+  grid-template-columns: auto auto;
+  justify-content: start;
+  column-gap: 1.5rem;
 }
 
-.toggle-row {
+.toggle-menu-single-row {
   display: flex;
-  justify-content: space-around;
+  gap: 1.5rem;
+}
+
+.toggle-menu-full-row {
+  grid-column: 1 / -1;
 }
 
 .deload-toggle {
