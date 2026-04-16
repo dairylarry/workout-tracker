@@ -20,11 +20,13 @@
   grid-template-columns: auto auto;
   justify-content: start;
   column-gap: 1.5rem;
+  padding-left: 15%;
 }
 
 .toggle-menu-single-row {
   display: flex;
   gap: 1.5rem;
+  padding-left: 15%;
 }
 
 .toggle-menu-full-row {
