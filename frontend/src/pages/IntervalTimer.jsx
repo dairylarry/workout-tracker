@@ -1,8 +1,9 @@
 import { useState, useRef, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { getCoreRoutines, recordCoreRoutineCompletion } from '../lib/dynamodb'
+import { getCoreRoutines, getCoreRoutineCompletions, recordCoreRoutineCompletion } from '../lib/dynamodb'
 import { unfurlRoutine, computeRoutineStats, formatDuration } from '../lib/unfurl'
 import '../styles/CoreTimer.css'
+import '../styles/CoreSelect.css'
 
 // NOTE: Renamed from CoreTimer → IntervalTimer. CSS classes remain "core-*".
 // "Core workouts" and "interval workouts" refer to the same thing — the timed
@@ -160,12 +161,18 @@ export default function IntervalTimer() {
   const [display, setDisplay] = useState({})
   const [pausedAt, setPausedAt] = useState(0)
   const [loading, setLoading] = useState(true)
+  const [completionCounts, setCompletionCounts] = useState({})
+  const [notesExpanded, setNotesExpanded] = useState(false)
+  const [progExpanded, setProgExpanded] = useState(false)
 
   // ── Load routines from DynamoDB ──
   useEffect(() => {
     async function load() {
-      const items = await getCoreRoutines()
+      const [items, completions] = await Promise.all([getCoreRoutines(), getCoreRoutineCompletions()])
       setRoutines(items)
+      const counts = {}
+      for (const c of completions) counts[c.routineId] = (counts[c.routineId] || 0) + 1
+      setCompletionCounts(counts)
       const savedId = localStorage.getItem(LS_KEY) || DEFAULT_ROUTINE_ID
       const found = items.find(r => r.id === savedId) || items[0] || null
       setSelectedRoutine(found)
@@ -375,17 +382,72 @@ export default function IntervalTimer() {
 
   // ── Idle ──
   if (timerState === 'idle') {
+    const doneCount = completionCounts[selectedRoutine?.id] || 0
+    const duration = stats ? formatDuration(stats.totalSeconds + COUNTDOWN_S) : ''
+
     return (
       <div className="core-timer idle">
         <button className="core-btn core-btn-back core-btn-back-top" onClick={() => navigate('/')}>
           ← Back
         </button>
-        <div className="core-timer-idle-info">
-          <h2 className="core-timer-name">{selectedRoutine?.name || 'No routine selected'}</h2>
-          {stats && (
-            <p className="core-timer-duration">{formatDuration(stats.totalSeconds + COUNTDOWN_S)}</p>
-          )}
-        </div>
+
+        {selectedRoutine ? (
+          <div className="routine-card idle-preview-card">
+            <div className="routine-card-header">
+              <span className="routine-card-name">{selectedRoutine.name}</span>
+              <span className="routine-card-badges">
+                <span className="badge badge-cat">{selectedRoutine.category}</span>
+                <span className="badge badge-diff">{selectedRoutine.difficulty}/5</span>
+              </span>
+            </div>
+            <p className="routine-card-meta">
+              {selectedRoutine.equipment} · {duration} · {stats?.exerciseCount} exercises
+              {doneCount > 0 && <span className="routine-card-done"> · done ×{doneCount}</span>}
+            </p>
+            {selectedRoutine.notes && (
+              <p
+                className={`routine-card-notes${notesExpanded ? ' expanded' : ''}`}
+                onClick={() => setNotesExpanded(p => !p)}
+              >
+                {selectedRoutine.notes}
+              </p>
+            )}
+            <div className="routine-card-exercises">
+              {selectedRoutine.routine.map((block, bi) => (
+                <div key={bi} className="routine-block">
+                  {block.label && block.numberOfTimes > 1 ? (
+                    <p className="block-label">{block.label} ×{block.numberOfTimes}</p>
+                  ) : block.label ? (
+                    <p className="block-label">{block.label}</p>
+                  ) : block.numberOfTimes > 1 ? (
+                    <p className="block-label">×{block.numberOfTimes}</p>
+                  ) : null}
+                  {block.exercises.map((ex, ei) => (
+                    <p key={ei} className="routine-exercise-row">
+                      {ex.name} · {ex.workSeconds}s
+                    </p>
+                  ))}
+                </div>
+              ))}
+            </div>
+            {selectedRoutine.progressions?.length > 0 && (
+              <div
+                className="routine-card-prog"
+                onClick={() => setProgExpanded(p => !p)}
+              >
+                <p className="prog-toggle">{progExpanded ? '▾' : '▸'} How to progress</p>
+                {progExpanded && (
+                  <ul className="prog-list">
+                    {selectedRoutine.progressions.map((p, i) => <li key={i}>{p}</li>)}
+                  </ul>
+                )}
+              </div>
+            )}
+          </div>
+        ) : (
+          <p className="core-timer-name">No routine selected</p>
+        )}
+
         <div className="core-timer-actions">
           <button className="core-btn core-btn-start" onClick={() => handleStart()} disabled={!selectedRoutine}>
             Start

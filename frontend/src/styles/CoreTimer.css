@@ -12,21 +12,25 @@
 
 /* ── Idle state ── */
 
-.core-timer-idle-info {
-  text-align: center;
+.core-timer.idle {
+  justify-content: flex-start;
+  overflow-y: auto;
+}
+
+.idle-preview-card {
+  width: 100%;
+  max-width: 400px;
+  cursor: default;
+}
+
+.idle-preview-card:active {
+  background: #fff;
 }
 
 .core-timer-name {
   font-size: 1.4rem;
   font-weight: 600;
   margin: 0 0 0.5rem;
-}
-
-.core-timer-duration {
-  font-size: 1.1rem;
-  color: #666;
-  margin: 0;
-  font-family: monospace;
 }
 
 /* ── Running state ── */
