@@ -23,7 +23,7 @@
   cursor: default;
 }
 
-.idle-preview-card:active {
+.routine-card.idle-preview-card:active {
   background: #fff;
 }
 
