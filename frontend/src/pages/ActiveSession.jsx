@@ -596,7 +596,7 @@ export default function ActiveSession() {
           crossSession: s.sessionType !== sessionType,
         }
       })
-      .filter(Boolean)
+      .filter(h => h && h.sets?.some(s => s.weight || s.reps))
   }
 
   function cycleHistory(exName) {
