@@ -7,10 +7,10 @@ export const PROGRAM = {
       focus: 'Strength + Hypertrophy',
       exercises: [
         { slotId: 'la-squat',     name: 'Barbell Back Squat', sets: 0, repRange: null, rir: null, rest: '3–4 min', is531: true, note: '5s PRO — track manually' },
-        { slotId: 'la-legpress',  name: 'Leg Press', sets: 3, repRange: [10, 12], rir: 2, rest: '90 sec', subs: [{ name: 'Bulgarian Split Squat', sets: 2, repRange: [8, 8], rir: 2, perSide: true }, 'Goblet Squat'] },
+        { slotId: 'la-legpress',  name: 'Leg Press', sets: 3, repRange: [10, 12], rir: 2, rest: '90 sec', subs: [{ name: 'Bulgarian Split Squat', sets: 2, repRange: [8, 8], rir: 2, perSide: true }, 'Goblet Squat', 'Seated Leg Press Machine'] },
         { slotId: 'la-rdl',       name: 'Romanian Deadlift', sets: 3, repRange: [6, 10], rir: 2, rest: '2 min', subs: ['DB Romanian Deadlift', 'KB Romanian Deadlift'] },
         { slotId: 'la-hipthrust', name: 'Barbell Hip Thrust', sets: 2, repRange: [8, 12], rir: 2, rest: '90 sec', subs: ['DB Hip Thrust', 'KB Hip Thrust', 'Cable Hip Thrust'] },
-        { slotId: 'la-calf',      name: 'Standing Calf Raise', sets: 3, repRange: [15, 20], rir: 1, rest: '60 sec', subs: ['Single-Leg DB Calf Raise', 'Standing Calf Raise Machine'] },
+        { slotId: 'la-calf',      name: 'Standing Calf Raise', sets: 3, repRange: [15, 20], rir: 1, rest: '60 sec', subs: ['Single-Leg DB Calf Raise', 'Standing Calf Raise Machine', 'Leg Press Calf Raise'] },
       ],
     },
     'upper-a': {
@@ -37,7 +37,7 @@ export const PROGRAM = {
         { slotId: 'lb-legcurl', name: 'Seated Leg Curl', sets: 3, repRange: [10, 12], rir: 1, rest: '90 sec', subs: [{ name: 'Nordic Curl', sets: 2, repRange: [5, 8], rir: 2 }, { name: 'Glute Ham Raise', sets: 2, repRange: [5, 8], rir: 2 }, 'Lying Leg Curl'] },
         { slotId: 'lb-rdl',     name: 'Single-Leg Romanian Deadlift', sets: 2, repRange: [8, 10], rir: 2, rest: '90 sec', perSide: true, subs: ['DB Single-Leg RDL', 'KB Single-Leg RDL'] },
         { slotId: 'lb-legext',  name: 'Leg Extension', sets: 3, repRange: [10, 12], rir: 1, rest: '60 sec', superset: 'A', subs: ['Cable Leg Extension'] },
-        { slotId: 'lb-calf',    name: 'Seated Calf Raise', sets: 3, repRange: [15, 20], rir: 1, rest: '60 sec', superset: 'A', subs: ['Seated DB Calf Raise'] },
+        { slotId: 'lb-calf',    name: 'Seated Calf Raise', sets: 3, repRange: [15, 20], rir: 1, rest: '60 sec', superset: 'A', subs: ['Seated DB Calf Raise', 'Leg Press Calf Raise'] },
       ],
     },
     'upper-b': {
@@ -51,7 +51,7 @@ export const PROGRAM = {
         { slotId: 'ub-fly',      name: 'Incline Cable Fly', sets: 3, repRange: [10, 12], rir: 1, rest: '60 sec', subs: ['Incline DB Fly', 'Pec Deck', 'Flat Cable Fly', 'Decline Cable Fly'] },
         { slotId: 'ub-facepull', name: 'Cable Face Pull', sets: 3, repRange: [12, 15], rir: 1, rest: '60 sec', superset: 'A', subs: ['Rear Delt Fly', 'Reverse Cable Crossover', 'Lying DB Reverse Fly'] },
         { slotId: 'ub-lateral',  name: 'Cable Lateral Raise', sets: 4, repRange: [12, 15], rir: 1, rest: '60 sec', superset: 'A', subs: ['DB Lateral Raise', 'Incline Dumbbell Y Raise', 'Machine Lateral Raise'] },
-        { slotId: 'ub-tri',      name: 'Cable Overhead Tricep Extension', sets: 2, repRange: [10, 12], rir: 1, rest: '60 sec', superset: 'B', subs: ['DB Overhead Tricep Extension'] },
+        { slotId: 'ub-tri',      name: 'Cable Overhead Tricep Extension', sets: 2, repRange: [10, 12], rir: 1, rest: '60 sec', superset: 'B', subs: ['DB Overhead Tricep Extension', 'Skullcrusher'] },
         { slotId: 'ub-curl',     name: 'Hammer Curl', sets: 3, repRange: [10, 12], rir: 1, rest: '60 sec', superset: 'B', subs: ['Cross-Body Hammer Curl'] },
       ],
     },

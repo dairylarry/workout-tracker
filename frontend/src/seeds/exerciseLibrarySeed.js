@@ -8,6 +8,7 @@ export const EXERCISE_SEED = [
   // Lower body — quads
   { name: 'Barbell Back Squat', muscleGroups: [MG.QUADS, MG.GLUTES], family: FAM.SQUAT, defaultRepRange: [5, 5], defaultSets: 3 },
   { name: 'Leg Press', muscleGroups: [MG.QUADS, MG.GLUTES], family: FAM.SQUAT, defaultRepRange: [10, 12], defaultSets: 3 },
+  { name: 'Seated Leg Press Machine', muscleGroups: [MG.QUADS, MG.GLUTES], family: FAM.SQUAT, defaultRepRange: [10, 12], defaultSets: 3 },
   { name: 'Bulgarian Split Squat', muscleGroups: [MG.QUADS, MG.GLUTES], family: FAM.SQUAT, defaultRepRange: [8, 12], defaultSets: 3, unilateral: true },
   { name: 'Goblet Squat', muscleGroups: [MG.QUADS, MG.GLUTES], family: FAM.SQUAT, defaultRepRange: [8, 12], defaultSets: 3 },
   { name: 'Pendulum Squat', muscleGroups: [MG.QUADS], family: FAM.SQUAT, defaultRepRange: [8, 12], defaultSets: 3 },
@@ -42,6 +43,7 @@ export const EXERCISE_SEED = [
   { name: 'Single-Leg DB Calf Raise', muscleGroups: [MG.CALVES], family: FAM.CALF_RAISE, defaultRepRange: [15, 20], defaultSets: 3, unilateral: true },
   { name: 'Seated Calf Raise', muscleGroups: [MG.CALVES], family: FAM.CALF_RAISE, defaultRepRange: [15, 20], defaultSets: 3 },
   { name: 'Seated DB Calf Raise', muscleGroups: [MG.CALVES], family: FAM.CALF_RAISE, defaultRepRange: [15, 20], defaultSets: 3 },
+  { name: 'Leg Press Calf Raise', muscleGroups: [MG.CALVES], family: FAM.CALF_RAISE, defaultRepRange: [15, 20], defaultSets: 3 },
 
   // Upper body — chest
   { name: 'Flat Barbell Bench Press', muscleGroups: [MG.CHEST, MG.TRICEPS], family: FAM.PRESS, defaultRepRange: [5, 5], defaultSets: 3 },
@@ -88,6 +90,7 @@ export const EXERCISE_SEED = [
   { name: 'Band Tricep Pushdown', muscleGroups: [MG.TRICEPS], family: FAM.PUSHDOWN, defaultRepRange: [10, 12], defaultSets: 4 },
   { name: 'Cable Overhead Tricep Extension', muscleGroups: [MG.TRICEPS], family: FAM.EXTENSION, defaultRepRange: [10, 12], defaultSets: 2 },
   { name: 'DB Overhead Tricep Extension', muscleGroups: [MG.TRICEPS], family: FAM.EXTENSION, defaultRepRange: [10, 12], defaultSets: 2 },
+  { name: 'Skullcrusher', muscleGroups: [MG.TRICEPS], family: FAM.EXTENSION, defaultRepRange: [8, 12], defaultSets: 3 },
 
   // Upper body — biceps
   { name: 'Incline DB Curl', muscleGroups: [MG.BICEPS], family: FAM.CURL, defaultRepRange: [10, 12], defaultSets: 3 },
@@ -102,4 +105,5 @@ export const EXERCISE_SEED = [
 
   // Abs
   { name: 'Cable Crunch', muscleGroups: [MG.CORE], family: FAM.ABS, defaultRepRange: [15, 20], defaultSets: 4 },
+  { name: 'Hanging Leg Raise', muscleGroups: [MG.CORE], family: FAM.ABS, defaultRepRange: [8, 15], defaultSets: 3 },
 ]
