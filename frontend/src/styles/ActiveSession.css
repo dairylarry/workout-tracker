@@ -81,57 +81,91 @@
   margin-bottom: 0.25rem;
 }
 
-.swap-btn {
+.kebab-btn {
   background: none;
   border: 1px solid #ccc;
   border-radius: 3px;
-  font-size: 0.7rem;
-  padding: 0.2rem 0.5rem;
-  min-width: 2.8rem; /* swap-btn default */
+  font-size: 0.85rem;
+  padding: 0.15rem 0.45rem;
   cursor: pointer;
   color: #666;
+  letter-spacing: 0.05em;
   -webkit-tap-highlight-color: transparent;
 }
 
-.swap-btn:active {
-  background: #f0f0f0;
-}
-
-.set-count-btn {
-  width: 3.2rem;
-}
-
-.swap-btn--active {
+.kebab-btn:active,
+.kebab-btn--active {
   background: #f0f0f0;
   border-color: #999;
   color: #333;
 }
 
-.set-edit-controls {
+.kebab-panel {
+  background: #fafafa;
+  border: 1px solid #e5e5e5;
+  border-radius: 4px;
+  padding: 0.5rem 0.6rem;
+  margin: 0.4rem 0;
   display: flex;
-  gap: 0.4rem;
-  margin-top: 0.4rem;
+  align-items: center;
+  gap: 0.6rem;
 }
 
-.set-edit-btn {
+.kebab-swap-btn {
   flex: 1;
-  padding: 0.35rem 0;
+  padding: 0.3rem 0.5rem;
   border: 1px solid #ccc;
   border-radius: 3px;
   font-size: 0.75rem;
-  background: #fafafa;
+  background: #fff;
   color: #555;
   cursor: pointer;
+  text-align: left;
   -webkit-tap-highlight-color: transparent;
 }
 
-.set-edit-btn:active {
+.kebab-swap-btn:active,
+.kebab-swap-btn--active {
+  background: #f0f0f0;
+  border-color: #999;
+}
+
+.kebab-counter {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  flex-shrink: 0;
+}
+
+.kebab-counter-btn {
+  width: 2rem;
+  height: 2rem;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+  font-size: 1rem;
+  background: #fff;
+  color: #555;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.kebab-counter-btn:active {
   background: #f0f0f0;
 }
 
-.set-edit-btn--remove:disabled {
+.kebab-counter-btn:disabled {
   opacity: 0.35;
   cursor: default;
+}
+
+.kebab-counter-label {
+  font-size: 0.78rem;
+  color: #555;
+  min-width: 3rem;
+  text-align: center;
 }
 
 .swapped-from {

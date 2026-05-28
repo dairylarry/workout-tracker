@@ -42,10 +42,10 @@ const PROGRAM_PK = 'PROGRAM#spring2026'
 
 const TO_DELETE = ['upper-a-5', 'upper-b-5']
 
-for (const stId of TO_DELETE) {
+await Promise.all(TO_DELETE.map(async stId => {
   const key = { PK: PROGRAM_PK, SK: `SESSION_TYPE#${stId}` }
   await db.send(new DeleteCommand({ TableName: TABLE, Key: key }))
   console.log(`Deleted ${stId}`)
-}
+}))
 
 console.log('Done.')

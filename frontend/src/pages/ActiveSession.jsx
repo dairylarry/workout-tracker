@@ -123,13 +123,12 @@ export default function ActiveSession() {
   const [startedAt, setStartedAt] = useState(null)
   const [deload, setDeload] = useState(false)
   const [fiveDay, setFiveDay] = useState(false)
-  const [simplify, setSimplify] = useState(true)
   const [recentSessions, setRecentSessions] = useState([])
   const [historyLevel, setHistoryLevel] = useState({})
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
-  const [swapOpen, setSwapOpen] = useState(null) // index of exercise with swap open
-  const [setEditOpen, setSetEditOpen] = useState(null) // index of exercise with ± panel open
+  const [swapOpen, setSwapOpen] = useState(null) // exIndex with swap picker open
+  const [kebabOpen, setKebabOpen] = useState(null) // exIndex with kebab panel open
   const [notes, setNotes] = useState('')
   const [addonFilter, setAddonFilter] = useState('')
   const [addonFamilyFilter, setAddonFamilyFilter] = useState('')
@@ -457,7 +456,7 @@ export default function ActiveSession() {
       return updated
     })
     setSwapOpen(null)
-    setSetEditOpen(null)
+    setKebabOpen(null)
   }
 
   function handleResetSwap(exIndex) {
@@ -473,7 +472,7 @@ export default function ActiveSession() {
       return updated
     })
     setSwapOpen(null)
-    setSetEditOpen(null)
+    setKebabOpen(null)
   }
 
 
@@ -513,7 +512,7 @@ export default function ActiveSession() {
     })
     setConfirmRemoveAddon(null)
     setSwapOpen(null)
-    setSetEditOpen(null)
+    setKebabOpen(null)
   }
 
   const [saveStatus, setSaveStatus] = useState(null)
@@ -621,153 +620,78 @@ export default function ActiveSession() {
         {startedAt && ` · started ${new Date(startedAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false })}`}
       </p>
 
-      <div className={fiveDayReductions ? 'toggle-menu' : 'toggle-menu-single-row'}>
-        {fiveDayReductions ? (
-          <>
-            <label className="deload-toggle">
-              <input
-                type="checkbox"
-                checked={simplify}
-                onChange={e => {
-                  setSimplify(e.target.checked)
-                  if (e.target.checked) {
-                    setSwapOpen(null)
-                    setSetEditOpen(null)
-                    setConfirmRemoveAddon(null)
-                    setAddonFilter('')
-                    setAddonFamilyFilter('')
+      <div className="toggle-menu-single-row">
+        <label className="deload-toggle">
+          <input
+            type="checkbox"
+            checked={deload}
+            onChange={e => {
+              const isDeload = e.target.checked
+              setDeload(isDeload)
+              updateSessionField(sessionType, date, 'deload', isDeload)
+              setExercises(prev => {
+                const updated = prev.map(ex => {
+                  if (!ex.is531 || !ex.trainingMax) return ex
+                  const newSets = isDeload
+                    ? getDeloadSets(ex.trainingMax)
+                    : getSetsForWeek(ex.week || 1, ex.trainingMax)
+                  return {
+                    ...ex,
+                    sets: newSets.map((s, i) => ({
+                      setNumber: i + 1,
+                      target: s.target,
+                      label: s.label,
+                      isWarmup: s.isWarmup,
+                      weight: '',
+                      reps: '',
+                      rir: '',
+                    })),
                   }
-                }}
-              />
-              Simplify view
-            </label>
-            <label className="deload-toggle">
-              <input
-                type="checkbox"
-                checked={deload}
-                onChange={e => {
-                  const isDeload = e.target.checked
-                  setDeload(isDeload)
-                  updateSessionField(sessionType, date, 'deload', isDeload)
-                  setExercises(prev => {
-                    const updated = prev.map(ex => {
-                      if (!ex.is531 || !ex.trainingMax) return ex
-                      const newSets = isDeload
-                        ? getDeloadSets(ex.trainingMax)
-                        : getSetsForWeek(ex.week || 1, ex.trainingMax)
-                      return {
-                        ...ex,
-                        sets: newSets.map((s, i) => ({
-                          setNumber: i + 1,
-                          target: s.target,
-                          label: s.label,
-                          isWarmup: s.isWarmup,
-                          weight: '',
-                          reps: '',
-                          rir: '',
-                        })),
-                      }
-                    })
-                    updateSessionExercises(sessionType, date, updated).catch(e =>
-                      console.error('Failed to save deload change:', e)
-                    )
-                    return updated
+                })
+                updateSessionExercises(sessionType, date, updated).catch(e =>
+                  console.error('Failed to save deload change:', e)
+                )
+                return updated
+              })
+            }}
+          />
+          Deload week
+        </label>
+        {fiveDayReductions && (
+          <label className="deload-toggle">
+            <input
+              type="checkbox"
+              checked={fiveDay}
+              onChange={e => {
+                const isFiveDay = e.target.checked
+                setFiveDay(isFiveDay)
+                updateSessionField(sessionType, date, 'fiveDay', isFiveDay)
+                setExercises(prev => {
+                  const updated = prev.map(ex => {
+                    const reduction = fiveDayReductions[ex.name]
+                    if (!reduction) return ex
+                    if (isFiveDay) {
+                      return { ...ex, sets: ex.sets.slice(0, -reduction) }
+                    } else {
+                      const lastNum = ex.sets.length
+                      const restored = Array.from({ length: reduction }, (_, i) => ({
+                        setNumber: lastNum + i + 1,
+                        weight: '',
+                        reps: '',
+                        rir: '',
+                      }))
+                      return { ...ex, sets: [...ex.sets, ...restored] }
+                    }
                   })
-                }}
-              />
-              Deload week
-            </label>
-            <label className="deload-toggle toggle-menu-full-row">
-              <input
-                type="checkbox"
-                checked={fiveDay}
-                onChange={e => {
-                  const isFiveDay = e.target.checked
-                  setFiveDay(isFiveDay)
-                  updateSessionField(sessionType, date, 'fiveDay', isFiveDay)
-                  setExercises(prev => {
-                    const updated = prev.map(ex => {
-                      const reduction = fiveDayReductions[ex.name]
-                      if (!reduction) return ex
-                      if (isFiveDay) {
-                        return { ...ex, sets: ex.sets.slice(0, -reduction) }
-                      } else {
-                        const lastNum = ex.sets.length
-                        const restored = Array.from({ length: reduction }, (_, i) => ({
-                          setNumber: lastNum + i + 1,
-                          weight: '',
-                          reps: '',
-                          rir: '',
-                        }))
-                        return { ...ex, sets: [...ex.sets, ...restored] }
-                      }
-                    })
-                    updateSessionExercises(sessionType, date, updated).catch(e =>
-                      console.error('Failed to save 5-day change:', e)
-                    )
-                    return updated
-                  })
-                }}
-              />
-              5-day week
-            </label>
-          </>
-        ) : (
-          <>
-            <label className="deload-toggle">
-              <input
-                type="checkbox"
-                checked={simplify}
-                onChange={e => {
-                  setSimplify(e.target.checked)
-                  if (e.target.checked) {
-                    setSwapOpen(null)
-                    setSetEditOpen(null)
-                    setConfirmRemoveAddon(null)
-                    setAddonFilter('')
-                    setAddonFamilyFilter('')
-                  }
-                }}
-              />
-              Simplify view
-            </label>
-            <label className="deload-toggle">
-              <input
-                type="checkbox"
-                checked={deload}
-                onChange={e => {
-                  const isDeload = e.target.checked
-                  setDeload(isDeload)
-                  updateSessionField(sessionType, date, 'deload', isDeload)
-                  setExercises(prev => {
-                    const updated = prev.map(ex => {
-                      if (!ex.is531 || !ex.trainingMax) return ex
-                      const newSets = isDeload
-                        ? getDeloadSets(ex.trainingMax)
-                        : getSetsForWeek(ex.week || 1, ex.trainingMax)
-                      return {
-                        ...ex,
-                        sets: newSets.map((s, i) => ({
-                          setNumber: i + 1,
-                          target: s.target,
-                          label: s.label,
-                          isWarmup: s.isWarmup,
-                          weight: '',
-                          reps: '',
-                          rir: '',
-                        })),
-                      }
-                    })
-                    updateSessionExercises(sessionType, date, updated).catch(e =>
-                      console.error('Failed to save deload change:', e)
-                    )
-                    return updated
-                  })
-                }}
-              />
-              Deload week
-            </label>
-          </>
+                  updateSessionExercises(sessionType, date, updated).catch(e =>
+                    console.error('Failed to save 5-day change:', e)
+                  )
+                  return updated
+                })
+              }}
+            />
+            5-day week
+          </label>
         )}
       </div>
 
@@ -897,30 +821,19 @@ export default function ActiveSession() {
               <div className="exercise-top-row">
                 <h3 className="exercise-name">{displayName}</h3>
                 <div className="exercise-controls">
-                  {!simplify && (
-                    <button
-                      className="swap-btn"
-                      onClick={() => { setSwapOpen(isSwapOpen ? null : exIndex); setSetEditOpen(null) }}
-                    >
-                      Swap
-                    </button>
-                  )}
-                  <select
+                  <button
                     className="unit-toggle"
-                    value={exercise.weightUnit || 'lbs'}
-                    onChange={e => handleUnitChange(exIndex, e.target.value)}
+                    onClick={() => handleUnitChange(exIndex, (exercise.weightUnit || 'lbs') === 'lbs' ? 'kg' : 'lbs')}
                   >
-                    <option value="lbs">lbs</option>
-                    <option value="kg">kg</option>
-                  </select>
-                  {!simplify && (
-                    <button
-                      className={`swap-btn set-count-btn${setEditOpen === exIndex ? ' swap-btn--active' : ''}`}
-                      onClick={() => { setSetEditOpen(setEditOpen === exIndex ? null : exIndex); setSwapOpen(null) }}
-                    >
-                      {setEditOpen === exIndex ? 'Done' : '±'}
-                    </button>
-                  )}
+                    {exercise.weightUnit || 'lbs'}
+                  </button>
+                  <button
+                    className={`kebab-btn${kebabOpen === exIndex ? ' kebab-btn--active' : ''}`}
+                    onClick={() => {
+                      if (kebabOpen === exIndex) { setKebabOpen(null); setSwapOpen(null) }
+                      else { setKebabOpen(exIndex); setSwapOpen(null) }
+                    }}
+                  >···</button>
                 </div>
               </div>
               {isSwapped && (
@@ -941,7 +854,27 @@ export default function ActiveSession() {
               )}
             </div>
 
-            {!simplify && isSwapOpen && (
+            {kebabOpen === exIndex && (
+              <div className="kebab-panel">
+                <button
+                  className={`kebab-swap-btn${isSwapOpen ? ' kebab-swap-btn--active' : ''}`}
+                  onClick={() => setSwapOpen(isSwapOpen ? null : exIndex)}
+                >
+                  ⇄ Swap exercise
+                </button>
+                <div className="kebab-counter">
+                  <button
+                    className="kebab-counter-btn"
+                    onClick={() => handleRemoveSet(exIndex)}
+                    disabled={exercise.sets.length <= 1}
+                  >−</button>
+                  <span className="kebab-counter-label">{exercise.sets.length} sets</span>
+                  <button className="kebab-counter-btn" onClick={() => handleAddSet(exIndex)}>+</button>
+                </div>
+              </div>
+            )}
+
+            {isSwapOpen && (
               <div className="swap-panel">
                 {exConfig.subs?.map(sub => {
                   const subName = typeof sub === 'object' ? sub.name : sub
@@ -1028,16 +961,6 @@ export default function ActiveSession() {
                 </div>
               ))}
             </div>
-            {!simplify && setEditOpen === exIndex && (
-              <div className="set-edit-controls">
-                <button
-                  className="set-edit-btn set-edit-btn--remove"
-                  onClick={() => handleRemoveSet(exIndex)}
-                  disabled={exercise.sets.length <= 1}
-                >− Set</button>
-                <button className="set-edit-btn" onClick={() => handleAddSet(exIndex)}>+ Set</button>
-              </div>
-            )}
           </div>
         )
       })}
@@ -1055,30 +978,19 @@ export default function ActiveSession() {
               <div className="exercise-top-row">
                 <h3 className="exercise-name">{displayName}</h3>
                 <div className="exercise-controls">
-                  {!simplify && (
-                    <button
-                      className="swap-btn"
-                      onClick={() => { setSwapOpen(isSwapOpen ? null : exIndex); setSetEditOpen(null); setAddonFilter(''); setAddonFamilyFilter('') }}
-                    >
-                      Swap
-                    </button>
-                  )}
-                  <select
+                  <button
                     className="unit-toggle"
-                    value={exercise.weightUnit || 'lbs'}
-                    onChange={e => handleUnitChange(exIndex, e.target.value)}
+                    onClick={() => handleUnitChange(exIndex, (exercise.weightUnit || 'lbs') === 'lbs' ? 'kg' : 'lbs')}
                   >
-                    <option value="lbs">lbs</option>
-                    <option value="kg">kg</option>
-                  </select>
-                  {!simplify && (
-                    <button
-                      className={`swap-btn set-count-btn${setEditOpen === exIndex ? ' swap-btn--active' : ''}`}
-                      onClick={() => { setSetEditOpen(setEditOpen === exIndex ? null : exIndex); setSwapOpen(null) }}
-                    >
-                      {setEditOpen === exIndex ? 'Done' : '±'}
-                    </button>
-                  )}
+                    {exercise.weightUnit || 'lbs'}
+                  </button>
+                  <button
+                    className={`kebab-btn${kebabOpen === exIndex ? ' kebab-btn--active' : ''}`}
+                    onClick={() => {
+                      if (kebabOpen === exIndex) { setKebabOpen(null); setSwapOpen(null); setAddonFilter(''); setAddonFamilyFilter('') }
+                      else { setKebabOpen(exIndex); setSwapOpen(null) }
+                    }}
+                  >···</button>
                 </div>
               </div>
               {isSwapped && (
@@ -1087,7 +999,27 @@ export default function ActiveSession() {
               <span className="addon-badge">Add-on</span>
             </div>
 
-            {!simplify && isSwapOpen && (() => {
+            {kebabOpen === exIndex && (
+              <div className="kebab-panel">
+                <button
+                  className={`kebab-swap-btn${isSwapOpen ? ' kebab-swap-btn--active' : ''}`}
+                  onClick={() => { setSwapOpen(isSwapOpen ? null : exIndex); if (!isSwapOpen) { setAddonFilter(''); setAddonFamilyFilter('') } }}
+                >
+                  ⇄ Swap exercise
+                </button>
+                <div className="kebab-counter">
+                  <button
+                    className="kebab-counter-btn"
+                    onClick={() => handleRemoveSet(exIndex)}
+                    disabled={exercise.sets.length <= 1}
+                  >−</button>
+                  <span className="kebab-counter-label">{exercise.sets.length} sets</span>
+                  <button className="kebab-counter-btn" onClick={() => handleAddSet(exIndex)}>+</button>
+                </div>
+              </div>
+            )}
+
+            {isSwapOpen && (() => {
               const filtered = exerciseLibrary
                 .filter(ex => {
                   if (addonFamilyFilter && ex.family !== addonFamilyFilter) return false
@@ -1197,41 +1129,27 @@ export default function ActiveSession() {
                 </div>
               ))}
             </div>
-            {!simplify && setEditOpen === exIndex && (
-              <div className="set-edit-controls">
-                <button
-                  className="set-edit-btn set-edit-btn--remove"
-                  onClick={() => handleRemoveSet(exIndex)}
-                  disabled={exercise.sets.length <= 1}
-                >− Set</button>
-                <button className="set-edit-btn" onClick={() => handleAddSet(exIndex)}>+ Set</button>
+            {confirmRemoveAddon === exIndex ? (
+              <div className="addon-remove-confirm">
+                <span>Remove?</span>
+                <button className="addon-remove-yes" onClick={() => handleRemoveSupplemental(exIndex)}>Yes</button>
+                <button className="addon-remove-no" onClick={() => setConfirmRemoveAddon(null)}>Cancel</button>
               </div>
-            )}
-            {!simplify && (
-              confirmRemoveAddon === exIndex ? (
-                <div className="addon-remove-confirm">
-                  <span>Remove?</span>
-                  <button className="addon-remove-yes" onClick={() => handleRemoveSupplemental(exIndex)}>Yes</button>
-                  <button className="addon-remove-no" onClick={() => setConfirmRemoveAddon(null)}>Cancel</button>
-                </div>
-              ) : (
-                <button className="addon-remove-btn" onClick={() => setConfirmRemoveAddon(exIndex)}>Remove</button>
-              )
+            ) : (
+              <button className="addon-remove-btn" onClick={() => setConfirmRemoveAddon(exIndex)}>Remove</button>
             )}
           </div>
         )
       })}
 
       {/* Add-on button */}
-      {!simplify && (
-        <button
-          className="addon-add-btn"
-          onClick={() => {
-            const cableCrunch = exerciseLibrary.find(ex => ex.name === 'Cable Crunch') || { name: 'Cable Crunch', defaultSets: 4 }
-            handleAddOnExercise(cableCrunch)
-          }}
-        >+ Add-on Exercise</button>
-      )}
+      <button
+        className="addon-add-btn"
+        onClick={() => {
+          const cableCrunch = exerciseLibrary.find(ex => ex.name === 'Cable Crunch') || { name: 'Cable Crunch', defaultSets: 4 }
+          handleAddOnExercise(cableCrunch)
+        }}
+      >+ Add-on Exercise</button>
 
       <div className="session-notes">
         <label className="session-notes-label" htmlFor="session-notes">Notes</label>
