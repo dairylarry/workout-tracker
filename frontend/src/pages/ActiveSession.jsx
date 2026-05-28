@@ -860,7 +860,7 @@ export default function ActiveSession() {
                   className={`kebab-swap-btn${isSwapOpen ? ' kebab-swap-btn--active' : ''}`}
                   onClick={() => setSwapOpen(isSwapOpen ? null : exIndex)}
                 >
-                  ⇄ Swap exercise
+                  ⇄ Swap Exercise
                 </button>
                 <div className="kebab-counter">
                   <button
@@ -1005,7 +1005,7 @@ export default function ActiveSession() {
                   className={`kebab-swap-btn${isSwapOpen ? ' kebab-swap-btn--active' : ''}`}
                   onClick={() => { setSwapOpen(isSwapOpen ? null : exIndex); if (!isSwapOpen) { setAddonFilter(''); setAddonFamilyFilter('') } }}
                 >
-                  ⇄ Swap exercise
+                  ⇄ Swap Exercise
                 </button>
                 <div className="kebab-counter">
                   <button
