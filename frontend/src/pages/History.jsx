@@ -54,7 +54,7 @@ export default function History() {
         const results = await Promise.all(
           Object.keys(program.sessionTypes).map(type => getAllSessionsForType(type))
         )
-        const all = results.flat().sort((a, b) => b.date.localeCompare(a.date))
+        const all = results.flat().filter(s => s.date).sort((a, b) => b.date.localeCompare(a.date))
         setSessions(all)
       } catch (e) {
         console.error('Failed to load history:', e)
