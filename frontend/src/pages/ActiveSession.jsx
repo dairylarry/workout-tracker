@@ -793,7 +793,7 @@ export default function ActiveSession() {
         // This surfaces appearances across other session types (e.g. Incline Cable Fly in both Upper A and Upper B)
         const libEntry = exerciseLibrary.find(e => e.name === displayName)
         const libHistory = (libEntry?.history || [])
-          .filter(h => h.date !== date && h.sets?.some(s => s.weight || s.reps))
+          .filter(h => h.date && h.date !== date && h.sets?.some(s => s.weight || s.reps))
           .map(h => ({
             date: h.date,
             sets: h.sets,
@@ -813,7 +813,7 @@ export default function ActiveSession() {
           if (!historySeen.has(key)) historySeen.set(key, h)
         }
         const history = Array.from(historySeen.values())
-          .sort((a, b) => b.date.localeCompare(a.date))
+          .sort((a, b) => (b.date || '').localeCompare(a.date || ''))
 
         return (
           <div key={exercise.name} className="exercise-block">
