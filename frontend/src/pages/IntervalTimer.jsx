@@ -80,6 +80,7 @@ function computeSchedule(unfurled) {
       start: t, end: t + ex.workSeconds,
       cue: ex.cue || null,
       next: isLast ? null : nextName,
+      nextNoRest: !isLast && ex.restSeconds === 0,
       exerciseIndex: i + 1,
       blockLabel: ex.blockLabel,
     })
@@ -526,7 +527,11 @@ export default function IntervalTimer() {
 
       {/* Next exercise preview — always rendered for layout stability */}
       <p className={`core-timer-next${showNext ? '' : ' invisible'}`}>
-        {showNext ? (display.next === null ? 'Last exercise' : `Next: ${display.next}`) : '\u00A0'}
+        {showNext
+          ? display.next === null
+            ? 'Last exercise'
+            : <>Next: {display.next}{display.nextNoRest && <span className="next-no-rest">no rest</span>}</>
+          : '\u00A0'}
       </p>
 
       {/* Action buttons */}

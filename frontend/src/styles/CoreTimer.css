@@ -92,6 +92,20 @@
   text-align: center;
 }
 
+.next-no-rest {
+  display: inline-block;
+  margin-left: 0.4rem;
+  padding: 0.1rem 0.4rem;
+  border-radius: 4px;
+  font-size: 0.7em;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  background: #fff7ed;
+  color: #c2410c;
+  vertical-align: middle;
+}
+
 /* Layout stability — invisible elements still occupy space */
 .invisible {
   visibility: hidden;
