@@ -9,7 +9,14 @@
 
 .home h1 {
   font-size: 2rem;
+  margin-bottom: 0.25rem;
+}
+
+.app-version {
+  font-size: 0.75rem;
+  color: #aaa;
   margin-bottom: 2rem;
+  letter-spacing: 0.04em;
 }
 
 .home-nav {

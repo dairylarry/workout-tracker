@@ -16,7 +16,7 @@ button {
 
 /* Prevent iOS Safari from zooming on input focus (triggers when font-size < 16px) */
 input, select, textarea {
-  font-size: max(1rem, 16px);
+  font-size: max(1rem, 16px) !important;
 }
 
 .deload-tag {
