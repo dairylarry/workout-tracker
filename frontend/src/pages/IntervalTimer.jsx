@@ -80,7 +80,7 @@ function computeSchedule(unfurled) {
       start: t, end: t + ex.workSeconds,
       cue: ex.cue || null,
       next: isLast ? null : nextName,
-      nextNoRest: !isLast && ex.restSeconds === 0,
+      nextRest: isLast ? null : ex.restSeconds,
       exerciseIndex: i + 1,
       blockLabel: ex.blockLabel,
     })
@@ -530,7 +530,11 @@ export default function IntervalTimer() {
         {showNext
           ? display.next === null
             ? 'Last exercise'
-            : <>Next: {display.next}{display.nextNoRest && <span className="next-no-rest">no rest</span>}</>
+            : display.nextRest === 0
+              ? <>Next: {display.next} <span className="next-no-rest">straight away</span></>
+              : display.nextRest > 0
+                ? <>Next: <span className="next-rest-duration">{display.nextRest}s rest \u00B7</span> {display.next}</>
+                : `Next: ${display.next}`
           : '\u00A0'}
       </p>
 

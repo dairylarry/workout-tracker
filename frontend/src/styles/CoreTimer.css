@@ -92,6 +92,11 @@
   text-align: center;
 }
 
+.next-rest-duration {
+  font-size: 0.85em;
+  color: #888;
+}
+
 .next-no-rest {
   display: inline-block;
   margin-left: 0.4rem;
