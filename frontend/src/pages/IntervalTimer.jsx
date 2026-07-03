@@ -533,7 +533,7 @@ export default function IntervalTimer() {
             : display.nextRest === 0
               ? <>Next: {display.next} <span className="next-no-rest">straight away</span></>
               : display.nextRest > 0
-                ? <>Next: <span className="next-rest-duration">{display.nextRest}s rest \u00B7</span> {display.next}</>
+                ? <>Next: <span className="next-rest-duration">{display.nextRest}s rest ·</span> {display.next}</>
                 : `Next: ${display.next}`
           : '\u00A0'}
       </p>
