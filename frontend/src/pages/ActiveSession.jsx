@@ -908,7 +908,7 @@ export default function ActiveSession() {
                   className={`kebab-note-btn${noteOpen.has(exIndex) ? ' kebab-swap-btn--active' : ''}`}
                   onClick={() => toggleNote(exIndex)}
                 >
-                  ✎ {noteOpen.has(exIndex) ? 'Hide note' : 'Add note'}
+                  ✎ Note
                 </button>
               </div>
             )}
@@ -1074,7 +1074,7 @@ export default function ActiveSession() {
                   className={`kebab-note-btn${noteOpen.has(exIndex) ? ' kebab-swap-btn--active' : ''}`}
                   onClick={() => toggleNote(exIndex)}
                 >
-                  ✎ {noteOpen.has(exIndex) ? 'Hide note' : 'Add note'}
+                  ✎ Note
                 </button>
               </div>
             )}

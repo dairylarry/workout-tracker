@@ -12,8 +12,10 @@ const linkComponents = {
 export default function NoteRenderer({ children, className }) {
   if (!children) return null
   return (
-    <ReactMarkdown remarkPlugins={[remarkGfm]} components={linkComponents} className={className}>
-      {children}
-    </ReactMarkdown>
+    <div className={className}>
+      <ReactMarkdown remarkPlugins={[remarkGfm]} components={linkComponents}>
+        {children}
+      </ReactMarkdown>
+    </div>
   )
 }
