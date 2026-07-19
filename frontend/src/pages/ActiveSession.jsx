@@ -604,6 +604,16 @@ export default function ActiveSession() {
     }
   }
 
+  function get531LastWeek(exerciseName) {
+    const past = recentSessions.find(s =>
+      s.date !== date &&
+      s.exercises?.some(ex => (ex.name === exerciseName || ex.swappedName === exerciseName) && ex.week)
+    )
+    if (!past) return null
+    const ex = past.exercises.find(ex => (ex.name === exerciseName || ex.swappedName === exerciseName) && ex.week)
+    return { week: ex.week, date: past.date }
+  }
+
   // Build slot history by matching slotId across all sessions (including analogous session types).
   // Falls back to array-index match for legacy sessions that predate slotIds.
   function getExerciseHistory(slotId, slotIndex) {
@@ -760,6 +770,12 @@ export default function ActiveSession() {
                   </select>
                   <span className="exercise-target">TM: {exercise.trainingMax} lbs · Rest {exConfig.rest}</span>
                 </div>
+                {(() => {
+                  const last = get531LastWeek(exConfig.name)
+                  return last ? (
+                    <div className="history-531-last">Last: Week {last.week} — {last.date}</div>
+                  ) : null
+                })()}
               </div>
 
               <div className="sets-grid">
