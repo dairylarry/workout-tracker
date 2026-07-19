@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { getToday } from '../lib/date'
 import { getSession } from '../lib/dynamodb'
 import { useProgram } from '../context/ProgramContext'
+import { VERSION } from '../constants/version'
 import '../styles/Home.css'
 
 const RESUME_CACHE_KEY = 'resume-session-cache'
@@ -69,7 +70,7 @@ export default function Home() {
   return (
     <div className="home">
       <h1>Workout Tracker</h1>
-      <p className="app-version">v 1.2.2</p>
+      <p className="app-version">v {VERSION}</p>
       <nav className="home-nav">
         {todaySession && (
           <button
