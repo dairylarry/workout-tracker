@@ -1,9 +1,8 @@
 import { useState, useEffect, useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
-import ReactMarkdown from 'react-markdown'
-import remarkGfm from 'remark-gfm'
 import { getAllSessionsForType } from '../lib/dynamodb'
 import { useProgram } from '../context/ProgramContext'
+import NoteRenderer from '../components/NoteRenderer'
 import '../styles/History.css'
 
 const MONTH_NAMES = [
@@ -308,25 +307,22 @@ export default function History() {
                       <>
                         <hr className="history-card-divider" />
                         <div className="history-card-note">
-                          <ReactMarkdown
-                            remarkPlugins={[remarkGfm]}
-                            components={{
-                              a: ({ href, children }) => (
-                                <a
-                                  href={href}
-                                  target="_blank"
-                                  rel="noopener noreferrer"
-                                  onClick={e => e.stopPropagation()}
-                                >
-                                  {children}
-                                </a>
-                              ),
-                            }}
-                          >
-                            {session.notes}
-                          </ReactMarkdown>
+                          <NoteRenderer>{session.notes}</NoteRenderer>
                         </div>
                       </>
+                    )}
+                    {session.exercises?.some(ex => ex.note) && (
+                      <div className="history-card-exercise-notes">
+                        {session.exercises.filter(ex => ex.note).map((ex, i) => {
+                          const name = ex.swappedName || ex.name
+                          const preview = ex.note.length > 60 ? ex.note.slice(0, 60) + '…' : ex.note
+                          return (
+                            <p key={i} className="history-card-exercise-note-row">
+                              <span className="history-card-exercise-note-name">{name}:</span> {preview}
+                            </p>
+                          )
+                        })}
+                      </div>
                     )}
                   </div>
                 )

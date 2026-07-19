@@ -2,6 +2,7 @@ import { useParams, useNavigate } from 'react-router-dom'
 import { useState, useEffect } from 'react'
 import { getSession, deleteSession, updateSessionExercises, updateSessionField } from '../lib/dynamodb'
 import { useProgram } from '../context/ProgramContext'
+import NoteRenderer from '../components/NoteRenderer'
 import '../styles/SessionDetail.css'
 
 export default function SessionDetail() {
@@ -98,6 +99,13 @@ export default function SessionDetail() {
       return rest
     }))
     setSwapOpen(null)
+  }
+
+  function handleNoteChange(exIndex, value) {
+    setEditExercises(prev => prev.map((ex, ei) => {
+      if (ei !== exIndex) return ex
+      return { ...ex, note: value }
+    }))
   }
 
   async function handleDelete() {
@@ -229,6 +237,23 @@ export default function SessionDetail() {
                 </div>
               ))}
             </div>
+            {editing ? (
+              <div className="detail-exercise-note-edit">
+                <hr className="exercise-note-divider" />
+                <textarea
+                  className="exercise-note-input"
+                  placeholder="Exercise note..."
+                  value={exercise.note || ''}
+                  onChange={e => handleNoteChange(exIndex, e.target.value)}
+                  rows={2}
+                />
+              </div>
+            ) : exercise.note ? (
+              <div className="detail-exercise-note">
+                <hr className="exercise-note-divider" />
+                <NoteRenderer className="history-exercise-note">{exercise.note}</NoteRenderer>
+              </div>
+            ) : null}
           </div>
         )
       })}
@@ -248,7 +273,7 @@ export default function SessionDetail() {
       ) : session.notes ? (
         <div className="detail-notes">
           <span className="detail-notes-label">Notes</span>
-          <p className="detail-notes-text">{session.notes}</p>
+          <NoteRenderer className="detail-notes-text">{session.notes}</NoteRenderer>
         </div>
       ) : null}
 

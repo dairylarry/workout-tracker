@@ -1,6 +1,7 @@
 import { useParams, useNavigate } from 'react-router-dom'
 import { useState, useEffect, useRef } from 'react'
 import { useProgram } from '../context/ProgramContext'
+import NoteRenderer from '../components/NoteRenderer'
 import { getSession, putSession, updateSessionExercises, updateSessionField, getRecentSessions, get531Config, updateExerciseHistory, removeExerciseHistoryEntry } from '../lib/dynamodb'
 import { getSetsForWeek, getDeloadSets, WEEK_LABELS } from '../lib/fiveThreeOne'
 import { EXERCISE_FAMILIES } from '../constants/exerciseEnums'
@@ -129,6 +130,7 @@ export default function ActiveSession() {
   const [error, setError] = useState(null)
   const [swapOpen, setSwapOpen] = useState(null) // exIndex with swap picker open
   const [kebabOpen, setKebabOpen] = useState(null) // exIndex with kebab panel open
+  const [noteOpen, setNoteOpen] = useState(new Set()) // set of exIndices with note UI visible
   const [notes, setNotes] = useState('')
   const [addonFilter, setAddonFilter] = useState('')
   const [addonFamilyFilter, setAddonFamilyFilter] = useState('')
@@ -188,6 +190,7 @@ export default function ActiveSession() {
         sets: ex.sets.map(s => ({ weight: s.weight, reps: s.reps, rir: s.rir })),
         weightUnit: ex.weightUnit || 'lbs',
         ...(deload && { deload: true }),
+        ...(ex.note && { note: ex.note }),
       }))
 
       return ops
@@ -383,6 +386,32 @@ export default function ActiveSession() {
 
       return updated
     })
+  }
+
+  function handleNoteChange(exIndex, value) {
+    setExercises(prev => {
+      const updated = prev.map((ex, ei) => {
+        if (ei !== exIndex) return ex
+        return { ...ex, note: value }
+      })
+      if (saveTimeout.current) clearTimeout(saveTimeout.current)
+      saveTimeout.current = setTimeout(() => {
+        updateSessionExercises(sessionType, date, updated).catch(e =>
+          console.error('Failed to save note:', e)
+        )
+      }, 500)
+      return updated
+    })
+  }
+
+  function toggleNote(exIndex) {
+    setNoteOpen(prev => {
+      const next = new Set(prev)
+      if (next.has(exIndex)) next.delete(exIndex)
+      else next.add(exIndex)
+      return next
+    })
+    setKebabOpen(null)
   }
 
   function handle531WeekChange(exIndex, newWeek) {
@@ -862,6 +891,12 @@ export default function ActiveSession() {
                 >
                   ⇄ Swap Exercise
                 </button>
+                <button
+                  className={`kebab-swap-btn${noteOpen.has(exIndex) ? ' kebab-swap-btn--active' : ''}`}
+                  onClick={() => toggleNote(exIndex)}
+                >
+                  ✎ Note
+                </button>
                 <div className="kebab-counter">
                   <button
                     className="kebab-counter-btn"
@@ -916,6 +951,7 @@ export default function ActiveSession() {
                         }).join(', ')
                     }
                     {showBump && <span className="bump-tag"> ↑ bump</span>}
+                    {h.note && <NoteRenderer className="history-exercise-note">{h.note}</NoteRenderer>}
                   </div>
                 )})}
                 {history.length > expandLevel && (
@@ -961,6 +997,18 @@ export default function ActiveSession() {
                 </div>
               ))}
             </div>
+            {noteOpen.has(exIndex) && (
+              <>
+                <hr className="exercise-note-divider" />
+                <textarea
+                  className="exercise-note-input"
+                  placeholder="Exercise note..."
+                  value={exercise.note || ''}
+                  onChange={e => handleNoteChange(exIndex, e.target.value)}
+                  rows={2}
+                />
+              </>
+            )}
           </div>
         )
       })}
@@ -1006,6 +1054,12 @@ export default function ActiveSession() {
                   onClick={() => { setSwapOpen(isSwapOpen ? null : exIndex); if (!isSwapOpen) { setAddonFilter(''); setAddonFamilyFilter('') } }}
                 >
                   ⇄ Swap Exercise
+                </button>
+                <button
+                  className={`kebab-swap-btn${noteOpen.has(exIndex) ? ' kebab-swap-btn--active' : ''}`}
+                  onClick={() => toggleNote(exIndex)}
+                >
+                  ✎ Note
                 </button>
                 <div className="kebab-counter">
                   <button
@@ -1129,6 +1183,18 @@ export default function ActiveSession() {
                 </div>
               ))}
             </div>
+            {noteOpen.has(exIndex) && (
+              <>
+                <hr className="exercise-note-divider" />
+                <textarea
+                  className="exercise-note-input"
+                  placeholder="Exercise note..."
+                  value={exercise.note || ''}
+                  onChange={e => handleNoteChange(exIndex, e.target.value)}
+                  rows={2}
+                />
+              </>
+            )}
             {confirmRemoveAddon === exIndex ? (
               <div className="addon-remove-confirm">
                 <span>Remove?</span>

@@ -69,7 +69,7 @@ export default function Home() {
   return (
     <div className="home">
       <h1>Workout Tracker</h1>
-      <p className="app-version">v 1.1.0</p>
+      <p className="app-version">v 1.2.0</p>
       <nav className="home-nav">
         {todaySession && (
           <button

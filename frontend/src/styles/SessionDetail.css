@@ -384,3 +384,31 @@
   display: block;
   -webkit-tap-highlight-color: transparent;
 }
+
+.exercise-note-divider {
+  border: none;
+  border-top: 1px solid #e5e5e5;
+  margin: 0.75rem 0 0.5rem;
+}
+
+.exercise-note-input {
+  width: 100%;
+  padding: 0.5rem 0.6rem;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 0.85rem;
+  font-family: inherit;
+  resize: vertical;
+  background: #fff;
+  box-sizing: border-box;
+}
+
+.exercise-note-input:focus {
+  outline: none;
+  border-color: #111;
+}
+
+.detail-exercise-note .history-exercise-note,
+.detail-exercise-note-edit .exercise-note-input {
+  margin-top: 0;
+}

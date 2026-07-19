@@ -382,6 +382,45 @@
   margin: 0.5rem 0;
 }
 
+.history-exercise-note {
+  font-size: 0.72rem;
+  color: #999;
+  font-style: italic;
+  margin-top: 0.2rem;
+}
+
+.history-exercise-note p {
+  margin: 0;
+}
+
+.history-exercise-note a {
+  color: #1a56db;
+  text-decoration: none;
+}
+
+.exercise-note-divider {
+  border: none;
+  border-top: 1px solid #e5e5e5;
+  margin: 0.75rem 0 0.5rem;
+}
+
+.exercise-note-input {
+  width: 100%;
+  padding: 0.5rem 0.6rem;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 0.85rem;
+  font-family: inherit;
+  resize: vertical;
+  background: #fff;
+  box-sizing: border-box;
+}
+
+.exercise-note-input:focus {
+  outline: none;
+  border-color: #111;
+}
+
 .last-session {
   font-size: 0.78rem;
   color: #888;

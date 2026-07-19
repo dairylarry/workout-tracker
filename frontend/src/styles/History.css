@@ -314,3 +314,26 @@
   color: #92400e;
   border-radius: 3px;
 }
+
+.history-card-exercise-notes {
+  margin-top: 0.4rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.history-card-exercise-note-row {
+  font-size: 0.75rem;
+  color: #888;
+  font-style: italic;
+  margin: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.history-card-exercise-note-name {
+  font-style: normal;
+  font-weight: 600;
+  color: #666;
+}
