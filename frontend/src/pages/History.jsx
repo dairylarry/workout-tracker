@@ -318,7 +318,7 @@ export default function History() {
                           const preview = ex.note.length > 60 ? ex.note.slice(0, 60) + '…' : ex.note
                           return (
                             <p key={i} className="history-card-exercise-note-row">
-                              <span className="history-card-exercise-note-name">{name}:</span> {preview}
+                              – <span className="history-card-exercise-note-name">{name}:</span> {preview}
                             </p>
                           )
                         })}

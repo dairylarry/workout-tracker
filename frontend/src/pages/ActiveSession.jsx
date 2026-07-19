@@ -290,6 +290,9 @@ export default function ActiveSession() {
           setFiveDay(existing.fiveDay || false)
           setStartedAt(existing.startedAt || null)
           setNotes(existing.notes || '')
+          // Auto-show note UI for any exercise that already has a note
+          const withNotes = new Set(backfilled.map((ex, i) => ex.note ? i : -1).filter(i => i >= 0))
+          if (withNotes.size > 0) setNoteOpen(withNotes)
           // Initialize ref from loaded exercises so cross-session stale entries are detected
           backfilled.forEach((ex, i) => {
             lastHistoryNameRef.current[i] = ex.swappedName || ex.name
@@ -411,7 +414,6 @@ export default function ActiveSession() {
       else next.add(exIndex)
       return next
     })
-    setKebabOpen(null)
   }
 
   function handle531WeekChange(exIndex, newWeek) {
@@ -885,27 +887,29 @@ export default function ActiveSession() {
 
             {kebabOpen === exIndex && (
               <div className="kebab-panel">
+                <div className="kebab-top-row">
+                  <button
+                    className={`kebab-swap-btn${isSwapOpen ? ' kebab-swap-btn--active' : ''}`}
+                    onClick={() => setSwapOpen(isSwapOpen ? null : exIndex)}
+                  >
+                    ⇄ Swap Exercise
+                  </button>
+                  <div className="kebab-counter">
+                    <button
+                      className="kebab-counter-btn"
+                      onClick={() => handleRemoveSet(exIndex)}
+                      disabled={exercise.sets.length <= 1}
+                    >−</button>
+                    <span className="kebab-counter-label">{exercise.sets.length} sets</span>
+                    <button className="kebab-counter-btn" onClick={() => handleAddSet(exIndex)}>+</button>
+                  </div>
+                </div>
                 <button
-                  className={`kebab-swap-btn${isSwapOpen ? ' kebab-swap-btn--active' : ''}`}
-                  onClick={() => setSwapOpen(isSwapOpen ? null : exIndex)}
-                >
-                  ⇄ Swap Exercise
-                </button>
-                <button
-                  className={`kebab-swap-btn${noteOpen.has(exIndex) ? ' kebab-swap-btn--active' : ''}`}
+                  className={`kebab-note-btn${noteOpen.has(exIndex) ? ' kebab-swap-btn--active' : ''}`}
                   onClick={() => toggleNote(exIndex)}
                 >
-                  ✎ Note
+                  ✎ {noteOpen.has(exIndex) ? 'Hide note' : 'Add note'}
                 </button>
-                <div className="kebab-counter">
-                  <button
-                    className="kebab-counter-btn"
-                    onClick={() => handleRemoveSet(exIndex)}
-                    disabled={exercise.sets.length <= 1}
-                  >−</button>
-                  <span className="kebab-counter-label">{exercise.sets.length} sets</span>
-                  <button className="kebab-counter-btn" onClick={() => handleAddSet(exIndex)}>+</button>
-                </div>
               </div>
             )}
 
@@ -1049,27 +1053,29 @@ export default function ActiveSession() {
 
             {kebabOpen === exIndex && (
               <div className="kebab-panel">
+                <div className="kebab-top-row">
+                  <button
+                    className={`kebab-swap-btn${isSwapOpen ? ' kebab-swap-btn--active' : ''}`}
+                    onClick={() => { setSwapOpen(isSwapOpen ? null : exIndex); if (!isSwapOpen) { setAddonFilter(''); setAddonFamilyFilter('') } }}
+                  >
+                    ⇄ Swap Exercise
+                  </button>
+                  <div className="kebab-counter">
+                    <button
+                      className="kebab-counter-btn"
+                      onClick={() => handleRemoveSet(exIndex)}
+                      disabled={exercise.sets.length <= 1}
+                    >−</button>
+                    <span className="kebab-counter-label">{exercise.sets.length} sets</span>
+                    <button className="kebab-counter-btn" onClick={() => handleAddSet(exIndex)}>+</button>
+                  </div>
+                </div>
                 <button
-                  className={`kebab-swap-btn${isSwapOpen ? ' kebab-swap-btn--active' : ''}`}
-                  onClick={() => { setSwapOpen(isSwapOpen ? null : exIndex); if (!isSwapOpen) { setAddonFilter(''); setAddonFamilyFilter('') } }}
-                >
-                  ⇄ Swap Exercise
-                </button>
-                <button
-                  className={`kebab-swap-btn${noteOpen.has(exIndex) ? ' kebab-swap-btn--active' : ''}`}
+                  className={`kebab-note-btn${noteOpen.has(exIndex) ? ' kebab-swap-btn--active' : ''}`}
                   onClick={() => toggleNote(exIndex)}
                 >
-                  ✎ Note
+                  ✎ {noteOpen.has(exIndex) ? 'Hide note' : 'Add note'}
                 </button>
-                <div className="kebab-counter">
-                  <button
-                    className="kebab-counter-btn"
-                    onClick={() => handleRemoveSet(exIndex)}
-                    disabled={exercise.sets.length <= 1}
-                  >−</button>
-                  <span className="kebab-counter-label">{exercise.sets.length} sets</span>
-                  <button className="kebab-counter-btn" onClick={() => handleAddSet(exIndex)}>+</button>
-                </div>
               </div>
             )}
 

@@ -107,9 +107,34 @@
   padding: 0.4rem 0.5rem;
   margin: 0.4rem 0;
   display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.kebab-top-row {
+  display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 0.5rem;
+}
+
+.kebab-note-btn {
+  width: 100%;
+  padding: 0.3rem 0.65rem;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+  font-size: 0.78rem;
+  background: #fff;
+  color: #555;
+  cursor: pointer;
+  text-align: left;
+  white-space: nowrap;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.kebab-note-btn:active {
+  background: #f0f0f0;
+  border-color: #999;
 }
 
 .kebab-swap-btn {
