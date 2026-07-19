@@ -187,7 +187,7 @@ export default function ActiveSession() {
         date,
         sessionType,
         ...dedupeKey,
-        sets: ex.sets.map(s => ({ weight: s.weight, reps: s.reps, rir: s.rir })),
+        sets: ex.sets.filter(s => s.weight || s.reps).map(s => ({ weight: s.weight, reps: s.reps, rir: s.rir })),
         weightUnit: ex.weightUnit || 'lbs',
         ...(deload && { deload: true }),
         ...(ex.note && { note: ex.note }),
@@ -949,7 +949,7 @@ export default function ActiveSession() {
                     {h.deload && <span className="deload-tag">deload</span>}{' '}
                     {h.sets.length === 0
                       ? <span className="history-none">None</span>
-                      : h.sets.map(s => {
+                      : h.sets.filter(s => s.weight || s.reps).map(s => {
                           const base = `${s.weight}${h.weightUnit === 'kg' ? 'kg' : ''}×${s.reps}`
                           return s.rir !== '' && s.rir !== undefined ? `${base}(${s.rir})` : base
                         }).join(', ')
@@ -1139,7 +1139,7 @@ export default function ActiveSession() {
                     <div key={`${h.date}-${h.sessionType}`} className="last-session">
                       <span className="history-date">{h.date}:</span>{' '}
                       {h.deload && <span className="deload-tag">deload</span>}{' '}
-                      {h.sets.map(s => {
+                      {h.sets.filter(s => s.weight || s.reps).map(s => {
                         const base = `${s.weight}${h.weightUnit === 'kg' ? 'kg' : ''}×${s.reps}`
                         return s.rir !== '' && s.rir !== undefined ? `${base}(${s.rir})` : base
                       }).join(', ')}
