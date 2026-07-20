@@ -699,41 +699,39 @@ export default function ActiveSession() {
         </div>
       )}
       {fiveDayReductions && (
-        <div className="toggle-menu-single-row">
-          <label className="deload-toggle">
-            <input
-              type="checkbox"
-              checked={fiveDay}
-              onChange={e => {
-                const isFiveDay = e.target.checked
-                setFiveDay(isFiveDay)
-                updateSessionField(sessionType, date, 'fiveDay', isFiveDay)
-                setExercises(prev => {
-                  const updated = prev.map(ex => {
-                    const reduction = fiveDayReductions[ex.name]
-                    if (!reduction) return ex
-                    if (isFiveDay) {
-                      return { ...ex, sets: ex.sets.slice(0, -reduction) }
-                    } else {
-                      const lastNum = ex.sets.length
-                      const restored = Array.from({ length: reduction }, (_, i) => ({
-                        setNumber: lastNum + i + 1,
-                        weight: '',
-                        reps: '',
-                        rir: '',
-                      }))
-                      return { ...ex, sets: [...ex.sets, ...restored] }
-                    }
-                  })
-                  updateSessionExercises(sessionType, date, updated).catch(e =>
-                    console.error('Failed to save 5-day change:', e)
-                  )
-                  return updated
+        <div className="session-system-row">
+          <button
+            className={`tag-chip tag-chip--system${fiveDay ? ' tag-chip--system-active' : ''}`}
+            onClick={() => {
+              const isFiveDay = !fiveDay
+              setFiveDay(isFiveDay)
+              updateSessionField(sessionType, date, 'fiveDay', isFiveDay)
+              setExercises(prev => {
+                const updated = prev.map(ex => {
+                  const reduction = fiveDayReductions[ex.name]
+                  if (!reduction) return ex
+                  if (isFiveDay) {
+                    return { ...ex, sets: ex.sets.slice(0, -reduction) }
+                  } else {
+                    const lastNum = ex.sets.length
+                    const restored = Array.from({ length: reduction }, (_, i) => ({
+                      setNumber: lastNum + i + 1,
+                      weight: '',
+                      reps: '',
+                      rir: '',
+                    }))
+                    return { ...ex, sets: [...ex.sets, ...restored] }
+                  }
                 })
-              }}
-            />
+                updateSessionExercises(sessionType, date, updated).catch(e =>
+                  console.error('Failed to save 5-day change:', e)
+                )
+                return updated
+              })
+            }}
+          >
             5-day week
-          </label>
+          </button>
         </div>
       )}
 
@@ -778,7 +776,11 @@ export default function ActiveSession() {
                 {(() => {
                   const last = get531LastWeek(exConfig.name)
                   return last ? (
-                    <div className="history-531-last">Last: {last.week === 'deload' ? 'Deload' : `Week ${last.week}`} — {last.date}</div>
+                    <div className="history-section">
+                      <div className="last-session">
+                        Last: {last.week === 'deload' ? 'Deload' : `Week ${last.week}`} — {last.date}
+                      </div>
+                    </div>
                   ) : null
                 })()}
               </div>

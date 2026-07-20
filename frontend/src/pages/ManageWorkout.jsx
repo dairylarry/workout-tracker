@@ -124,20 +124,17 @@ export default function ManageWorkout() {
       <button className="back" onClick={() => navigate('/')}>← Back</button>
       <h2>Manage Workout</h2>
 
-      {!editMode && (
-        <button className="mw-edit-btn" onClick={() => setEditMode(true)}>Edit Workout</button>
-      )}
-      {editMode && (
-        <button className="mw-done-btn" onClick={() => { setEditMode(false); setEditingSubs(null) }}>Done Editing</button>
-      )}
-
-      <button className="mw-library-btn" onClick={() => navigate('/manage/library')}>
-        Exercise Library ({exerciseLibrary.length})
-      </button>
-
-      <button className="mw-library-btn" onClick={() => navigate('/manage/tags')}>
-        Manage Tags
-      </button>
+      <div className="mw-actions">
+        {!editMode ? (
+          <button className="mw-edit-btn" onClick={() => setEditMode(true)}>Edit Workout</button>
+        ) : (
+          <button className="mw-done-btn" onClick={() => { setEditMode(false); setEditingSubs(null) }}>Done Editing</button>
+        )}
+        <button className="mw-nav-btn" onClick={() => navigate('/manage/tags')}>Manage Tags</button>
+        <button className="mw-nav-btn" onClick={() => navigate('/manage/library')}>
+          Exercise Library ({exerciseLibrary.length})
+        </button>
+      </div>
 
       {SESSION_ORDER.map(sessionId => {
         const session = program.sessionTypes[sessionId]

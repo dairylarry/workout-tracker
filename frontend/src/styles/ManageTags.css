@@ -28,22 +28,109 @@
 }
 
 .mt-row {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0.6rem 0.75rem;
   background: #fff;
   border: 1px solid #e5e5e5;
   border-radius: 6px;
+  padding: 0.6rem 0.75rem;
+}
+
+.mt-row > * {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.mt-row-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.mt-edit-btn {
+  font-size: 0.8rem;
+  color: #555;
+  background: none;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  padding: 0.2rem 0.55rem;
+  cursor: pointer;
+  min-height: 28px;
+  -webkit-tap-highlight-color: transparent;
 }
 
 .mt-delete-btn {
-  font-size: 0.8rem;
+  font-size: 1rem;
   color: #dc2626;
   background: none;
   border: 1px solid #dc2626;
   border-radius: 4px;
-  padding: 0.25rem 0.6rem;
+  padding: 0.1rem 0.5rem;
+  cursor: pointer;
+  min-height: 28px;
+  line-height: 1;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.mt-edit-form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.mt-edit-input {
+  width: 100%;
+}
+
+.mt-color-picker {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+}
+
+.mt-color-swatch {
+  padding: 0.15rem 0.5rem;
+  border-radius: 10px;
+  font-size: 0.72rem;
+  font-weight: 500;
+  font-family: inherit;
+  cursor: pointer;
+  border: 2px solid transparent;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.mt-color-swatch--active {
+  border-color: #111;
+}
+
+.mt-edit-actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.mt-save-btn {
+  padding: 0.45rem 1rem;
+  min-height: 36px;
+  border: 2px solid #111;
+  background: #111;
+  color: #fff;
+  border-radius: 4px;
+  font-size: 0.85rem;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.mt-save-btn:disabled {
+  opacity: 0.4;
+}
+
+.mt-cancel-btn {
+  padding: 0.45rem 1rem;
+  min-height: 36px;
+  border: 2px solid #ddd;
+  background: #fff;
+  color: #111;
+  border-radius: 4px;
+  font-size: 0.85rem;
   cursor: pointer;
   -webkit-tap-highlight-color: transparent;
 }

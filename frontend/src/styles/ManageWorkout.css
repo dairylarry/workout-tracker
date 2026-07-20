@@ -9,6 +9,13 @@
   margin-bottom: 1.5rem;
 }
 
+.mw-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  margin-bottom: 1.5rem;
+}
+
 .mw-edit-btn,
 .mw-done-btn {
   width: 100%;
@@ -18,7 +25,20 @@
   font-weight: 600;
   border-radius: 4px;
   cursor: pointer;
-  margin-bottom: 0.5rem;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.mw-nav-btn {
+  width: 100%;
+  padding: 0.75rem;
+  min-height: 48px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  border: 2px solid #111;
+  background: #fff;
+  color: #111;
+  border-radius: 4px;
+  cursor: pointer;
   -webkit-tap-highlight-color: transparent;
 }
 
@@ -350,20 +370,6 @@
   justify-content: center;
 }
 
-.mw-library-btn {
-  width: 100%;
-  padding: 0.75rem;
-  min-height: 48px;
-  font-size: 0.95rem;
-  font-weight: 600;
-  border: 2px solid #111;
-  background: #fff;
-  color: #111;
-  border-radius: 4px;
-  cursor: pointer;
-  margin-bottom: 1.5rem;
-  -webkit-tap-highlight-color: transparent;
-}
 
 .mw-confirm-delete {
   display: flex;

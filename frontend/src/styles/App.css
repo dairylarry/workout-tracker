@@ -41,6 +41,13 @@ input, select, textarea {
   border-color: transparent;
 }
 
+/* System pill (e.g. 5-day week) — uses dark fill when active instead of a tag color */
+.tag-chip--system-active {
+  border-color: transparent;
+  background: #1e293b;
+  color: #f8fafc;
+}
+
 /* Display-only tag badge (span) — used in history and read views */
 .tag-chip--badge {
   border: none;
@@ -63,6 +70,13 @@ input, select, textarea {
   flex-wrap: wrap;
   gap: 0.3rem;
   margin-left: 0.35rem;
+}
+
+.session-system-row {
+  display: flex;
+  margin-bottom: 0.5rem;
+  padding-top: 0.25rem;
+  border-top: 1px solid #e5e5e5;
 }
 
 .history-session-tag {

@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { getTags, putTags } from '../lib/dynamodb'
-import { DEFAULT_TAGS, nextTagColor } from '../constants/tags'
+import { DEFAULT_TAGS, nextTagColor, TAG_COLORS } from '../constants/tags'
 import TagChip from '../components/TagChip'
 import '../styles/ManageTags.css'
 
@@ -10,6 +10,9 @@ export default function ManageTags() {
   const [tags, setTags] = useState(null)
   const [newName, setNewName] = useState('')
   const [saving, setSaving] = useState(false)
+  const [editingId, setEditingId] = useState(null)
+  const [editName, setEditName] = useState('')
+  const [editColor, setEditColor] = useState(null)
 
   useEffect(() => {
     async function load() {
@@ -42,6 +45,24 @@ export default function ManageTags() {
     const next = tags.map(t => t.id === id ? { ...t, deleted: true } : t)
     await putTags(next)
     setTags(next)
+    if (editingId === id) setEditingId(null)
+  }
+
+  function startEdit(tag) {
+    setEditingId(tag.id)
+    setEditName(tag.name)
+    setEditColor(tag.color)
+  }
+
+  async function handleSaveEdit() {
+    const name = editName.trim()
+    if (!name) return
+    const next = tags.map(t =>
+      t.id === editingId ? { ...t, name, color: editColor } : t
+    )
+    await putTags(next)
+    setTags(next)
+    setEditingId(null)
   }
 
   if (!tags) return <div className="manage-tags"><p>Loading...</p></div>
@@ -58,13 +79,47 @@ export default function ManageTags() {
         {active.length === 0 && <p className="mt-empty">No tags yet.</p>}
         {active.map(tag => (
           <div key={tag.id} className="mt-row">
-            <TagChip tag={tag} />
-            <button
-              className="mt-delete-btn"
-              onClick={() => handleDelete(tag.id)}
-            >
-              Remove
-            </button>
+            {editingId === tag.id ? (
+              <div className="mt-edit-form">
+                <input
+                  className="mt-input mt-edit-input"
+                  type="text"
+                  value={editName}
+                  onChange={e => setEditName(e.target.value)}
+                  onKeyDown={e => e.key === 'Enter' && handleSaveEdit()}
+                  maxLength={30}
+                  autoFocus
+                />
+                <div className="mt-color-picker">
+                  {TAG_COLORS.map((c, i) => (
+                    <button
+                      key={i}
+                      className={`mt-color-swatch${editColor?.bg === c.bg ? ' mt-color-swatch--active' : ''}`}
+                      style={{ backgroundColor: c.bg, color: c.text }}
+                      onClick={() => setEditColor(c)}
+                    >
+                      Aa
+                    </button>
+                  ))}
+                </div>
+                <div className="mt-edit-actions">
+                  <button className="mt-save-btn" onClick={handleSaveEdit} disabled={!editName.trim()}>
+                    Save
+                  </button>
+                  <button className="mt-cancel-btn" onClick={() => setEditingId(null)}>
+                    Cancel
+                  </button>
+                </div>
+              </div>
+            ) : (
+              <>
+                <TagChip tag={tag} />
+                <div className="mt-row-actions">
+                  <button className="mt-edit-btn" onClick={() => startEdit(tag)}>Edit</button>
+                  <button className="mt-delete-btn" onClick={() => handleDelete(tag.id)}>×</button>
+                </div>
+              </>
+            )}
           </div>
         ))}
       </div>
