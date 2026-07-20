@@ -772,7 +772,7 @@ export default function ActiveSession() {
                     <option value={3}>{WEEK_LABELS[3]}</option>
                     <option value="deload">Deload</option>
                   </select>
-                  <span className="exercise-target">TM: {exercise.trainingMax} lbs · Rest {exConfig.rest}</span>
+                  <span className="exercise-target">TM: {exercise.trainingMax} lb · Rest {exConfig.rest}</span>
                 </div>
                 {(() => {
                   const last = get531LastWeek(exConfig.name)
@@ -881,7 +881,7 @@ export default function ActiveSession() {
                     className="unit-toggle"
                     onClick={() => handleUnitChange(exIndex, (exercise.weightUnit || 'lbs') === 'lbs' ? 'kg' : 'lbs')}
                   >
-                    {exercise.weightUnit || 'lbs'}
+                    {(exercise.weightUnit || 'lbs') === 'kg' ? 'kg' : 'lb'}
                   </button>
                   <button
                     className={`kebab-btn${kebabOpen === exIndex ? ' kebab-btn--active' : ''}`}
@@ -1068,7 +1068,7 @@ export default function ActiveSession() {
                     className="unit-toggle"
                     onClick={() => handleUnitChange(exIndex, (exercise.weightUnit || 'lbs') === 'lbs' ? 'kg' : 'lbs')}
                   >
-                    {exercise.weightUnit || 'lbs'}
+                    {(exercise.weightUnit || 'lbs') === 'kg' ? 'kg' : 'lb'}
                   </button>
                   <button
                     className={`kebab-btn${kebabOpen === exIndex ? ' kebab-btn--active' : ''}`}

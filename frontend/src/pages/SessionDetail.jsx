@@ -233,7 +233,7 @@ export default function SessionDetail() {
                         value={set.weightUnit || 'lbs'}
                         onChange={e => handleSetChange(exIndex, setIndex, 'weightUnit', e.target.value)}
                       >
-                        <option value="lbs">lbs</option>
+                        <option value="lbs">lb</option>
                         <option value="kg">kg</option>
                       </select>
                       <input
@@ -253,7 +253,7 @@ export default function SessionDetail() {
                     </>
                   ) : (
                     <>
-                      <span>{set.weight ? `${set.weight} ${set.weightUnit || 'lbs'}` : '—'}</span>
+                      <span>{set.weight ? `${set.weight} ${(set.weightUnit || 'lbs') === 'kg' ? 'kg' : 'lb'}` : '—'}</span>
                       <span>{set.reps || '—'}</span>
                       <span>{set.rir !== '' && set.rir !== undefined ? set.rir : '—'}</span>
                     </>

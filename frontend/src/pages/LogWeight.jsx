@@ -75,7 +75,7 @@ export default function LogWeight() {
             className="weight-input"
           />
           <select value={unit} onChange={e => setUnit(e.target.value)} className="unit-select">
-            <option value="lbs">lbs</option>
+            <option value="lbs">lb</option>
             <option value="kg">kg</option>
           </select>
         </div>
