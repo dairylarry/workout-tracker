@@ -420,12 +420,14 @@ export default function ActiveSession() {
     setExercises(prev => {
       const updated = prev.map((ex, ei) => {
         if (ei !== exIndex || !ex.is531 || !ex.trainingMax) return ex
-        const newSets = getSetsForWeek(newWeek, ex.trainingMax).map((s, i) => ({
+        const rawSets = newWeek === 'deload'
+          ? getDeloadSets(ex.trainingMax)
+          : getSetsForWeek(newWeek, ex.trainingMax)
+        const newSets = rawSets.map((s, i) => ({
           setNumber: i + 1,
           target: s.target,
           label: s.label,
           isWarmup: s.isWarmup,
-
           weight: '',
           reps: '',
           rir: '',
@@ -572,10 +574,11 @@ export default function ActiveSession() {
           const newTm = newFtoConfigs[key]?.trainingMax
           if (newTm && newTm !== ex.trainingMax) {
             const week = ex.week || 1
+            const rawSets = week === 'deload' ? getDeloadSets(newTm) : getSetsForWeek(week, newTm)
             return {
               ...ex,
               trainingMax: newTm,
-              sets: getSetsForWeek(week, newTm).map((s, i) => ({
+              sets: rawSets.map((s, i) => ({
                 setNumber: i + 1,
                 target: s.target,
                 label: s.label,
@@ -670,30 +673,6 @@ export default function ActiveSession() {
               const isDeload = e.target.checked
               setDeload(isDeload)
               updateSessionField(sessionType, date, 'deload', isDeload)
-              setExercises(prev => {
-                const updated = prev.map(ex => {
-                  if (!ex.is531 || !ex.trainingMax) return ex
-                  const newSets = isDeload
-                    ? getDeloadSets(ex.trainingMax)
-                    : getSetsForWeek(ex.week || 1, ex.trainingMax)
-                  return {
-                    ...ex,
-                    sets: newSets.map((s, i) => ({
-                      setNumber: i + 1,
-                      target: s.target,
-                      label: s.label,
-                      isWarmup: s.isWarmup,
-                      weight: '',
-                      reps: '',
-                      rir: '',
-                    })),
-                  }
-                })
-                updateSessionExercises(sessionType, date, updated).catch(e =>
-                  console.error('Failed to save deload change:', e)
-                )
-                return updated
-              })
             }}
           />
           Deload week
@@ -761,19 +740,23 @@ export default function ActiveSession() {
                 <div className="fto-week-row">
                   <select
                     value={exercise.week || 1}
-                    onChange={e => handle531WeekChange(exIndex, Number(e.target.value))}
+                    onChange={e => {
+                      const val = e.target.value
+                      handle531WeekChange(exIndex, val === 'deload' ? 'deload' : Number(val))
+                    }}
                     className="week-select"
                   >
                     <option value={1}>{WEEK_LABELS[1]}</option>
                     <option value={2}>{WEEK_LABELS[2]}</option>
                     <option value={3}>{WEEK_LABELS[3]}</option>
+                    <option value="deload">Deload</option>
                   </select>
                   <span className="exercise-target">TM: {exercise.trainingMax} lbs · Rest {exConfig.rest}</span>
                 </div>
                 {(() => {
                   const last = get531LastWeek(exConfig.name)
                   return last ? (
-                    <div className="history-531-last">Last: Week {last.week} — {last.date}</div>
+                    <div className="history-531-last">Last: {last.week === 'deload' ? 'Deload' : `Week ${last.week}`} — {last.date}</div>
                   ) : null
                 })()}
               </div>
