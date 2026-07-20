@@ -41,11 +41,11 @@ input, select, textarea {
   border-color: transparent;
 }
 
-/* System pill (e.g. 5-day week) — uses dark fill when active instead of a tag color */
+/* System pill (e.g. 5-day week) — uses dark blue fill when active instead of a tag color */
 .tag-chip--system-active {
   border-color: transparent;
-  background: #1e293b;
-  color: #f8fafc;
+  background: #1d4ed8;
+  color: #eff6ff;
 }
 
 /* Display-only tag badge (span) — used in history and read views */
@@ -58,11 +58,15 @@ input, select, textarea {
   padding: 0.1rem 0.45rem;
 }
 
+.session-meta {
+  margin-bottom: 1rem;
+}
+
 .session-tags-row {
   display: flex;
   flex-wrap: wrap;
   gap: 0.4rem;
-  margin-bottom: 0.3rem;
+  margin-bottom: 0.55rem;
 }
 
 .session-tags-display {
@@ -74,7 +78,6 @@ input, select, textarea {
 
 .session-system-row {
   display: flex;
-  margin-bottom: 0.9rem;
 }
 
 .history-session-tag {

@@ -297,6 +297,7 @@ export default function History() {
               {selectedWeekSessions.map(session => {
                 const config = program?.sessionTypes[session.sessionType]
                 const hasNotes = session.notes && session.notes.trim().length > 0
+                const hasAnyNote = hasNotes || session.exercises?.some(ex => ex.note)
                 return (
                   <div
                     key={`${session.sessionType}-${session.date}`}
@@ -322,13 +323,11 @@ export default function History() {
                         })()}
                       </div>
                     </div>
+                    {hasAnyNote && <hr className="history-card-divider" />}
                     {hasNotes && (
-                      <>
-                        <hr className="history-card-divider" />
-                        <div className="history-card-note">
-                          <NoteRenderer>{session.notes}</NoteRenderer>
-                        </div>
-                      </>
+                      <div className="history-card-note">
+                        <NoteRenderer>{session.notes}</NoteRenderer>
+                      </div>
                     )}
                     {session.exercises?.some(ex => ex.note) && (
                       <div className="history-card-exercise-notes">

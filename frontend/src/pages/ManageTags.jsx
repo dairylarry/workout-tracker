@@ -30,10 +30,14 @@ export default function ManageTags() {
     const name = newName.trim()
     if (!name) return
     const id = name.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '')
-    if (tags.some(t => t.id === id)) return
+    if (tags.some(t => t.id === id && !t.deleted)) return
     const activeTags = tags.filter(t => !t.deleted)
     const color = nextTagColor(activeTags.length)
-    const next = [...tags, { id, name, color }]
+    // Restore soft-deleted tag with same ID rather than duplicating it
+    const existingDeleted = tags.find(t => t.id === id && t.deleted)
+    const next = existingDeleted
+      ? tags.map(t => t.id === id ? { ...t, name, color, deleted: false } : t)
+      : [...tags, { id, name, color }]
     setSaving(true)
     await putTags(next)
     setTags(next)

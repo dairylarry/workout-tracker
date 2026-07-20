@@ -678,62 +678,64 @@ export default function ActiveSession() {
         {startedAt && ` · started ${new Date(startedAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false })}`}
       </p>
 
-      {allTags.filter(t => !t.deleted).length > 0 && (
-        <div className="session-tags-row">
-          {allTags.filter(t => !t.deleted).map(tag => (
-            <TagChip
-              key={tag.id}
-              tag={tag}
-              active={sessionTags.includes(tag.id)}
-              onToggle={id => {
-                setSessionTags(prev => {
-                  const next = prev.includes(id) ? prev.filter(x => x !== id) : [...prev, id]
-                  updateSessionField(sessionType, date, 'tags', next).catch(e =>
-                    console.error('Failed to save tags:', e)
+      <div className="session-meta">
+        {allTags.filter(t => !t.deleted).length > 0 && (
+          <div className="session-tags-row">
+            {allTags.filter(t => !t.deleted).map(tag => (
+              <TagChip
+                key={tag.id}
+                tag={tag}
+                active={sessionTags.includes(tag.id)}
+                onToggle={id => {
+                  setSessionTags(prev => {
+                    const next = prev.includes(id) ? prev.filter(x => x !== id) : [...prev, id]
+                    updateSessionField(sessionType, date, 'tags', next).catch(e =>
+                      console.error('Failed to save tags:', e)
+                    )
+                    return next
+                  })
+                }}
+              />
+            ))}
+          </div>
+        )}
+        {fiveDayReductions && (
+          <div className="session-system-row">
+            <button
+              className={`tag-chip tag-chip--system${fiveDay ? ' tag-chip--system-active' : ''}`}
+              onClick={() => {
+                const isFiveDay = !fiveDay
+                setFiveDay(isFiveDay)
+                updateSessionField(sessionType, date, 'fiveDay', isFiveDay)
+                setExercises(prev => {
+                  const updated = prev.map(ex => {
+                    const reduction = fiveDayReductions[ex.name]
+                    if (!reduction) return ex
+                    if (isFiveDay) {
+                      return { ...ex, sets: ex.sets.slice(0, -reduction) }
+                    } else {
+                      const lastNum = ex.sets.length
+                      const restored = Array.from({ length: reduction }, (_, i) => ({
+                        setNumber: lastNum + i + 1,
+                        weight: '',
+                        reps: '',
+                        rir: '',
+                      }))
+                      return { ...ex, sets: [...ex.sets, ...restored] }
+                    }
+                  })
+                  updateSessionExercises(sessionType, date, updated).catch(e =>
+                    console.error('Failed to save 5-day change:', e)
                   )
-                  return next
+                  return updated
                 })
               }}
-            />
-          ))}
-        </div>
-      )}
-      {fiveDayReductions && (
-        <div className="session-system-row">
-          <button
-            className={`tag-chip tag-chip--system${fiveDay ? ' tag-chip--system-active' : ''}`}
-            onClick={() => {
-              const isFiveDay = !fiveDay
-              setFiveDay(isFiveDay)
-              updateSessionField(sessionType, date, 'fiveDay', isFiveDay)
-              setExercises(prev => {
-                const updated = prev.map(ex => {
-                  const reduction = fiveDayReductions[ex.name]
-                  if (!reduction) return ex
-                  if (isFiveDay) {
-                    return { ...ex, sets: ex.sets.slice(0, -reduction) }
-                  } else {
-                    const lastNum = ex.sets.length
-                    const restored = Array.from({ length: reduction }, (_, i) => ({
-                      setNumber: lastNum + i + 1,
-                      weight: '',
-                      reps: '',
-                      rir: '',
-                    }))
-                    return { ...ex, sets: [...ex.sets, ...restored] }
-                  }
-                })
-                updateSessionExercises(sessionType, date, updated).catch(e =>
-                  console.error('Failed to save 5-day change:', e)
-                )
-                return updated
-              })
-            }}
-          >
-            5-day week
-          </button>
-        </div>
-      )}
+            >
+              5-day week
+            </button>
+          </div>
+        )}
+      </div>
 
       {config.exercises.map((exConfig) => {
         if (exConfig.is531) {
