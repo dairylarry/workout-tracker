@@ -125,7 +125,7 @@ export default function SessionDetail() {
   async function handleDelete() {
     try {
       await deleteSession(sessionType, date)
-      navigate('/history')
+      navigate('/history', { replace: true })
     } catch (e) {
       console.error('Failed to delete session:', e)
     }
