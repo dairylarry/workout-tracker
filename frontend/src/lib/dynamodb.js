@@ -183,6 +183,32 @@ export async function getAllBodyweights() {
   }
 }
 
+// --- Tags ---
+
+export async function getTags() {
+  try {
+    const response = await docClient.send(new GetCommand({
+      TableName: TABLE,
+      Key: { PK: 'TAGS', SK: 'ALL' },
+    }))
+    return response.Item?.tags ?? null
+  } catch (e) {
+    console.warn('Failed to load tags:', e.message)
+    return null
+  }
+}
+
+export async function putTags(tags) {
+  try {
+    await docClient.send(new PutCommand({
+      TableName: TABLE,
+      Item: { PK: 'TAGS', SK: 'ALL', tags },
+    }))
+  } catch (e) {
+    console.warn('Failed to save tags:', e.message)
+  }
+}
+
 // --- 5/3/1 Config ---
 
 export async function get531Config(exercise) {

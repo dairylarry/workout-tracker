@@ -257,7 +257,7 @@
 .history-card-top {
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  align-items: flex-start;
 }
 
 .history-card-divider {
@@ -302,17 +302,13 @@
 .history-type {
   font-size: 0.85rem;
   color: #666;
-  display: flex;
-  align-items: center;
-  gap: 0.4rem;
 }
 
-.deload-badge {
-  font-size: 0.7rem;
-  padding: 0.1rem 0.35rem;
-  background: #fef3c7;
-  color: #92400e;
-  border-radius: 3px;
+.history-card-top-right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.3rem;
 }
 
 .history-card-exercise-notes {

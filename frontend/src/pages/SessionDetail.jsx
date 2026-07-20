@@ -1,8 +1,10 @@
 import { useParams, useNavigate } from 'react-router-dom'
 import { useState, useEffect } from 'react'
-import { getSession, deleteSession, updateSessionExercises, updateSessionField } from '../lib/dynamodb'
+import { getSession, deleteSession, updateSessionExercises, updateSessionField, getTags, putTags } from '../lib/dynamodb'
 import { useProgram } from '../context/ProgramContext'
 import NoteRenderer from '../components/NoteRenderer'
+import TagChip from '../components/TagChip'
+import { DEFAULT_TAGS, resolveSessionTags } from '../constants/tags'
 import '../styles/SessionDetail.css'
 
 export default function SessionDetail() {
@@ -15,7 +17,8 @@ export default function SessionDetail() {
   const [confirmDelete, setConfirmDelete] = useState(false)
   const [editing, setEditing] = useState(false)
   const [editExercises, setEditExercises] = useState(null)
-  const [editDeload, setEditDeload] = useState(false)
+  const [editTags, setEditTags] = useState([])
+  const [allTags, setAllTags] = useState([])
   const [swapOpen, setSwapOpen] = useState(null)
   const [editNotes, setEditNotes] = useState('')
   const [saveStatus, setSaveStatus] = useState(null)
@@ -23,8 +26,17 @@ export default function SessionDetail() {
   useEffect(() => {
     async function load() {
       try {
-        const data = await getSession(sessionType, date)
+        const [data, tagsResult] = await Promise.all([
+          getSession(sessionType, date),
+          getTags(),
+        ])
         setSession(data)
+        let loadedTags = tagsResult
+        if (loadedTags === null) {
+          loadedTags = DEFAULT_TAGS
+          putTags(loadedTags)
+        }
+        setAllTags(loadedTags)
       } catch (e) {
         console.error('Failed to load session:', e)
       } finally {
@@ -36,7 +48,7 @@ export default function SessionDetail() {
 
   function startEditing() {
     setEditExercises(JSON.parse(JSON.stringify(session.exercises)))
-    setEditDeload(session.deload || false)
+    setEditTags(resolveSessionTags(session))
     setEditNotes(session.notes || '')
     setEditing(true)
   }
@@ -53,13 +65,14 @@ export default function SessionDetail() {
     setSaveStatus('saving')
     try {
       await updateSessionExercises(sessionType, date, editExercises)
-      if (editDeload !== (session.deload || false)) {
-        await updateSessionField(sessionType, date, 'deload', editDeload)
+      const prevTags = resolveSessionTags(session)
+      if (JSON.stringify([...editTags].sort()) !== JSON.stringify([...prevTags].sort())) {
+        await updateSessionField(sessionType, date, 'tags', editTags)
       }
       if (editNotes !== (session.notes || '')) {
         await updateSessionField(sessionType, date, 'notes', editNotes)
       }
-      setSession(prev => ({ ...prev, exercises: editExercises, deload: editDeload, notes: editNotes }))
+      setSession(prev => ({ ...prev, exercises: editExercises, tags: editTags, notes: editNotes }))
       setEditing(false)
       setEditExercises(null)
       setSaveStatus(null)
@@ -121,7 +134,9 @@ export default function SessionDetail() {
   if (!session) return <div className="session-detail"><p>Session not found.</p></div>
 
   const exercises = editing ? editExercises : session.exercises
-  const deload = editing ? editDeload : (session.deload || false)
+  const displayTags = (editing ? editTags : resolveSessionTags(session))
+    .map(id => allTags.find(t => t.id === id))
+    .filter(Boolean)
 
   return (
     <div className="session-detail">
@@ -129,18 +144,26 @@ export default function SessionDetail() {
       <h2>{config?.name || sessionType}</h2>
       <p className="detail-date">
         {date}
-        {deload && !editing && <span className="deload-badge">Deload</span>}
+        {!editing && displayTags.length > 0 && (
+          <span className="session-tags-display">
+            {displayTags.map(tag => <TagChip key={tag.id} tag={tag} />)}
+          </span>
+        )}
       </p>
 
-      {editing && (
-        <label className="deload-toggle">
-          <input
-            type="checkbox"
-            checked={editDeload}
-            onChange={e => setEditDeload(e.target.checked)}
-          />
-          Deload week
-        </label>
+      {editing && allTags.filter(t => !t.deleted).length > 0 && (
+        <div className="session-tags-row">
+          {allTags.filter(t => !t.deleted).map(tag => (
+            <TagChip
+              key={tag.id}
+              tag={tag}
+              active={editTags.includes(tag.id)}
+              onToggle={id => setEditTags(prev =>
+                prev.includes(id) ? prev.filter(x => x !== id) : [...prev, id]
+              )}
+            />
+          ))}
+        </div>
       )}
 
       {!editing && (
@@ -156,7 +179,7 @@ export default function SessionDetail() {
         return (
           <div key={exercise.name} className="detail-exercise">
             <div className="detail-exercise-header">
-              <h3>{displayName}{exercise.supplemental && <span className="deload-badge" style={{ marginLeft: '0.4rem' }}>Add-on</span>}</h3>
+              <h3>{displayName}{exercise.supplemental && <span className="addon-badge">Add-on</span>}</h3>
               {editing && exConfig && !exConfig.is531 && (
                 <button
                   className="swap-btn"

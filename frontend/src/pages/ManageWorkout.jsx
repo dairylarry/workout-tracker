@@ -135,6 +135,10 @@ export default function ManageWorkout() {
         Exercise Library ({exerciseLibrary.length})
       </button>
 
+      <button className="mw-library-btn" onClick={() => navigate('/manage/tags')}>
+        Manage Tags
+      </button>
+
       {SESSION_ORDER.map(sessionId => {
         const session = program.sessionTypes[sessionId]
         if (!session) return null

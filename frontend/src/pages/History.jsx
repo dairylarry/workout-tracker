@@ -1,8 +1,10 @@
 import { useState, useEffect, useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { getAllSessionsForType } from '../lib/dynamodb'
+import { getAllSessionsForType, getTags, putTags } from '../lib/dynamodb'
 import { useProgram } from '../context/ProgramContext'
 import NoteRenderer from '../components/NoteRenderer'
+import TagChip from '../components/TagChip'
+import { DEFAULT_TAGS, resolveSessionTags } from '../constants/tags'
 import '../styles/History.css'
 
 const MONTH_NAMES = [
@@ -31,6 +33,7 @@ export default function History() {
   const navigate = useNavigate()
   const { program } = useProgram()
   const [sessions, setSessions] = useState([])
+  const [allTags, setAllTags] = useState([])
   const [loading, setLoading] = useState(true)
 
   const now = new Date()
@@ -50,11 +53,18 @@ export default function History() {
     if (!program) return
     async function load() {
       try {
-        const results = await Promise.all(
-          Object.keys(program.sessionTypes).map(type => getAllSessionsForType(type))
-        )
+        const [results, tagsResult] = await Promise.all([
+          Promise.all(Object.keys(program.sessionTypes).map(type => getAllSessionsForType(type))),
+          getTags(),
+        ])
         const all = results.flat().filter(s => s.date).sort((a, b) => b.date.localeCompare(a.date))
         setSessions(all)
+        let loadedTags = tagsResult
+        if (loadedTags === null) {
+          loadedTags = DEFAULT_TAGS
+          putTags(loadedTags)
+        }
+        setAllTags(loadedTags)
       } catch (e) {
         console.error('Failed to load history:', e)
       } finally {
@@ -298,10 +308,19 @@ export default function History() {
                   >
                     <div className="history-card-top">
                       <span className="history-date">{formatDate(session.date)}</span>
-                      <span className="history-type">
-                        {config?.name || session.sessionType}
-                        {session.deload && <span className="deload-badge">Deload</span>}
-                      </span>
+                      <div className="history-card-top-right">
+                        <span className="history-type">{config?.name || session.sessionType}</span>
+                        {(() => {
+                          const tagObjs = resolveSessionTags(session)
+                            .map(id => allTags.find(t => t.id === id))
+                            .filter(Boolean)
+                          return tagObjs.length > 0 ? (
+                            <span className="session-tags-display">
+                              {tagObjs.map(tag => <TagChip key={tag.id} tag={tag} />)}
+                            </span>
+                          ) : null
+                        })()}
+                      </div>
                     </div>
                     {hasNotes && (
                       <>

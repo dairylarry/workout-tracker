@@ -2,9 +2,11 @@ import { useParams, useNavigate } from 'react-router-dom'
 import { useState, useEffect, useRef } from 'react'
 import { useProgram } from '../context/ProgramContext'
 import NoteRenderer from '../components/NoteRenderer'
-import { getSession, putSession, updateSessionExercises, updateSessionField, getRecentSessions, get531Config, updateExerciseHistory, removeExerciseHistoryEntry } from '../lib/dynamodb'
+import { getSession, putSession, updateSessionExercises, updateSessionField, getRecentSessions, get531Config, updateExerciseHistory, removeExerciseHistoryEntry, getTags, putTags } from '../lib/dynamodb'
 import { getSetsForWeek, getDeloadSets, WEEK_LABELS } from '../lib/fiveThreeOne'
 import { EXERCISE_FAMILIES } from '../constants/exerciseEnums'
+import { DEFAULT_TAGS, resolveSessionTags, resolveHistoryTags } from '../constants/tags'
+import TagChip from '../components/TagChip'
 import '../styles/ActiveSession.css'
 
 const EXERCISE_TO_531_KEY = {
@@ -122,7 +124,8 @@ export default function ActiveSession() {
 
   const [exercises, setExercises] = useState(null)
   const [startedAt, setStartedAt] = useState(null)
-  const [deload, setDeload] = useState(false)
+  const [sessionTags, setSessionTags] = useState([])
+  const [allTags, setAllTags] = useState([])
   const [fiveDay, setFiveDay] = useState(false)
   const [recentSessions, setRecentSessions] = useState([])
   const [historyLevel, setHistoryLevel] = useState({})
@@ -189,7 +192,9 @@ export default function ActiveSession() {
         ...dedupeKey,
         sets: ex.sets.filter(s => s.weight || s.reps).map(s => ({ weight: s.weight, reps: s.reps, rir: s.rir })),
         weightUnit: ex.weightUnit || 'lbs',
-        ...(deload && { deload: true }),
+        // Legacy: keep writing deload field so pre-tag clients can still read history
+        ...(sessionTags.includes('deload') && { deload: true }),
+        ...(sessionTags.length && { tags: sessionTags }),
         ...(ex.note && { note: ex.note }),
       }))
 
@@ -265,10 +270,18 @@ export default function ActiveSession() {
           for (const stId of slotIdIndex[ex.slotId] || []) analogousTypes.add(stId)
         }
 
-        const [existing, ...recentArrays] = await Promise.all([
+        const [existing, tagsResult, ...recentArrays] = await Promise.all([
           getSession(sessionType, date),
+          getTags(),
           ...Array.from(analogousTypes).map(st => getRecentSessions(st, 6)),
         ])
+
+        let loadedTags = tagsResult
+        if (loadedTags === null) {
+          loadedTags = DEFAULT_TAGS
+          putTags(loadedTags)
+        }
+        setAllTags(loadedTags)
         const recent = recentArrays.flat()
 
         // Sort by date desc, exclude the current session, cap at 5
@@ -286,7 +299,7 @@ export default function ActiveSession() {
             return cfg?.slotId ? { ...ex, slotId: cfg.slotId } : ex
           })
           setExercises(backfilled)
-          setDeload(existing.deload || false)
+          setSessionTags(resolveSessionTags(existing))
           setFiveDay(existing.fiveDay || false)
           setStartedAt(existing.startedAt || null)
           setNotes(existing.notes || '')
@@ -302,8 +315,9 @@ export default function ActiveSession() {
           let inferredWeek = 1
           if (pastSessions.length > 0) {
             const last531 = pastSessions[0].exercises?.find(e => e.is531)
-            if (last531?.week) {
-              inferredWeek = (last531.week % 3) + 1
+            if (last531?.week && last531.week !== 'deload') {
+              const next = (last531.week % 3) + 1
+              if (next >= 1 && next <= 3) inferredWeek = next
             }
           }
 
@@ -335,7 +349,7 @@ export default function ActiveSession() {
             sessionType,
             date,
             startedAt: now,
-            deload: false,
+            tags: [],
             exercises: initial,
           })
         }
@@ -634,7 +648,7 @@ export default function ActiveSession() {
           sets: ex.sets,
           weightUnit: ex.weightUnit || 'lbs',
           displayName: ex.swappedName || ex.name,
-          deload: s.deload || false,
+          tags: resolveSessionTags(s),
           sessionType: s.sessionType,
           crossSession: s.sessionType !== sessionType,
         }
@@ -664,20 +678,28 @@ export default function ActiveSession() {
         {startedAt && ` · started ${new Date(startedAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false })}`}
       </p>
 
-      <div className="toggle-menu-single-row">
-        <label className="deload-toggle">
-          <input
-            type="checkbox"
-            checked={deload}
-            onChange={e => {
-              const isDeload = e.target.checked
-              setDeload(isDeload)
-              updateSessionField(sessionType, date, 'deload', isDeload)
-            }}
-          />
-          Deload week
-        </label>
-        {fiveDayReductions && (
+      {allTags.filter(t => !t.deleted).length > 0 && (
+        <div className="session-tags-row">
+          {allTags.filter(t => !t.deleted).map(tag => (
+            <TagChip
+              key={tag.id}
+              tag={tag}
+              active={sessionTags.includes(tag.id)}
+              onToggle={id => {
+                setSessionTags(prev => {
+                  const next = prev.includes(id) ? prev.filter(x => x !== id) : [...prev, id]
+                  updateSessionField(sessionType, date, 'tags', next).catch(e =>
+                    console.error('Failed to save tags:', e)
+                  )
+                  return next
+                })
+              }}
+            />
+          ))}
+        </div>
+      )}
+      {fiveDayReductions && (
+        <div className="toggle-menu-single-row">
           <label className="deload-toggle">
             <input
               type="checkbox"
@@ -712,8 +734,8 @@ export default function ActiveSession() {
             />
             5-day week
           </label>
-        )}
-      </div>
+        </div>
+      )}
 
       {config.exercises.map((exConfig) => {
         if (exConfig.is531) {
@@ -829,11 +851,11 @@ export default function ActiveSession() {
             sets: h.sets,
             weightUnit: h.weightUnit || 'lbs',
             displayName,
-            deload: h.deload || false,
+            tags: resolveHistoryTags(h),
             sessionType: h.sessionType,
             crossSession: h.sessionType !== sessionType,
           }))
-        // Slot-based takes precedence for same date+sessionType (has accurate displayName/deload)
+        // Slot-based takes precedence for same date+sessionType (has accurate displayName/tags)
         const historySeen = new Map()
         for (const h of slotHistory) {
           historySeen.set(`${h.date}#${h.sessionType}`, h)
@@ -945,7 +967,11 @@ export default function ActiveSession() {
                       <span className="history-session-tag">[{program.sessionTypes[h.sessionType].name}]</span>
                     )}{' '}
                     <span className="history-variant">{h.displayName}</span>{' '}
-                    {h.deload && <span className="deload-tag">deload</span>}{' '}
+                    {h.tags?.map(id => {
+                      const tag = allTags.find(t => t.id === id)
+                      return tag ? <TagChip key={id} tag={tag} /> : null
+                    })}
+                    {' '}
                     {h.sets.length === 0
                       ? <span className="history-none">None</span>
                       : h.sets.filter(s => s.weight || s.reps).map(s => {
@@ -1137,7 +1163,11 @@ export default function ActiveSession() {
                   {addonHistory.slice(0, expandLevel).map(h => (
                     <div key={`${h.date}-${h.sessionType}`} className="last-session">
                       <span className="history-date">{h.date}:</span>{' '}
-                      {h.deload && <span className="deload-tag">deload</span>}{' '}
+                      {resolveHistoryTags(h).map(id => {
+                        const tag = allTags.find(t => t.id === id)
+                        return tag ? <TagChip key={id} tag={tag} /> : null
+                      })}
+                      {' '}
                       {h.sets.filter(s => s.weight || s.reps).map(s => {
                         const base = `${s.weight}${h.weightUnit === 'kg' ? 'kg' : ''}×${s.reps}`
                         return s.rir !== '' && s.rir !== undefined ? `${base}(${s.rir})` : base

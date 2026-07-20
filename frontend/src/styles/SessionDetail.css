@@ -366,13 +366,6 @@
   -webkit-tap-highlight-color: transparent;
 }
 
-.deload-badge {
-  font-size: 0.7rem;
-  padding: 0.1rem 0.35rem;
-  background: #fef3c7;
-  color: #92400e;
-  border-radius: 3px;
-}
 
 .back {
   background: none;
@@ -383,6 +376,15 @@
   margin-bottom: 1rem;
   display: block;
   -webkit-tap-highlight-color: transparent;
+}
+
+.addon-badge {
+  font-size: 0.7rem;
+  padding: 0.1rem 0.35rem;
+  background: #f0f0f0;
+  color: #555;
+  border-radius: 3px;
+  margin-left: 0.4rem;
 }
 
 .exercise-note-divider {

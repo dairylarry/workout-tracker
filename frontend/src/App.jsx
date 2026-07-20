@@ -12,6 +12,7 @@ import DoubleProgression from './pages/DoubleProgression'
 import LogWeight from './pages/LogWeight'
 import FiveThreeOneConfig from './pages/FiveThreeOneConfig'
 import ManageWorkout from './pages/ManageWorkout'
+import ManageTags from './pages/ManageTags'
 import ExerciseLibrary from './pages/ExerciseLibrary'
 import AudioTest from './pages/AudioTest'
 import IntervalTimer from './pages/IntervalTimer'
@@ -39,6 +40,7 @@ export default function App() {
         <Route path="/weight" element={<LogWeight />} />
         <Route path="/531" element={<FiveThreeOneConfig />} />
         <Route path="/manage" element={<ManageWorkout />} />
+        <Route path="/manage/tags" element={<ManageTags />} />
         <Route path="/manage/library" element={<ExerciseLibrary />} />
         <Route path="/audio-test" element={<AudioTest />} />
         <Route path="/interval" element={<IntervalTimer />} />
