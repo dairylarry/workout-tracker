@@ -34,7 +34,7 @@ input, select, textarea {
   background: transparent;
   color: #999;
   -webkit-tap-highlight-color: transparent;
-  min-height: 28px;
+  min-height: 36px;
 }
 
 .tag-chip--active {

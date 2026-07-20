@@ -679,7 +679,7 @@ export default function ActiveSession() {
       </p>
 
       <div className="session-meta">
-        {allTags.filter(t => !t.deleted).length > 0 && (
+        {(allTags.filter(t => !t.deleted).length > 0 || fiveDayReductions) && (
           <div className="session-tags-row">
             {allTags.filter(t => !t.deleted).map(tag => (
               <TagChip
@@ -697,10 +697,7 @@ export default function ActiveSession() {
                 }}
               />
             ))}
-          </div>
-        )}
-        {fiveDayReductions && (
-          <div className="session-system-row">
+            {fiveDayReductions && (
             <button
               className={`tag-chip tag-chip--system${fiveDay ? ' tag-chip--system-active' : ''}`}
               onClick={() => {
@@ -733,6 +730,7 @@ export default function ActiveSession() {
             >
               5-day week
             </button>
+            )}
           </div>
         )}
       </div>
