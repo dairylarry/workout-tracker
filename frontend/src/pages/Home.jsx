@@ -43,6 +43,7 @@ export default function Home() {
   const { program, loading: programLoading } = useProgram()
   // Show cached resume-sessions immediately (for today only) to avoid flash
   const [todaySessions, setTodaySessions] = useState(() => readResumeCache())
+  const [resumeIndex, setResumeIndex] = useState(0)
 
   useEffect(() => {
     if (programLoading || !program) return
@@ -69,15 +70,27 @@ export default function Home() {
       <h1>Workout Tracker</h1>
       <p className="app-version">v {VERSION}</p>
       <nav className="home-nav">
-        {todaySessions.map(s => (
-          <button
-            key={s.type}
-            className="resume-btn"
-            onClick={() => navigate(`/session/${s.type}/${s.date}`)}
-          >
-            Resume Session — {s.name}
-          </button>
-        ))}
+        {todaySessions.length > 0 && (() => {
+          const s = todaySessions[resumeIndex % todaySessions.length]
+          return (
+            <div className={`resume-row${todaySessions.length > 1 ? ' resume-row--multi' : ''}`}>
+              <button
+                className="resume-btn"
+                onClick={() => navigate(`/session/${s.type}/${s.date}`)}
+              >
+                Resume Session — {s.name}
+              </button>
+              {todaySessions.length > 1 && (
+                <button
+                  className="resume-cycle-btn"
+                  onClick={() => setResumeIndex(i => (i + 1) % todaySessions.length)}
+                >
+                  ›
+                </button>
+              )}
+            </div>
+          )
+        })()}
         <button onClick={() => navigate('/session/start')}>New Session</button>
         <button onClick={() => navigate('/history')}>View Sessions</button>
         <button onClick={() => navigate('/weight')}>Log Weight</button>

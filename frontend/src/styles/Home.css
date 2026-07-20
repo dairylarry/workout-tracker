@@ -45,7 +45,17 @@
   color: #fff;
 }
 
+.resume-row {
+  display: flex;
+  width: 100%;
+}
+
+.resume-row--multi .resume-btn {
+  border-radius: 4px 0 0 4px;
+}
+
 .resume-btn {
+  flex: 1;
   background: #111 !important;
   color: #fff !important;
   font-weight: 600;
@@ -53,6 +63,24 @@
 
 .resume-btn:active {
   opacity: 0.8;
+}
+
+.resume-cycle-btn {
+  background: #333;
+  color: #fff;
+  border: 2px solid #111;
+  border-left: none;
+  border-radius: 0 4px 4px 0;
+  padding: 0 1.1rem;
+  font-size: 1.3rem;
+  line-height: 1;
+  cursor: pointer;
+  min-height: 52px;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.resume-cycle-btn:active {
+  background: #555;
 }
 
 @media (hover: hover) {
