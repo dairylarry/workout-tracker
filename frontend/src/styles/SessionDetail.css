@@ -415,18 +415,18 @@
   margin-top: 0;
 }
 
-.history-exercise-note {
+.session-detail .history-exercise-note {
   font-size: 0.78rem;
   color: #666;
   font-style: italic;
   margin-top: 0.2rem;
 }
 
-.history-exercise-note p {
+.session-detail .history-exercise-note p {
   margin: 0;
 }
 
-.history-exercise-note a {
+.session-detail .history-exercise-note a {
   color: #1a56db;
   text-decoration: none;
 }
