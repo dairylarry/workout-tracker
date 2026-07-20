@@ -778,7 +778,7 @@ export default function ActiveSession() {
                   return last ? (
                     <div className="history-section">
                       <div className="last-session">
-                        Last: {last.week === 'deload' ? 'Deload' : `Week ${last.week}`} — {last.date}
+                        <strong>Last:</strong> {last.week === 'deload' ? 'Deload' : `Week ${last.week}`} — {last.date}
                       </div>
                     </div>
                   ) : null

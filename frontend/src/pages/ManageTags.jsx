@@ -78,7 +78,7 @@ export default function ManageTags() {
       <div className="mt-list">
         {active.length === 0 && <p className="mt-empty">No tags yet.</p>}
         {active.map(tag => (
-          <div key={tag.id} className="mt-row">
+          <div key={tag.id} className={`mt-row${editingId === tag.id ? ' mt-row--editing' : ''}`}>
             {editingId === tag.id ? (
               <div className="mt-edit-form">
                 <input

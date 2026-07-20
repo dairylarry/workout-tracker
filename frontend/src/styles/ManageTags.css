@@ -28,16 +28,13 @@
 }
 
 .mt-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
   background: #fff;
   border: 1px solid #e5e5e5;
   border-radius: 6px;
   padding: 0.6rem 0.75rem;
-}
-
-.mt-row > * {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
 }
 
 .mt-row-actions {
@@ -71,10 +68,16 @@
   -webkit-tap-highlight-color: transparent;
 }
 
+.mt-row--editing {
+  flex-direction: column;
+  align-items: stretch;
+}
+
 .mt-edit-form {
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
+  width: 100%;
 }
 
 .mt-edit-input {
