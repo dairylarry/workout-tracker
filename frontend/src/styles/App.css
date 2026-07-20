@@ -38,7 +38,7 @@ input, select, textarea {
 }
 
 .tag-chip--active {
-  border-color: transparent;
+  border-color: currentColor;
 }
 
 /* System pill (e.g. 5-day week) — uses dark blue fill when active instead of a tag color */
