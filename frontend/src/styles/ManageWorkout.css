@@ -396,6 +396,62 @@
   cursor: pointer;
 }
 
+.mw-item-right {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  flex-shrink: 0;
+}
+
+.mw-edit-icon-btn {
+  background: none;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  width: 28px;
+  height: 28px;
+  font-size: 0.9rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  color: #1a1a1a;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.mw-edit-icon-btn--save {
+  color: #16a34a;
+  border-color: #16a34a;
+}
+
+.mw-edit-icon-btn:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+
+.mw-edit-exercise-form {
+  padding: 0.5rem 0.5rem 0.75rem;
+  background: #fafafa;
+  border-top: 1px solid #eee;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.edit-mode-btn {
+  width: 100%;
+  padding: 0.65rem;
+  min-height: 44px;
+  font-size: 0.85rem;
+  border: 2px solid #111;
+  background: #fff;
+  color: #111;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-top: 1rem;
+  -webkit-tap-highlight-color: transparent;
+}
+
 .delete-mode-btn {
   width: 100%;
   padding: 0.65rem;

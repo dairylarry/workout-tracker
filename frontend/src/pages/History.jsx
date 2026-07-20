@@ -2,6 +2,7 @@ import { useState, useEffect, useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { getAllSessionsForType, getTags, putTags } from '../lib/dynamodb'
 import { useProgram } from '../context/ProgramContext'
+import { getDisplayName } from '../constants/exercises'
 import NoteRenderer from '../components/NoteRenderer'
 import TagChip from '../components/TagChip'
 import { DEFAULT_TAGS, resolveSessionTags } from '../constants/tags'
@@ -31,7 +32,7 @@ function formatDate(dateStr) {
 
 export default function History() {
   const navigate = useNavigate()
-  const { program } = useProgram()
+  const { program, exerciseLibrary } = useProgram()
   const [sessions, setSessions] = useState([])
   const [allTags, setAllTags] = useState([])
   const [loading, setLoading] = useState(true)
@@ -332,7 +333,7 @@ export default function History() {
                     {session.exercises?.some(ex => ex.note) && (
                       <div className="history-card-exercise-notes">
                         {session.exercises.filter(ex => ex.note).map((ex, i) => {
-                          const name = ex.swappedName || ex.name
+                          const name = getDisplayName(ex.swappedName || ex.name, exerciseLibrary)
                           const preview = ex.note.length > 60 ? ex.note.slice(0, 60) + '…' : ex.note
                           return (
                             <p key={i} className="history-card-exercise-note-row">

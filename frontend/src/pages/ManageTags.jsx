@@ -108,7 +108,7 @@ export default function ManageTags() {
                 </div>
                 <div className="mt-edit-actions">
                   <button className="mt-save-btn" onClick={handleSaveEdit} disabled={!editName.trim()}>
-                    Save
+                    ✓
                   </button>
                   <button className="mt-cancel-btn" onClick={() => setEditingId(null)}>
                     Cancel
@@ -119,7 +119,7 @@ export default function ManageTags() {
               <>
                 <TagChip tag={tag} />
                 <div className="mt-row-actions">
-                  <button className="mt-edit-btn" onClick={() => startEdit(tag)}>Edit</button>
+                  <button className="mt-edit-btn" onClick={() => startEdit(tag)}>✎</button>
                   <button className="mt-delete-btn" onClick={() => handleDelete(tag.id)}>×</button>
                 </div>
               </>

@@ -2,6 +2,7 @@ import { useParams, useNavigate } from 'react-router-dom'
 import { useState, useEffect } from 'react'
 import { getSession, deleteSession, updateSessionExercises, updateSessionField, getTags, putTags } from '../lib/dynamodb'
 import { useProgram } from '../context/ProgramContext'
+import { getDisplayName } from '../constants/exercises'
 import NoteRenderer from '../components/NoteRenderer'
 import TagChip from '../components/TagChip'
 import { DEFAULT_TAGS, resolveSessionTags } from '../constants/tags'
@@ -10,7 +11,7 @@ import '../styles/SessionDetail.css'
 export default function SessionDetail() {
   const { sessionType, date } = useParams()
   const navigate = useNavigate()
-  const { program } = useProgram()
+  const { program, exerciseLibrary } = useProgram()
   const config = program?.sessionTypes[sessionType]
   const [session, setSession] = useState(null)
   const [loading, setLoading] = useState(true)
@@ -172,7 +173,7 @@ export default function SessionDetail() {
 
       {exercises?.map((exercise, exIndex) => {
         const exConfig = config?.exercises.find(e => e.name === exercise.name)
-        const displayName = exercise.swappedName || exercise.name
+        const displayName = getDisplayName(exercise.swappedName || exercise.name, exerciseLibrary)
         const isSwapped = !!exercise.swappedName
         const isSwapOpen = swapOpen === exIndex
 
@@ -190,19 +191,19 @@ export default function SessionDetail() {
               )}
             </div>
             {isSwapped && (
-              <span className="swapped-from">Originally: {exercise.name}</span>
+              <span className="swapped-from">Originally: {getDisplayName(exercise.name, exerciseLibrary)}</span>
             )}
 
             {editing && isSwapOpen && exConfig && (
               <div className="swap-panel">
                 {exConfig.subs?.map(sub => (
                   <button key={sub} className="swap-option" onClick={() => handleSwap(exIndex, sub)}>
-                    {sub}
+                    {getDisplayName(sub, exerciseLibrary)}
                   </button>
                 ))}
                 {isSwapped && (
                   <button className="swap-reset" onClick={() => handleResetSwap(exIndex)}>
-                    Reset to {exercise.name}
+                    Reset to {getDisplayName(exercise.name, exerciseLibrary)}
                   </button>
                 )}
               </div>

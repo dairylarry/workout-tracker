@@ -315,7 +315,7 @@ export async function getExerciseLibrary() {
 export async function putExercise(exercise) {
   const item = {
     PK: 'EXERCISE_LIB',
-    SK: `EXERCISE#${exercise.name.toLowerCase().replace(/\s+/g, '-')}`,
+    SK: `EXERCISE#${exercise.name.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '')}`,
     ...exercise,
   }
   try {
@@ -326,15 +326,16 @@ export async function putExercise(exercise) {
 }
 
 export async function updateExerciseMeta(exercise) {
-  const sk = `EXERCISE#${exercise.name.toLowerCase().replace(/\s+/g, '-')}`
+  const sk = `EXERCISE#${exercise.name.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '')}`
   try {
     await docClient.send(new UpdateCommand({
       TableName: TABLE,
       Key: { PK: 'EXERCISE_LIB', SK: sk },
-      UpdateExpression: 'SET #nm = :nm, muscleGroups = :mg, #fam = :fam, defaultRepRange = :rr, defaultSets = :ds, createdAt = if_not_exists(createdAt, :ca)',
-      ExpressionAttributeNames: { '#nm': 'name', '#fam': 'family' },
+      // name is the immutable ID — only displayName changes on rename (see constants/exercises.js)
+      UpdateExpression: 'SET displayName = :dn, muscleGroups = :mg, #fam = :fam, defaultRepRange = :rr, defaultSets = :ds, createdAt = if_not_exists(createdAt, :ca)',
+      ExpressionAttributeNames: { '#fam': 'family' },
       ExpressionAttributeValues: {
-        ':nm': exercise.name,
+        ':dn': exercise.displayName,
         ':mg': exercise.muscleGroups,
         ':fam': exercise.family ?? null,
         ':rr': exercise.defaultRepRange ?? null,

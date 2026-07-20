@@ -5,6 +5,7 @@ import NoteRenderer from '../components/NoteRenderer'
 import { getSession, putSession, updateSessionExercises, updateSessionField, getRecentSessions, get531Config, updateExerciseHistory, removeExerciseHistoryEntry, getTags, putTags } from '../lib/dynamodb'
 import { getSetsForWeek, getDeloadSets, WEEK_LABELS } from '../lib/fiveThreeOne'
 import { EXERCISE_FAMILIES } from '../constants/exerciseEnums'
+import { getDisplayName, enrichExercise } from '../constants/exercises'
 import { DEFAULT_TAGS, resolveSessionTags, resolveHistoryTags } from '../constants/tags'
 import TagChip from '../components/TagChip'
 import '../styles/ActiveSession.css'
@@ -294,9 +295,8 @@ export default function ActiveSession() {
           // Backfill slotId onto loaded exercises if missing (older sessions predate slotIds).
           // Match by array index against the program config — the historical invariant.
           const backfilled = existing.exercises.map((ex, i) => {
-            if (ex.slotId || ex.supplemental) return ex
-            const cfg = config.exercises[i]
-            return cfg?.slotId ? { ...ex, slotId: cfg.slotId } : ex
+            const withSlot = (ex.slotId || ex.supplemental) ? ex : (config.exercises[i]?.slotId ? { ...ex, slotId: config.exercises[i].slotId } : ex)
+            return enrichExercise(withSlot, exerciseLibrary)
           })
           setExercises(backfilled)
           setSessionTags(resolveSessionTags(existing))
@@ -338,6 +338,8 @@ export default function ActiveSession() {
               }))
             }
           })
+
+          initial.forEach((ex, i) => { initial[i] = enrichExercise(ex, exerciseLibrary) })
 
           const now = new Date().toISOString()
           setStartedAt(now)
@@ -492,10 +494,7 @@ export default function ActiveSession() {
     setExercises(prev => {
       const updated = prev.map((ex, ei) => {
         if (ei !== exIndex) return ex
-        return {
-          ...ex,
-          swappedName: newName,
-        }
+        return enrichExercise({ ...ex, swappedName: newName }, exerciseLibrary)
       })
       updateSessionExercises(sessionType, date, updated).catch(e =>
         console.error('Failed to save swap:', e)
@@ -511,7 +510,7 @@ export default function ActiveSession() {
       const updated = prev.map((ex, ei) => {
         if (ei !== exIndex) return ex
         const { swappedName, ...rest } = ex
-        return rest
+        return enrichExercise(rest, exerciseLibrary)
       })
       updateSessionExercises(sessionType, date, updated).catch(e =>
         console.error('Failed to save swap reset:', e)
@@ -533,6 +532,7 @@ export default function ActiveSession() {
       }))
       const newEx = {
         name: libExercise.name,
+        displayName: libExercise.displayName || libExercise.name,
         weightUnit: 'lbs',
         supplemental: true,
         sets,
@@ -647,7 +647,7 @@ export default function ActiveSession() {
           date: s.date,
           sets: ex.sets,
           weightUnit: ex.weightUnit || 'lbs',
-          displayName: ex.swappedName || ex.name,
+          displayName: getDisplayName(ex.swappedName || ex.name, exerciseLibrary),
           tags: resolveSessionTags(s),
           sessionType: s.sessionType,
           crossSession: s.sessionType !== sessionType,
@@ -832,7 +832,8 @@ export default function ActiveSession() {
         const exIndex = exercises.indexOf(exercise)
         const slotHistory = getExerciseHistory(exConfig.slotId, exIndex)
         const expandLevel = historyLevel[exercise.name] || 1
-        const displayName = exercise.swappedName || exercise.name
+        const displayName = exercise.displayName
+        const nameKey = exercise.swappedName || exercise.name
         const isSwapped = !!exercise.swappedName
         const isSwapOpen = swapOpen === exIndex
 
@@ -842,12 +843,12 @@ export default function ActiveSession() {
         )
         const displaySets = activeSub?.sets || exConfig.sets
         // Use getRangeRir so plain string subs resolve via exercise library
-        const { repRange: displayRange, rir: displayRir } = getRangeRir(displayName, exConfig, exerciseLibrary)
+        const { repRange: displayRange, rir: displayRir } = getRangeRir(nameKey, exConfig, exerciseLibrary)
         const progReady = !exConfig.is531 && checkProgression(exercise.sets, displayRange, displayRir)
 
         // Build union of slot-based history + library history for this exercise
         // This surfaces appearances across other session types (e.g. Incline Cable Fly in both Upper A and Upper B)
-        const libEntry = exerciseLibrary.find(e => e.name === displayName)
+        const libEntry = exerciseLibrary.find(e => e.name === nameKey)
         const libHistory = (libEntry?.history || [])
           .filter(h => h.date && h.date !== date && h.sets?.some(s => s.weight || s.reps))
           .map(h => ({
@@ -893,7 +894,7 @@ export default function ActiveSession() {
                 </div>
               </div>
               {isSwapped && (
-                <span className="swapped-from">Originally: {exercise.name}</span>
+                <span className="swapped-from">Originally: {getDisplayName(exercise.name, exerciseLibrary)}</span>
               )}
               <span className="exercise-target">
                 {displaySets} × {displayRange[0] === displayRange[1] ? displayRange[0] : `${displayRange[0]}–${displayRange[1]}`}
@@ -1049,7 +1050,7 @@ export default function ActiveSession() {
       {/* Supplemental exercises */}
       {exercises.filter(ex => ex.supplemental).map(exercise => {
         const exIndex = exercises.indexOf(exercise)
-        const displayName = exercise.swappedName || exercise.name
+        const displayName = exercise.displayName
         const isSwapped = !!exercise.swappedName
         const isSwapOpen = swapOpen === exIndex
 
@@ -1075,7 +1076,7 @@ export default function ActiveSession() {
                 </div>
               </div>
               {isSwapped && (
-                <span className="swapped-from">Originally: {exercise.name}</span>
+                <span className="swapped-from">Originally: {getDisplayName(exercise.name, exerciseLibrary)}</span>
               )}
               <span className="addon-badge">Add-on</span>
             </div>
@@ -1113,9 +1114,9 @@ export default function ActiveSession() {
                 .filter(ex => {
                   if (addonFamilyFilter && ex.family !== addonFamilyFilter) return false
                   const q = addonFilter.toLowerCase()
-                  return !q || ex.name.toLowerCase().includes(q)
+                  return !q || (ex.displayName || ex.name).toLowerCase().includes(q)
                 })
-                .sort((a, b) => a.name.localeCompare(b.name))
+                .sort((a, b) => (a.displayName || a.name).localeCompare(b.displayName || b.name))
               const limit = addonFilter ? 20 : 3
               const shown = filtered.slice(0, limit)
               const remaining = filtered.length - limit
@@ -1141,7 +1142,7 @@ export default function ActiveSession() {
                   />
                   {shown.map(ex => (
                     <button key={ex.name} className="swap-option" onClick={() => handleSwap(exIndex, ex.name)}>
-                      {ex.name}
+                      {ex.displayName || ex.name}
                     </button>
                   ))}
                   {remaining > 0 && !addonFilter && (
@@ -1150,7 +1151,7 @@ export default function ActiveSession() {
                   {filtered.length === 0 && <span className="addon-no-results">No matches</span>}
                   {isSwapped && (
                     <button className="swap-reset" onClick={() => handleResetSwap(exIndex)}>
-                      Reset to {exercise.name}
+                      Reset to {getDisplayName(exercise.name, exerciseLibrary)}
                     </button>
                   )}
                 </div>
@@ -1158,9 +1159,9 @@ export default function ActiveSession() {
             })()}
 
             {(() => {
-              const libEntry = exerciseLibrary.find(ex => ex.name === displayName)
+              const libEntry = exerciseLibrary.find(ex => ex.name === (exercise.swappedName || exercise.name))
               const addonHistory = (libEntry?.history || []).filter(h => h.date !== date && h.sets?.some(s => s.weight || s.reps))
-              const expandLevel = historyLevel[displayName] || 1
+              const expandLevel = historyLevel[exercise.name] || 1
               if (addonHistory.length === 0) return null
               return (
                 <div className="history-section">
@@ -1179,10 +1180,10 @@ export default function ActiveSession() {
                     </div>
                   ))}
                   {addonHistory.length > expandLevel && (
-                    <button className="show-more" onClick={() => cycleHistory(displayName)}>+</button>
+                    <button className="show-more" onClick={() => cycleHistory(exercise.name)}>+</button>
                   )}
                   {expandLevel > 1 && expandLevel >= addonHistory.length && (
-                    <button className="show-more" onClick={() => cycleHistory(displayName)}>−</button>
+                    <button className="show-more" onClick={() => cycleHistory(exercise.name)}>−</button>
                   )}
                 </div>
               )
