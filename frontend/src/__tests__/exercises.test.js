@@ -263,3 +263,154 @@ describe('edit exercise: displayName vs name', () => {
     expect(result).toBe('Barbell Back Squat')
   })
 })
+
+// --- Exercise history note propagation ---
+// Mirrors the mapping logic in getExerciseHistory (ActiveSession.jsx)
+
+function buildHistoryEntry(session, slotIndex, exerciseLibrary) {
+  const ex = session.exercises[slotIndex]
+  if (!ex) return null
+  return {
+    date: session.date,
+    sets: ex.sets,
+    weightUnit: ex.weightUnit || 'lbs',
+    displayName: getDisplayName(ex.swappedName || ex.name, exerciseLibrary),
+    sessionType: session.sessionType,
+    note: ex.note,
+  }
+}
+
+describe('exercise history note propagation', () => {
+  const session = {
+    date: '2026-07-16',
+    sessionType: 'upper-a',
+    exercises: [
+      { name: 'Barbell Back Squat', sets: [{ weight: 100, reps: 8 }], note: 'Pause at the contraction' },
+      { name: 'Flat Barbell Bench Press', sets: [{ weight: 80, reps: 8 }] },
+    ],
+  }
+
+  it('includes note in history entry when exercise has a note', () => {
+    const entry = buildHistoryEntry(session, 0, LIBRARY)
+    expect(entry.note).toBe('Pause at the contraction')
+  })
+
+  it('note is undefined when exercise has no note', () => {
+    const entry = buildHistoryEntry(session, 1, LIBRARY)
+    expect(entry.note).toBeUndefined()
+  })
+
+  it('note does not affect other history fields', () => {
+    const entry = buildHistoryEntry(session, 0, LIBRARY)
+    expect(entry.date).toBe('2026-07-16')
+    expect(entry.displayName).toBe('Barbell Back Squat')
+    expect(entry.sets).toHaveLength(1)
+    expect(entry.sessionType).toBe('upper-a')
+  })
+
+  it('note is preserved when exercise is swapped', () => {
+    const swappedSession = {
+      ...session,
+      exercises: [
+        { name: 'Barbell Back Squat', swappedName: 'low-bar-squat-1737500000000', sets: [{ weight: 100, reps: 8 }], note: 'Stay tight' },
+      ],
+    }
+    const entry = buildHistoryEntry(swappedSession, 0, LIBRARY)
+    expect(entry.note).toBe('Stay tight')
+    expect(entry.displayName).toBe('Low Bar Squat')
+  })
+})
+
+// --- History entry rendering: full pipeline ---
+// Mirrors the set-string and field logic rendered in the history-section JSX
+
+function formatSet(s, weightUnit) {
+  const base = `${s.weight}${weightUnit === 'kg' ? 'kg' : ''}×${s.reps}`
+  return s.rir !== '' && s.rir !== undefined ? `${base}(${s.rir})` : base
+}
+
+function formatSets(sets, weightUnit) {
+  const filled = sets.filter(s => s.weight || s.reps)
+  if (filled.length === 0) return null
+  return filled.map(s => formatSet(s, weightUnit)).join(', ')
+}
+
+describe('history entry rendering: full pipeline', () => {
+  it('fully populated entry has all fields', () => {
+    const session = {
+      date: '2026-07-16',
+      sessionType: 'upper-a',
+      exercises: [{
+        name: 'Barbell Back Squat',
+        sets: [{ weight: 100, reps: 8, rir: '1' }],
+        weightUnit: 'lbs',
+        note: 'Pause at the contraction',
+      }],
+    }
+    const entry = buildHistoryEntry(session, 0, LIBRARY)
+    expect(entry.date).toBe('2026-07-16')
+    expect(entry.displayName).toBe('Barbell Back Squat')
+    expect(entry.sets).toHaveLength(1)
+    expect(entry.weightUnit).toBe('lbs')
+    expect(entry.sessionType).toBe('upper-a')
+    expect(entry.note).toBe('Pause at the contraction')
+  })
+
+  it('set string: lbs, no rir', () => {
+    expect(formatSet({ weight: 100, reps: 8 }, 'lbs')).toBe('100×8')
+  })
+
+  it('set string: kg unit appended', () => {
+    expect(formatSet({ weight: 80, reps: 5 }, 'kg')).toBe('80kg×5')
+  })
+
+  it('set string: rir appended in parens', () => {
+    expect(formatSet({ weight: 100, reps: 8, rir: '2' }, 'lbs')).toBe('100×8(2)')
+  })
+
+  it('set string: rir of 0 is shown', () => {
+    expect(formatSet({ weight: 100, reps: 8, rir: '0' }, 'lbs')).toBe('100×8(0)')
+  })
+
+  it('set string: empty string rir is omitted', () => {
+    expect(formatSet({ weight: 100, reps: 8, rir: '' }, 'lbs')).toBe('100×8')
+  })
+
+  it('formatSets: multiple sets joined by comma', () => {
+    const sets = [
+      { weight: 100, reps: 8 },
+      { weight: 100, reps: 7 },
+      { weight: 100, reps: 6 },
+    ]
+    expect(formatSets(sets, 'lbs')).toBe('100×8, 100×7, 100×6')
+  })
+
+  it('formatSets: filters empty sets', () => {
+    const sets = [{ weight: 100, reps: 8 }, { weight: '', reps: '' }]
+    expect(formatSets(sets, 'lbs')).toBe('100×8')
+  })
+
+  it('formatSets: all empty returns null (rendered as None)', () => {
+    expect(formatSets([{ weight: '', reps: '' }], 'lbs')).toBeNull()
+  })
+
+  it('missing note renders nothing (falsy)', () => {
+    const session = {
+      date: '2026-07-16',
+      sessionType: 'upper-a',
+      exercises: [{ name: 'Barbell Back Squat', sets: [{ weight: 100, reps: 8 }] }],
+    }
+    const entry = buildHistoryEntry(session, 0, LIBRARY)
+    expect(entry.note).toBeFalsy()
+  })
+
+  it('weightUnit defaults to lbs when absent', () => {
+    const session = {
+      date: '2026-07-16',
+      sessionType: 'upper-a',
+      exercises: [{ name: 'Barbell Back Squat', sets: [{ weight: 100, reps: 8 }] }],
+    }
+    const entry = buildHistoryEntry(session, 0, LIBRARY)
+    expect(entry.weightUnit).toBe('lbs')
+  })
+})

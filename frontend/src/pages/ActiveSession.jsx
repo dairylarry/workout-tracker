@@ -651,6 +651,7 @@ export default function ActiveSession() {
           tags: resolveSessionTags(s),
           sessionType: s.sessionType,
           crossSession: s.sessionType !== sessionType,
+          note: ex.note,
         }
       })
       .filter(h => h && h.sets?.some(s => s.weight || s.reps))
@@ -983,7 +984,12 @@ export default function ActiveSession() {
                         }).join(', ')
                     }
                     {showBump && <span className="bump-tag"> ↑ bump</span>}
-                    {h.note && <NoteRenderer className="history-exercise-note">{h.note}</NoteRenderer>}
+                    {h.note && (
+                      <>
+                        <hr className="history-note-divider" />
+                        <NoteRenderer className="history-exercise-note">{h.note}</NoteRenderer>
+                      </>
+                    )}
                   </div>
                 )})}
                 {history.length > expandLevel && (
@@ -1175,6 +1181,12 @@ export default function ActiveSession() {
                         const base = `${s.weight}${h.weightUnit === 'kg' ? 'kg' : ''}×${s.reps}`
                         return s.rir !== '' && s.rir !== undefined ? `${base}(${s.rir})` : base
                       }).join(', ')}
+                      {h.note && (
+                        <>
+                          <hr className="history-note-divider" />
+                          <NoteRenderer className="history-exercise-note">{h.note}</NoteRenderer>
+                        </>
+                      )}
                     </div>
                   ))}
                   {addonHistory.length > expandLevel && (

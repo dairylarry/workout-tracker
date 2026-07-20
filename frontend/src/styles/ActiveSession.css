@@ -406,11 +406,15 @@
   margin: 0.5rem 0;
 }
 
+.history-note-divider {
+  border: none;
+  border-top: 1px solid #e5e5e5;
+  margin: 0.4rem 0 0.3rem;
+}
+
 .history-exercise-note {
-  font-size: 0.72rem;
-  color: #999;
-  font-style: italic;
-  margin-top: 0.2rem;
+  font-size: 0.8rem;
+  color: #444;
 }
 
 .history-exercise-note p {
