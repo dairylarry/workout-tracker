@@ -25,16 +25,30 @@ export const CORE_WORKOUT_SEED = [
       {
         label: 'Warm-up',
         numberOfTimes: 1,
-        exercises: [{ name: 'Dead Bug (alternating arm and leg)', workSeconds: 45, restSeconds: 15, cue: 'lower back pinned to mat, move only as far as you can control' }]
+        exercises: [
+          { name: 'Dead Bug (alternating arm and leg)', workSeconds: 45, restSeconds: 0, cue: 'lower back pinned to mat, move only as far as you can control' },
+        ],
       },
       {
-        numberOfTimes: 2,
+        label: 'Round 1',
+        numberOfTimes: 1,
         exercises: [
-          { name: 'Hollow Body Hold', workSeconds: 40, restSeconds: 20, cue: 'long body, rib cage down, press lower back into mat' },
-          { name: 'Reverse Crunch', workSeconds: 40, restSeconds: 20, cue: 'curl hips up, not momentum — control the lower' },
-          { name: 'Plank Shoulder Tap', workSeconds: 40, restSeconds: 20, cue: 'hips still, feet wide if needed, slow taps' },
+          { name: 'Hollow Body Hold',     workSeconds: 45, restSeconds: 0,  cue: 'long body, rib cage down, press lower back into mat' },
+          { name: 'Reverse Plank',        workSeconds: 45, restSeconds: 0,  cue: 'hips up, squeeze glutes, drive heels into floor' },
+          { name: 'Plank Shoulder Tap',   workSeconds: 45, restSeconds: 0,  cue: 'hips still, feet wide if needed, slow taps' },
+          { name: 'Left Side Plank Hold', workSeconds: 45, restSeconds: 0,  cue: 'hips stacked, drive top hip to ceiling' },
+          { name: 'Right Side Plank Hold',workSeconds: 45, restSeconds: 40, cue: 'hips stacked, drive top hip to ceiling' },
+        ],
+      },
+      {
+        label: 'Round 2',
+        numberOfTimes: 1,
+        exercises: [
+          { name: 'Hollow Body Hold',     workSeconds: 45, restSeconds: 0, cue: 'long body, rib cage down, press lower back into mat' },
+          { name: 'Reverse Plank',        workSeconds: 45, restSeconds: 0, cue: 'hips up, squeeze glutes, drive heels into floor' },
+          { name: 'Plank Shoulder Tap',   workSeconds: 45, restSeconds: 0, cue: 'hips still, feet wide if needed, slow taps' },
           { name: 'Left Side Plank Hold', workSeconds: 45, restSeconds: 0, cue: 'hips stacked, drive top hip to ceiling' },
-          { name: 'Right Side Plank Hold', workSeconds: 45, restSeconds: 30, cue: 'hips stacked, drive top hip to ceiling' },
+          { name: 'Right Side Plank Hold',workSeconds: 45, restSeconds: 0, cue: 'hips stacked, drive top hip to ceiling' },
         ],
       },
       {
@@ -45,10 +59,10 @@ export const CORE_WORKOUT_SEED = [
         ],
       },
     ],
-    notes: 'Post-strength finisher. The 40/20 ratio is productive without being punishing after a hard session.',
+    notes: 'Post-strength finisher. Two rounds of five holds with a 40s rest between rounds.',
     progressions: [
-      'Harder variation: dead bug → 3-second lowering; hollow hold → hollow body rock.',
-      'Reduce rest: cut to 15s across all intervals, then 10s.',
+      'Harder variation: hollow hold → hollow body rock; dead bug → 3-second lowering.',
+      'Reduce rest: cut the inter-round rest from 40s to 20s.',
       'Add load: hold a light dumbbell or kettlebell overhead on dead bug and hollow hold.',
     ],
   },
