@@ -1079,9 +1079,6 @@ export default function ActiveSession() {
                   >···</button>
                 </div>
               </div>
-              {isSwapped && (
-                <span className="swapped-from">Originally: {getDisplayName(exercise.name, exerciseLibrary)}</span>
-              )}
               <span className="addon-badge">Add-on</span>
             </div>
 
