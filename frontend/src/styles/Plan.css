@@ -56,12 +56,14 @@
 .plan ul,
 .plan ol {
   list-style: none;
-  padding-left: 1.25rem;
+  padding-left: 0;
   margin-bottom: 0.75rem;
 }
 
 .plan li {
-  position: relative;
+  display: flex;
+  align-items: flex-start;
+  gap: 0.4rem;
   font-size: 0.9rem;
   margin-bottom: 0.3rem;
   line-height: 1.4;
@@ -69,8 +71,8 @@
 
 .plan ul > li::before {
   content: "•";
-  position: absolute;
-  left: -1rem;
+  flex-shrink: 0;
+  line-height: 1.4;
 }
 
 .plan ol {
@@ -83,8 +85,9 @@
 
 .plan ol > li::before {
   content: counter(plan-ol) ".";
-  position: absolute;
-  left: -1.25rem;
+  flex-shrink: 0;
+  line-height: 1.4;
+  min-width: 1rem;
 }
 
 .plan hr {
