@@ -35,7 +35,7 @@ export function ProgramProvider({ children }) {
             }
           }
 
-          setProgram({ name: 'Spring 2026', sessionTypes })
+          setProgram({ name: 'Fall 2026', sessionTypes })
         } else {
           // First load — seed from programConfig.js
           console.log('No program config in DynamoDB — seeding from programConfig.js')

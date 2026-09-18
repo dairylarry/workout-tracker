@@ -1,5 +1,5 @@
 export const PROGRAM = {
-  name: 'Spring 2026',
+  name: 'Fall 2026',
   sessionTypes: {
     'lower-a': {
       name: 'Lower A',
@@ -9,7 +9,7 @@ export const PROGRAM = {
         { slotId: 'la-squat',     name: 'Barbell Back Squat', sets: 0, repRange: null, rir: null, rest: '3–4 min', is531: true, note: '5s PRO — track manually' },
         { slotId: 'la-legpress',  name: 'Leg Press', sets: 3, repRange: [10, 12], rir: 2, rest: '90 sec', subs: [{ name: 'Bulgarian Split Squat', sets: 2, repRange: [8, 8], rir: 2, perSide: true }, 'Goblet Squat', 'Seated Leg Press Machine'] },
         { slotId: 'la-rdl',       name: 'Romanian Deadlift', sets: 3, repRange: [6, 10], rir: 2, rest: '2 min', subs: ['DB Romanian Deadlift', 'KB Romanian Deadlift'] },
-        { slotId: 'la-hipthrust', name: 'Barbell Hip Thrust', sets: 2, repRange: [8, 12], rir: 2, rest: '90 sec', subs: ['DB Hip Thrust', 'KB Hip Thrust', 'Cable Hip Thrust'] },
+        { slotId: 'la-hipthrust', name: 'Barbell Hip Thrust', sets: 2, repRange: [8, 12], rir: 1, rest: '90 sec', subs: ['DB Hip Thrust', 'KB Hip Thrust', 'Cable Hip Thrust'] },
         { slotId: 'la-calf',      name: 'Standing Calf Raise', sets: 3, repRange: [15, 20], rir: 1, rest: '60 sec', subs: ['Single-Leg DB Calf Raise', 'Standing Calf Raise Machine', 'Leg Press Calf Raise'] },
       ],
     },
@@ -24,7 +24,7 @@ export const PROGRAM = {
         { slotId: 'ua-press',   name: 'Seated DB Shoulder Press', sets: 3, repRange: [8, 12], rir: 2, rest: '90 sec', subs: ['Standing DB Shoulder Press', 'Machine Shoulder Press'] },
         { slotId: 'ua-lateral', name: 'Cable Lateral Raise', sets: 4, repRange: [12, 15], rir: 1, rest: '60 sec', subs: ['DB Lateral Raise', 'Incline Dumbbell Y Raise', 'Machine Lateral Raise'] },
         { slotId: 'ua-fly',     name: 'Incline Cable Fly', sets: 2, repRange: [10, 12], rir: 1, rest: '60 sec', subs: ['Incline DB Fly', 'Pec Deck', 'Flat Cable Fly', 'Decline Cable Fly'] },
-        { slotId: 'ua-tri',     name: 'Tricep Bar Pushdown', sets: 4, repRange: [10, 12], rir: 1, rest: '60 sec', superset: 'A', subs: ['Tricep Rope Pushdown', 'Band Tricep Pushdown'] },
+        { slotId: 'ua-tri',     name: 'EZ Bar Skullcrusher', sets: 4, repRange: [8, 12], rir: 1, rest: '60 sec', superset: 'A', subs: ['Overhead Cable Extension'] },
         { slotId: 'ua-curl',    name: 'EZ Bar Curl', sets: 4, repRange: [10, 12], rir: 1, rest: '60 sec', superset: 'A', subs: ['DB Curl', 'Barbell Curl', 'Bicep Curl Machine', 'DB Preacher Curl', 'EZ Preacher Curl'] },
       ],
     },
