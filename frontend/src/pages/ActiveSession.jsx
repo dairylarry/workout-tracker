@@ -943,8 +943,8 @@ export default function ActiveSession() {
                 {exConfig.subs?.map(sub => {
                   const subName = typeof sub === 'object' ? sub.name : sub
                   const subLabel = typeof sub === 'object'
-                    ? `${sub.name} (${sub.sets}×${sub.repRange[0] === sub.repRange[1] ? sub.repRange[0] : `${sub.repRange[0]}–${sub.repRange[1]}`}, RIR ${sub.rir})`
-                    : sub
+                    ? `${getDisplayName(subName, exerciseLibrary)} (${sub.sets}×${sub.repRange[0] === sub.repRange[1] ? sub.repRange[0] : `${sub.repRange[0]}–${sub.repRange[1]}`}, RIR ${sub.rir})`
+                    : getDisplayName(subName, exerciseLibrary)
                   return (
                     <button key={subName} className="swap-option" onClick={() => handleSwap(exIndex, subName)}>
                       {subLabel}
@@ -953,7 +953,7 @@ export default function ActiveSession() {
                 })}
                 {isSwapped && (
                   <button className="swap-reset" onClick={() => handleResetSwap(exIndex)}>
-                    Reset to {exercise.name}
+                    Reset to {getDisplayName(exercise.name, exerciseLibrary)}
                   </button>
                 )}
               </div>

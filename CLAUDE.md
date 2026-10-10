@@ -1,5 +1,10 @@
 # Claude Guidelines — Workout Tracker
 
+## Related Repos
+- **This repo is a read-only reference for now.** It's being migrated into a multi-user, app-store-distributable product in `../workout-tracker-app`. Do not modify code here unless explicitly told the PWA-migration phase has started — a general request to work on "the workout tracker" elsewhere does not imply permission to edit this repo.
+- `../workout-tracker-app` — new Expo/React Native app rebuild. Its `DESIGN.md` is the canonical system design doc for the whole migration (covers this repo, the app, and the backend) — don't duplicate design decisions here.
+- `../workout-tracker-api` — new backend (AWS API Gateway + Lambda + Cognito + DynamoDB) being built to eventually replace this repo's direct-DynamoDB-from-browser calls.
+
 ## Workflow
 - **Confirm before coding** — discuss and propose first; implement only when explicitly asked
 - **Don't commit** unless explicitly asked

@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { useProgram, seedFromConfig, seedCoreRoutines } from '../context/ProgramContext'
 import { putSessionType } from '../lib/dynamodb'
 import { reseedExerciseLibraryMetaOnly } from '../seeds/reseed'
+import { getDisplayName } from '../constants/exercises'
 import '../styles/ManageWorkout.css'
 
 const SESSION_ORDER = ['lower-a', 'upper-a', 'lower-b', 'upper-b', 'upper-c']
@@ -107,7 +108,7 @@ export default function ManageWorkout() {
       .filter(ex => !subFilter || ex.muscleGroups?.some(mg => mg === subFilter))
     return muscleFiltered
       .filter(ex => !subFamilyFilter || ex.family === subFamilyFilter)
-      .sort((a, b) => a.name.localeCompare(b.name))
+      .sort((a, b) => (a.displayName || a.name).localeCompare(b.displayName || b.name))
   }
 
   // Get available families from muscle-filtered results
@@ -151,7 +152,7 @@ export default function ManageWorkout() {
                 <div key={ex.name} className="mw-exercise">
                   <div className="mw-exercise-header">
                     <div className="mw-exercise-name">
-                      {ex.name}
+                      {getDisplayName(ex.name, exerciseLibrary)}
                       {ex.superset && <span className={`mw-superset-badge superset-${ex.superset.toLowerCase()}`}>Superset {ex.superset}</span>}
                     </div>
                     {ex.is531 ? (
@@ -179,7 +180,7 @@ export default function ManageWorkout() {
                             : ''
                           return (
                             <div key={subName} className="mw-sub-chip">
-                              <span>{subName}{subDetail}</span>
+                              <span>{getDisplayName(subName, exerciseLibrary)}{subDetail}</span>
                               {editMode && <button className="mw-sub-remove" onClick={() => handleRemoveSub(sessionId, ex.name, subName)}>✕</button>}
                             </div>
                           )
@@ -217,7 +218,7 @@ export default function ManageWorkout() {
                                 className="mw-sub-picker-item"
                                 onClick={() => handleAddSub(sessionId, ex.name, libEx)}
                               >
-                                {libEx.name}
+                                {libEx.displayName || libEx.name}
                                 <span className="mw-sub-picker-meta">
                                   {libEx.muscleGroups?.join(', ')}
                                   {libEx.family ? ` · ${libEx.family}` : ''}
