@@ -899,6 +899,24 @@ export default function ActiveSession() {
                 {displaySets} × {displayRange[0] === displayRange[1] ? displayRange[0] : `${displayRange[0]}–${displayRange[1]}`}
                 {exConfig.perSide ? '/side' : ''} · RIR {displayRir} · {exConfig.rest}
               </span>
+              {(() => {
+                const eightWeeksAgo = new Date(date)
+                eightWeeksAgo.setDate(eightWeeksAgo.getDate() - 56)
+                const cutoff = eightWeeksAgo.toISOString().split('T')[0]
+                let best = null
+                for (const h of history) {
+                  if ((h.date || '') < cutoff) continue
+                  if (h.tags?.includes('deload')) continue
+                  for (const s of h.sets || []) {
+                    const w = parseFloat(s.weight)
+                    if (!w) continue
+                    if (!best || w > best.weight) best = { weight: w, reps: s.reps, unit: h.weightUnit || 'lbs' }
+                  }
+                }
+                return best ? (
+                  <span className="best-weight">Best (8 wks): {best.weight} {best.unit} × {best.reps}</span>
+                ) : null
+              })()}
               {exConfig.superset && (
                 <span className={`superset-badge superset-${exConfig.superset.toLowerCase()}`}>Superset {exConfig.superset}</span>
               )}
