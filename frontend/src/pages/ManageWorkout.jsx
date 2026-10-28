@@ -10,7 +10,7 @@ const SESSION_ORDER = ['lower-a', 'upper-a', 'lower-b', 'upper-b', 'upper-c']
 
 // Exercises with reduced sets on 5-day weeks. Value = sets to subtract.
 const FIVE_DAY_REDUCTIONS = {
-  'upper-a': { 'Tricep Bar Pushdown': 1, 'EZ Bar Curl': 1 },
+  'upper-a': { 'EZ Bar Skullcrusher': 1, 'EZ Bar Curl': 1 },
   'upper-b': { 'Cable Lateral Raise': 1, 'Hammer Curl': 1 },
 }
 const MUSCLE_GROUPS = ['quads', 'hamstrings', 'glutes', 'calves', 'chest', 'back', 'shoulders', 'biceps', 'triceps', 'core']

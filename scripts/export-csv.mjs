@@ -48,7 +48,7 @@ const client = new DynamoDBClient({
 })
 const db = DynamoDBDocumentClient.from(client)
 const TABLE = 'workout-tracker-db'
-const SESSION_TYPES = ['lower-a', 'upper-a', 'lower-b', 'upper-b']
+const SESSION_TYPES = ['lower-a', 'upper-a', 'lower-b', 'upper-b', 'upper-c']
 
 // --- CSV helpers ---
 
@@ -92,7 +92,7 @@ async function exportSessionHistory(today, outDir) {
     const items = await queryAll(`SESSION#${st}`)
     allSessions.push(...items)
   }
-  allSessions.sort((a, b) => a.date.localeCompare(b.date))
+  allSessions.sort((a, b) => (a.date || '').localeCompare(b.date || ''))
 
   const header = ['date', 'session_type', 'deload', 'exercise_name', 'original_name', 'slot_index', 'supplemental', 'set_number', 'weight', 'weight_unit', 'reps', 'rir', 'notes']
   const rows = [header.join(',')]
