@@ -907,6 +907,7 @@ export default function ActiveSession() {
                 for (const h of history) {
                   if ((h.date || '') < cutoff) continue
                   if (h.tags?.includes('deload')) continue
+                  if (h.displayName !== displayName) continue
                   for (const s of h.sets || []) {
                     const w = parseFloat(s.weight)
                     const r = parseInt(s.reps)
