@@ -94,11 +94,16 @@ async function exportSessionHistory(today, outDir) {
   }
   allSessions.sort((a, b) => (a.date || '').localeCompare(b.date || ''))
 
-  const header = ['date', 'session_type', 'deload', 'exercise_name', 'original_name', 'slot_index', 'supplemental', 'set_number', 'weight', 'weight_unit', 'reps', 'rir', 'notes']
+  const header = ['date', 'session_type', 'deload', 'tags', 'exercise_name', 'original_name', 'slot_index', 'supplemental', 'set_number', 'weight', 'weight_unit', 'reps', 'rir', 'notes']
   const rows = [header.join(',')]
 
   for (const session of allSessions) {
     const exercises = session.exercises || []
+    // Resolve tags from both new (tags array) and legacy (deload boolean) sources
+    const sessionTags = [...(session.tags || [])]
+    if (session.deload && !sessionTags.includes('deload')) sessionTags.unshift('deload')
+    const isDeload = sessionTags.includes('deload')
+
     for (let i = 0; i < exercises.length; i++) {
       const ex = exercises[i]
       const sets = ex.sets || []
@@ -114,7 +119,8 @@ async function exportSessionHistory(today, outDir) {
         rows.push(toCsvRow([
           session.date,
           session.sessionType,
-          session.deload ? 'true' : 'false',
+          isDeload ? 'true' : 'false',
+          sessionTags.join('|'),
           exerciseName,
           originalName,
           slotIndex,
