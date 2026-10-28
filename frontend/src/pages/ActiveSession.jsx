@@ -909,8 +909,10 @@ export default function ActiveSession() {
                   if (h.tags?.includes('deload')) continue
                   for (const s of h.sets || []) {
                     const w = parseFloat(s.weight)
-                    if (!w) continue
-                    if (!best || w > best.weight) best = { weight: w, reps: s.reps, unit: h.weightUnit || 'lbs' }
+                    const r = parseInt(s.reps)
+                    if (!w || !r) continue
+                    if (r < displayRange[0]) continue
+                    if (!best || w > best.weight) best = { weight: w, reps: r, unit: h.weightUnit || 'lbs' }
                   }
                 }
                 return best ? (
