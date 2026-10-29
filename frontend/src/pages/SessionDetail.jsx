@@ -172,7 +172,7 @@ export default function SessionDetail() {
       )}
 
       {exercises?.map((exercise, exIndex) => {
-        const exConfig = config?.exercises.find(e => e.name === exercise.name)
+        const exConfig = config?.exercises.find(e => exercise.slotId ? e.slotId === exercise.slotId : e.name === exercise.name)
         const displayName = getDisplayName(exercise.swappedName || exercise.name, exerciseLibrary)
         const isSwapped = !!exercise.swappedName
         const isSwapOpen = swapOpen === exIndex
