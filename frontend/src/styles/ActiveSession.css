@@ -398,6 +398,17 @@
   margin-top: 0.25rem;
 }
 
+.drop-back-badge {
+  display: inline-block;
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 0.2rem 0.5rem;
+  border-radius: 3px;
+  background: #fee2e2;
+  color: #991b1b;
+  margin-top: 0.25rem;
+}
+
 .bump-tag {
   display: inline-block;
   font-size: 0.68rem;

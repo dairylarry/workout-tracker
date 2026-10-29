@@ -70,21 +70,28 @@ function buildSlotIdIndex(program) {
   return index
 }
 
-// Progression criteria (for bump tag):
-// (1) all sets reach top of rep range
-// (2) all sets have RIR >= target (you have more in the tank than required)
-// (3) all sets use the same weight
-// Skips 5/3/1 exercises (handled separately by 5/3/1 waves).
-function checkProgression(sets, repRange, targetRir) {
-  if (!sets || sets.length === 0) return false
-  if (!repRange || targetRir == null || targetRir === undefined) return false
+// Progression trigger: first 2 sets at top of range, same weight.
+// Later sets don't need to — fatigue drops them naturally.
+// TODO: make N configurable (currently 2) to support "all sets" vs "first N sets" modes.
+function checkProgression(sets, repRange) {
+  if (!sets || sets.length < 2) return false
+  if (!repRange) return false
   const topReps = repRange[1]
-  const firstWeight = sets[0].weight
-  if (firstWeight === '' || firstWeight == null) return false
-  return sets.every(
+  const w0 = sets[0]?.weight
+  if (w0 === '' || w0 == null) return false
+  return sets.slice(0, 2).every(
     s => s.reps !== '' && s.reps != null && Number(s.reps) >= topReps &&
-         s.rir !== '' && s.rir != null && Number(s.rir) >= targetRir &&
-         String(s.weight) === String(firstWeight)
+         String(s.weight) === String(w0)
+  )
+}
+
+// Returns true when the first 2 sets fall below the bottom of the rep range.
+// Used to detect a two-session-in-a-row drop, which triggers a drop-back warning.
+function firstTwoBelowBottom(sets, repRange) {
+  if (!sets || sets.length < 2 || !repRange) return false
+  const bottomReps = repRange[0]
+  return sets.slice(0, 2).every(
+    s => s.reps !== '' && s.reps != null && Number(s.reps) < bottomReps
   )
 }
 
@@ -843,7 +850,9 @@ export default function ActiveSession() {
         const displaySets = activeSub?.sets || exConfig.sets
         // Use getRangeRir so plain string subs resolve via exercise library
         const { repRange: displayRange, rir: displayRir } = getRangeRir(nameKey, exConfig, exerciseLibrary)
-        const progReady = !exConfig.is531 && checkProgression(exercise.sets, displayRange, displayRir)
+        const progReady = !exConfig.is531 && checkProgression(exercise.sets, displayRange)
+        const prevSameTypeSets = history.filter(h => !h.crossSession)[0]?.sets
+        const dropBack = !exConfig.is531 && firstTwoBelowBottom(exercise.sets, displayRange) && firstTwoBelowBottom(prevSameTypeSets, displayRange)
 
         // Build union of slot-based history + library history for this exercise
         // This surfaces appearances across other session types (e.g. Incline Cable Fly in both Upper A and Upper B)
@@ -928,6 +937,9 @@ export default function ActiveSession() {
               )}
               {progReady && (
                 <span className="progression-badge">↑ Add weight next session</span>
+              )}
+              {dropBack && (
+                <span className="drop-back-badge">↓ Drop back</span>
               )}
             </div>
 
