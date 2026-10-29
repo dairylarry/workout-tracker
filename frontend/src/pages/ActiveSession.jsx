@@ -961,17 +961,29 @@ export default function ActiveSession() {
 
             {isSwapOpen && (
               <div className="swap-panel">
-                {exConfig.subs?.map(sub => {
-                  const subName = typeof sub === 'object' ? sub.name : sub
-                  const subLabel = typeof sub === 'object'
-                    ? `${getDisplayName(subName, exerciseLibrary)} (${sub.sets}×${sub.repRange[0] === sub.repRange[1] ? sub.repRange[0] : `${sub.repRange[0]}–${sub.repRange[1]}`}, RIR ${sub.rir})`
-                    : getDisplayName(subName, exerciseLibrary)
-                  return (
-                    <button key={subName} className="swap-option" onClick={() => handleSwap(exIndex, subName)}>
-                      {subLabel}
-                    </button>
-                  )
-                })}
+                {(() => {
+                  const options = []
+                  if (exConfig.name !== nameKey) {
+                    options.push(
+                      <button key={exConfig.name} className="swap-option" onClick={() => handleSwap(exIndex, exConfig.name)}>
+                        {getDisplayName(exConfig.name, exerciseLibrary)}
+                      </button>
+                    )
+                  }
+                  exConfig.subs?.forEach(sub => {
+                    const subName = typeof sub === 'object' ? sub.name : sub
+                    if (subName === nameKey) return
+                    const subLabel = typeof sub === 'object'
+                      ? `${getDisplayName(subName, exerciseLibrary)} (${sub.sets}×${sub.repRange[0] === sub.repRange[1] ? sub.repRange[0] : `${sub.repRange[0]}–${sub.repRange[1]}`}, RIR ${sub.rir})`
+                      : getDisplayName(subName, exerciseLibrary)
+                    options.push(
+                      <button key={subName} className="swap-option" onClick={() => handleSwap(exIndex, subName)}>
+                        {subLabel}
+                      </button>
+                    )
+                  })
+                  return options
+                })()}
                 {isSwapped && (
                   <button className="swap-reset" onClick={() => handleResetSwap(exIndex)}>
                     Reset to {getDisplayName(exercise.name, exerciseLibrary)}

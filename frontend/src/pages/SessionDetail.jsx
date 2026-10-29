@@ -196,14 +196,27 @@ export default function SessionDetail() {
 
             {editing && isSwapOpen && exConfig && (
               <div className="swap-panel">
-                {exConfig.subs?.map(sub => {
-                  const subName = typeof sub === 'object' ? sub.name : sub
-                  return (
-                    <button key={subName} className="swap-option" onClick={() => handleSwap(exIndex, subName)}>
-                      {getDisplayName(subName, exerciseLibrary)}
-                    </button>
-                  )
-                })}
+                {(() => {
+                  const activeName = exercise.swappedName || exercise.name
+                  const options = []
+                  if (exConfig.name !== activeName) {
+                    options.push(
+                      <button key={exConfig.name} className="swap-option" onClick={() => handleSwap(exIndex, exConfig.name)}>
+                        {getDisplayName(exConfig.name, exerciseLibrary)}
+                      </button>
+                    )
+                  }
+                  exConfig.subs?.forEach(sub => {
+                    const subName = typeof sub === 'object' ? sub.name : sub
+                    if (subName === activeName) return
+                    options.push(
+                      <button key={subName} className="swap-option" onClick={() => handleSwap(exIndex, subName)}>
+                        {getDisplayName(subName, exerciseLibrary)}
+                      </button>
+                    )
+                  })
+                  return options
+                })()}
                 {isSwapped && (
                   <button className="swap-reset" onClick={() => handleResetSwap(exIndex)}>
                     Reset to {getDisplayName(exercise.name, exerciseLibrary)}
