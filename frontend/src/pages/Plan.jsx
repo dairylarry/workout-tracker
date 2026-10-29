@@ -15,6 +15,12 @@ export default function Plan() {
           table({ node, ...props }) {
             return <div className="table-wrap"><table {...props} /></div>
           },
+          a({ node, href, children, ...props }) {
+            if (href?.startsWith('/')) {
+              return <a href={href} onClick={e => { e.preventDefault(); navigate(href) }} {...props}>{children}</a>
+            }
+            return <a href={href} {...props}>{children}</a>
+          },
         }}
       >
         {planContent}
