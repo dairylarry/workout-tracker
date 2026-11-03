@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { get531Config, put531Config } from '../lib/dynamodb'
-import { getFullWaveTable } from '../lib/fiveThreeOne'
+import { getFullWaveTable, getTMTestSets } from '../lib/fiveThreeOne'
 import { getToday } from '../lib/date'
 import '../styles/FiveThreeOneConfig.css'
 
@@ -95,6 +95,8 @@ export default function FiveThreeOneConfig() {
         const config = configs[ex.key]
         const tm = config?.trainingMax
         const wave = tm ? getFullWaveTable(tm) : null
+        const tmTest = tm ? getTMTestSets(tm) : null
+        const tmTestWorking = tmTest ? tmTest.filter(s => !s.isWarmup) : []
         const status = saveStatus[ex.key]
 
         return (
@@ -124,12 +126,14 @@ export default function FiveThreeOneConfig() {
                       <th>5</th>
                       <th>3</th>
                       <th>1</th>
+                      <th>TM</th>
                     </tr>
                   </thead>
                   <tbody>
                     {wave.warmup.map((s, i) => (
                       <tr key={`warmup-${i}`} className="warmup-row">
                         <td>{s.label}</td>
+                        <td>{s.target}</td>
                         <td>{s.target}</td>
                         <td>{s.target}</td>
                         <td>{s.target}</td>
@@ -141,8 +145,16 @@ export default function FiveThreeOneConfig() {
                         <td>{wave.weeks[1][i].target}</td>
                         <td>{wave.weeks[2][i].target}</td>
                         <td>{wave.weeks[3][i].target}</td>
+                        <td>{tmTestWorking[i]?.target ?? '—'}</td>
                       </tr>
                     ))}
+                    <tr className="tm-test-row">
+                      <td>{tmTestWorking[3]?.label ?? '1×3–5'}</td>
+                      <td>—</td>
+                      <td>—</td>
+                      <td>—</td>
+                      <td>{tmTestWorking[3]?.target ?? '—'}</td>
+                    </tr>
                   </tbody>
                 </table>
               </div>

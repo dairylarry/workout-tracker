@@ -94,6 +94,11 @@
   background: #fffde7;
 }
 
+.tm-test-row {
+  border-top: 1px solid #ddd;
+  color: #555;
+}
+
 .tm-history {
   margin-top: 1rem;
 }
