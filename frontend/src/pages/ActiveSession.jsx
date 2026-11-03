@@ -757,6 +757,10 @@ export default function ActiveSession() {
                 <div className="exercise-top-row">
                   <h3>{exConfig.name}</h3>
                   <span className="badge-531">5/3/1</span>
+                  <button
+                    className={`kebab-note-btn${noteOpen.has(exIndex) ? ' kebab-swap-btn--active' : ''}`}
+                    onClick={() => toggleNote(exIndex)}
+                  >✎</button>
                 </div>
                 <div className="fto-week-row">
                   <select
@@ -823,6 +827,18 @@ export default function ActiveSession() {
                   </div>
                 ))}
               </div>
+              {noteOpen.has(exIndex) && (
+                <>
+                  <hr className="exercise-note-divider" />
+                  <textarea
+                    className="exercise-note-input"
+                    placeholder="Exercise note..."
+                    value={exercise.note || ''}
+                    onChange={e => handleNoteChange(exIndex, e.target.value)}
+                    rows={2}
+                  />
+                </>
+              )}
             </div>
           )
         }
