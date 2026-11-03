@@ -73,17 +73,7 @@ function buildSlotIdIndex(program) {
 // Progression trigger: first 2 sets at top of range, same weight.
 // Later sets don't need to — fatigue drops them naturally.
 // TODO: make N configurable (currently 2) to support "all sets" vs "first N sets" modes.
-function checkProgression(sets, repRange) {
-  if (!sets || sets.length < 2) return false
-  if (!repRange) return false
-  const topReps = repRange[1]
-  const w0 = sets[0]?.weight
-  if (w0 === '' || w0 == null) return false
-  return sets.slice(0, 2).every(
-    s => s.reps !== '' && s.reps != null && Number(s.reps) >= topReps &&
-         String(s.weight) === String(w0)
-  )
-}
+import { checkProgression } from '../lib/progression'
 
 
 // Look up {repRange, rir} for an exercise name within a program slot context.

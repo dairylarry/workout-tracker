@@ -73,4 +73,17 @@ describe('buildExerciseHistoryOps', () => {
     expect(removeOp).toMatchObject({ name: 'Leg Press', args: { slotIndex: 1 } })
     expect(updateOps[1]).toMatchObject({ name: 'Hack Squat', entry: { slotIndex: 1 } })
   })
+
+  it('no remove when prevExercises entry is missing (new exercise added mid-edit)', () => {
+    const next = makeEx('Cable Row')
+    const ops = buildExerciseHistoryOps([next], [], { date: DATE, sessionType: SESSION_TYPE, tags: [] })
+    expect(ops.every(o => o.op !== 'remove')).toBe(true)
+    expect(ops[0]).toMatchObject({ op: 'update', name: 'Cable Row' })
+  })
+
+  it('no remove when prevExercise has no name (undefined slot)', () => {
+    const next = makeEx('Cable Row')
+    const ops = buildExerciseHistoryOps([next], [{}], { date: DATE, sessionType: SESSION_TYPE, tags: [] })
+    expect(ops.every(o => o.op !== 'remove')).toBe(true)
+  })
 })
