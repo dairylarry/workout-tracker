@@ -1,6 +1,7 @@
 import { useParams, useNavigate } from 'react-router-dom'
 import { useState, useEffect } from 'react'
-import { getSession, deleteSession, updateSessionExercises, updateSessionField, getTags, putTags } from '../lib/dynamodb'
+import { getSession, deleteSession, updateSessionExercises, updateSessionField, getTags, putTags, updateExerciseHistory, removeExerciseHistoryEntry } from '../lib/dynamodb'
+import { buildExerciseHistoryOps } from '../lib/sessionSync'
 import { useProgram } from '../context/ProgramContext'
 import { getDisplayName } from '../constants/exercises'
 import NoteRenderer from '../components/NoteRenderer'
@@ -73,6 +74,15 @@ export default function SessionDetail() {
       if (editNotes !== (session.notes || '')) {
         await updateSessionField(sessionType, date, 'notes', editNotes)
       }
+
+      // Sync EXERCISE_LIB cache: remove stale entries, upsert corrected ones
+      const syncOps = buildExerciseHistoryOps(editExercises, session.exercises, { date, sessionType, tags: editTags })
+      await Promise.all(syncOps.map(op =>
+        op.op === 'remove'
+          ? removeExerciseHistoryEntry(op.name, op.args)
+          : updateExerciseHistory(op.name, op.entry)
+      ))
+
       setSession(prev => ({ ...prev, exercises: editExercises, tags: editTags, notes: editNotes }))
       setEditing(false)
       setEditExercises(null)

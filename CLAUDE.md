@@ -8,6 +8,7 @@
 ## Workflow
 - **Confirm before coding** — discuss and propose first; implement only when explicitly asked
 - **Don't commit** unless explicitly asked
+- **Run tests before every commit** — `cd frontend && npm test`; fix any failures before committing. Don't add tests unless explicitly asked.
 - **Bump the version** on every shipped change — assume minor unless told otherwise; update the version string in `frontend/src/constants/version.js`
 
 ## Code Style
