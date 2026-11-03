@@ -4,6 +4,7 @@ import { getSession, deleteSession, updateSessionExercises, updateSessionField, 
 import { buildExerciseHistoryOps } from '../lib/sessionSync'
 import { useProgram } from '../context/ProgramContext'
 import { getDisplayName } from '../constants/exercises'
+import { WEEK_LABELS } from '../lib/fiveThreeOne'
 import NoteRenderer from '../components/NoteRenderer'
 import TagChip from '../components/TagChip'
 import { DEFAULT_TAGS, resolveSessionTags } from '../constants/tags'
@@ -191,6 +192,9 @@ export default function SessionDetail() {
           <div key={exercise.name} className="detail-exercise">
             <div className="detail-exercise-header">
               <h3>{displayName}{exercise.supplemental && <span className="addon-badge">Add-on</span>}</h3>
+              {exercise.is531 && exercise.week != null && (
+                <span className="detail-531-week">{WEEK_LABELS[exercise.week] ?? `Week ${exercise.week}`}</span>
+              )}
               {editing && exConfig && !exConfig.is531 && (
                 <button
                   className="swap-btn"

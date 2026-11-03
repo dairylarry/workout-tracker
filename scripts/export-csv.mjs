@@ -94,7 +94,7 @@ async function exportSessionHistory(today, outDir) {
   }
   allSessions.sort((a, b) => (a.date || '').localeCompare(b.date || ''))
 
-  const header = ['date', 'session_type', 'deload', 'tags', 'exercise_name', 'original_name', 'slot_index', 'supplemental', 'set_number', 'weight', 'weight_unit', 'reps', 'rir', 'notes']
+  const header = ['date', 'session_type', 'deload', 'tags', 'exercise_name', 'original_name', 'slot_index', 'supplemental', 'set_number', 'weight', 'weight_unit', 'reps', 'rir', 'week', 'notes']
   const rows = [header.join(',')]
 
   for (const session of allSessions) {
@@ -130,6 +130,7 @@ async function exportSessionHistory(today, outDir) {
           ex.weightUnit || 'lbs',
           set.reps ?? '',
           set.rir ?? '',
+          ex.is531 ? (ex.week ?? '') : '',
           session.notes || '',
         ]))
       }
