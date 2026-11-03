@@ -80,8 +80,34 @@ export function getFullWaveTable(trainingMax) {
   return { warmup, weeks }
 }
 
+const TM_TEST_WORKING_SETS = [
+  { reps: 5, pct: 0.70, label: '1×5' },
+  { reps: 5, pct: 0.80, label: '1×5' },
+  { reps: 5, pct: 0.90, label: '1×5' },
+  { reps: 5, pct: 1.00, label: '1×3–5' },
+]
+
+/**
+ * Get sets for the 7th Week TM Test: warmups + 70/80/90/100% working sets.
+ * The 100% set is pre-filled with 5 reps (top of the 3–5 target range).
+ */
+export function getTMTestSets(trainingMax) {
+  const warmup = WARMUP_SETS.map(s => ({
+    ...s,
+    target: ceilTo5(trainingMax * s.pct),
+    isWarmup: true,
+  }))
+  const working = TM_TEST_WORKING_SETS.map(s => ({
+    ...s,
+    target: ceilTo5(trainingMax * s.pct),
+    isWarmup: false,
+  }))
+  return [...warmup, ...working]
+}
+
 export const WEEK_LABELS = {
   1: 'Week 1 (5s)',
   2: 'Week 2 (3s)',
   3: 'Week 3 (5/3/1)',
+  'tm-test': 'TM Test (7th Week)',
 }

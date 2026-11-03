@@ -3,7 +3,7 @@ import { useState, useEffect, useRef } from 'react'
 import { useProgram } from '../context/ProgramContext'
 import NoteRenderer from '../components/NoteRenderer'
 import { getSession, putSession, updateSessionExercises, updateSessionField, getRecentSessions, get531Config, updateExerciseHistory, removeExerciseHistoryEntry, getTags, putTags } from '../lib/dynamodb'
-import { getSetsForWeek, getDeloadSets, WEEK_LABELS } from '../lib/fiveThreeOne'
+import { getSetsForWeek, getDeloadSets, getTMTestSets, WEEK_LABELS } from '../lib/fiveThreeOne'
 import { EXERCISE_FAMILIES } from '../constants/exerciseEnums'
 import { getDisplayName, enrichExercise } from '../constants/exercises'
 import { DEFAULT_TAGS, resolveSessionTags, resolveHistoryTags } from '../constants/tags'
@@ -313,7 +313,7 @@ export default function ActiveSession() {
           let inferredWeek = 1
           if (pastSessions.length > 0) {
             const last531 = pastSessions[0].exercises?.find(e => e.is531)
-            if (last531?.week && last531.week !== 'deload') {
+            if (last531?.week && last531.week !== 'deload' && last531.week !== 'tm-test') {
               const next = (last531.week % 3) + 1
               if (next >= 1 && next <= 3) inferredWeek = next
             }
@@ -436,7 +436,9 @@ export default function ActiveSession() {
         if (ei !== exIndex || !ex.is531 || !ex.trainingMax) return ex
         const rawSets = newWeek === 'deload'
           ? getDeloadSets(ex.trainingMax)
-          : getSetsForWeek(newWeek, ex.trainingMax)
+          : newWeek === 'tm-test'
+            ? getTMTestSets(ex.trainingMax)
+            : getSetsForWeek(newWeek, ex.trainingMax)
         const newSets = rawSets.map((s, i) => ({
           setNumber: i + 1,
           target: s.target,
@@ -586,7 +588,7 @@ export default function ActiveSession() {
           const newTm = newFtoConfigs[key]?.trainingMax
           if (newTm && newTm !== ex.trainingMax) {
             const week = ex.week || 1
-            const rawSets = week === 'deload' ? getDeloadSets(newTm) : getSetsForWeek(week, newTm)
+            const rawSets = week === 'deload' ? getDeloadSets(newTm) : week === 'tm-test' ? getTMTestSets(newTm) : getSetsForWeek(week, newTm)
             return {
               ...ex,
               trainingMax: newTm,
@@ -761,7 +763,7 @@ export default function ActiveSession() {
                     value={exercise.week || 1}
                     onChange={e => {
                       const val = e.target.value
-                      handle531WeekChange(exIndex, val === 'deload' ? 'deload' : Number(val))
+                      handle531WeekChange(exIndex, val === 'deload' || val === 'tm-test' ? val : Number(val))
                     }}
                     className="week-select"
                   >
@@ -769,6 +771,7 @@ export default function ActiveSession() {
                     <option value={2}>{WEEK_LABELS[2]}</option>
                     <option value={3}>{WEEK_LABELS[3]}</option>
                     <option value="deload">Deload</option>
+                    <option value="tm-test">{WEEK_LABELS['tm-test']}</option>
                   </select>
                   <span className="exercise-target">TM: {exercise.trainingMax} lb · Rest {exConfig.rest}</span>
                 </div>
