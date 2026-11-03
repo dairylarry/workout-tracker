@@ -272,7 +272,7 @@ export default function ActiveSession() {
         const [existing, tagsResult, ...recentArrays] = await Promise.all([
           getSession(sessionType, date),
           getTags(),
-          ...Array.from(analogousTypes).map(st => getRecentSessions(st, 6)),
+          ...Array.from(analogousTypes).map(st => getRecentSessions(st, 8)),
         ])
 
         let loadedTags = tagsResult
@@ -662,6 +662,7 @@ export default function ActiveSession() {
       const current = prev[exName] || 1
       if (current === 1) return { ...prev, [exName]: 3 }
       if (current === 3) return { ...prev, [exName]: 5 }
+      if (current === 5) return { ...prev, [exName]: 8 }
       return { ...prev, [exName]: 1 }
     })
   }
