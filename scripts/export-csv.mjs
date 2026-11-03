@@ -85,7 +85,7 @@ async function queryAll(pk) {
 
 // --- session_history.csv ---
 
-async function exportSessionHistory(today, outDir) {
+async function exportSessionHistory(today, outDir, tmRows) {
   console.log('Fetching session history...')
   const allSessions = []
   for (const st of SESSION_TYPES) {
@@ -137,9 +137,11 @@ async function exportSessionHistory(today, outDir) {
     }
   }
 
+  const content = rows.join('\n') + (tmRows ? '\n\n' + tmRows.join('\n') : '')
   const outPath = resolve(outDir, `session_history_${today}.csv`)
-  writeFileSync(outPath, rows.join('\n'), 'utf8')
-  console.log(`  ✓ ${rows.length - 1} set rows → exports/${today}/session_history_${today}.csv`)
+  writeFileSync(outPath, content, 'utf8')
+  const tmNote = tmRows ? ` + ${tmRows.length - 1} TM rows` : ''
+  console.log(`  ✓ ${rows.length - 1} set rows${tmNote} → exports/${today}/session_history_${today}.csv`)
 }
 
 // --- exercise_history.csv ---
@@ -178,12 +180,10 @@ async function exportExerciseHistory(today, outDir) {
   console.log(`  ✓ ${rows.length - 1} set rows → exports/${today}/exercise_history_${today}.csv`)
 }
 
-// --- training_maxes.csv ---
+// --- training maxes section (appended to session_history.csv) ---
 
-async function exportTrainingMaxes(today, outDir) {
-  console.log('Fetching 5/3/1 training maxes...')
+async function fetchTrainingMaxRows() {
   const items = await queryAll('531_CONFIG')
-
   const header = ['exercise', 'training_max', 'history_date', 'history_tm']
   const rows = [header.join(',')]
 
@@ -200,10 +200,7 @@ async function exportTrainingMaxes(today, outDir) {
       }
     }
   }
-
-  const outPath = resolve(outDir, `training_maxes_${today}.csv`)
-  writeFileSync(outPath, rows.join('\n'), 'utf8')
-  console.log(`  ✓ ${rows.length - 1} rows → exports/${today}/training_maxes_${today}.csv`)
+  return rows
 }
 
 // --- Main ---
@@ -212,9 +209,11 @@ async function main() {
   const today = new Date().toISOString().split('T')[0] // YYYY-MM-DD
   const outDir = resolve(ROOT, `exports/${today}`)
   mkdirSync(outDir, { recursive: true })
-  await exportSessionHistory(today, outDir)
+  console.log('Fetching 5/3/1 training maxes...')
+  const tmRows = await fetchTrainingMaxRows()
+  console.log(`  ✓ ${tmRows.length - 1} TM rows fetched`)
+  await exportSessionHistory(today, outDir, tmRows)
   await exportExerciseHistory(today, outDir)
-  await exportTrainingMaxes(today, outDir)
   console.log('\nDone.')
 }
 
