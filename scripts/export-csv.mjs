@@ -184,19 +184,18 @@ async function exportTrainingMaxes(today, outDir) {
   console.log('Fetching 5/3/1 training maxes...')
   const items = await queryAll('531_CONFIG')
 
-  const header = ['exercise', 'training_max', 'history_date', 'history_tm']
+  const header = ['exercise', 'history_date', 'history_tm']
   const rows = [header.join(',')]
 
   for (const item of items) {
     const exercise = (item.SK || '').replace('EXERCISE#', '')
-    const tm = item.trainingMax ?? ''
     const history = item.history || []
 
     if (history.length === 0) {
-      rows.push(toCsvRow([exercise, tm, '', '']))
+      rows.push(toCsvRow([exercise, '', '']))
     } else {
       for (const entry of history) {
-        rows.push(toCsvRow([exercise, tm, entry.date || '', entry.tm ?? '']))
+        rows.push(toCsvRow([exercise, entry.date || '', entry.tm ?? '']))
       }
     }
   }
