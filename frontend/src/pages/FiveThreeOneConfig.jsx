@@ -17,6 +17,8 @@ export default function FiveThreeOneConfig() {
   const [loading, setLoading] = useState(true)
   const [saveStatus, setSaveStatus] = useState({})
   const [deleteMode, setDeleteMode] = useState(false)
+  const [previewOpen, setPreviewOpen] = useState({})
+  const [previewInputs, setPreviewInputs] = useState({})
 
   useEffect(() => {
     async function load() {
@@ -82,6 +84,16 @@ export default function FiveThreeOneConfig() {
     } catch (e) {
       console.error('Failed to delete history entry:', e)
     }
+  }
+
+  function openPreview(key, currentTm) {
+    setPreviewOpen(prev => ({ ...prev, [key]: true }))
+    setPreviewInputs(prev => ({ ...prev, [key]: currentTm?.toString() || '' }))
+  }
+
+  function closePreview(key) {
+    setPreviewOpen(prev => ({ ...prev, [key]: false }))
+    setPreviewInputs(prev => ({ ...prev, [key]: '' }))
   }
 
   if (loading) return <div className="fto-config"><p>Loading...</p></div>
@@ -157,6 +169,75 @@ export default function FiveThreeOneConfig() {
                     </tr>
                   </tbody>
                 </table>
+              </div>
+            )}
+
+            {wave && !previewOpen[ex.key] && (
+              <button className="preview-btn" onClick={() => openPreview(ex.key, tm)}>Preview</button>
+            )}
+
+            {previewOpen[ex.key] && (
+              <div className="preview-section">
+                <div className="preview-header">
+                  <span className="preview-label">Preview TM (lbs)</span>
+                  <input
+                    type="number"
+                    inputMode="numeric"
+                    className="preview-input"
+                    value={previewInputs[ex.key] || ''}
+                    onChange={e => setPreviewInputs(prev => ({ ...prev, [ex.key]: e.target.value }))}
+                    placeholder="e.g. 370"
+                  />
+                  <button className="preview-close" onClick={() => closePreview(ex.key)}>×</button>
+                </div>
+                {(() => {
+                  const ptm = Number(previewInputs[ex.key])
+                  if (!ptm || ptm <= 0) return null
+                  const pwave = getFullWaveTable(ptm)
+                  const ptmTestWorking = getTMTestSets(ptm).filter(s => !s.isWarmup)
+                  return (
+                    <div className="wave-table-wrap">
+                      <table className="wave-table">
+                        <thead>
+                          <tr>
+                            <th>{ex.label.split(' ').pop()}</th>
+                            <th>5</th>
+                            <th>3</th>
+                            <th>1</th>
+                            <th>TM</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {pwave.warmup.map((s, i) => (
+                            <tr key={`warmup-${i}`} className="warmup-row">
+                              <td>{s.label}</td>
+                              <td>{s.target}</td>
+                              <td>{s.target}</td>
+                              <td>{s.target}</td>
+                              <td>{s.target}</td>
+                            </tr>
+                          ))}
+                          {[0, 1, 2].map(i => (
+                            <tr key={`work-${i}`}>
+                              <td>{pwave.weeks[1][i].label}</td>
+                              <td>{pwave.weeks[1][i].target}</td>
+                              <td>{pwave.weeks[2][i].target}</td>
+                              <td>{pwave.weeks[3][i].target}</td>
+                              <td>{ptmTestWorking[i]?.target ?? '—'}</td>
+                            </tr>
+                          ))}
+                          <tr className="tm-test-row">
+                            <td>{ptmTestWorking[3]?.label ?? '1×3–5'}</td>
+                            <td>—</td>
+                            <td>—</td>
+                            <td>—</td>
+                            <td>{ptmTestWorking[3]?.target ?? '—'}</td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  )
+                })()}
               </div>
             )}
 
